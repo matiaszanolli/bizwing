@@ -1,4 +1,4 @@
-/* Aerobiz Supersonic - Retro Terminal Aesthetic */
+/* BizWing - Retro Terminal Aesthetic */
 
 :root {
     --color-bg: #000080;
@@ -41,6 +41,18 @@ body {
     padding: 15px;
     border: 2px solid var(--color-primary);
     margin-bottom: 10px;
+}
+
+.header-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.game-logo {
+    height: 40px;
+    width: auto;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .game-header h1 {

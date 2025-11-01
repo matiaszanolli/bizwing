@@ -92,7 +92,7 @@ export class GameState {
         }
 
         // Add welcome messages
-        this.addNews('Welcome to Aerobiz Supersonic! Build your airline empire.');
+        this.addNews('Welcome to BizWing! Build your airline empire.');
         this.addNews('Manage routes, finances, and compete with rivals to dominate the skies.');
     }
 

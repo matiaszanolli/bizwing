@@ -1,7 +1,7 @@
 {
-  "name": "aerobiz-supersonic",
+  "name": "bizwing",
   "version": "0.2.0",
-  "description": "Browser-based airline management simulation inspired by KOEI's Aerobiz Supersonic",
+  "description": "Browser-based airline management simulation game",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,7 +16,7 @@
     "airline",
     "management",
     "strategy",
-    "aerobiz"
+    "bizwing"
   ],
   "author": "",
   "license": "MIT",
