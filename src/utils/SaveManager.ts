@@ -164,6 +164,13 @@ export class SaveManager {
     }
 
     /**
+     * Clear auto-save (for starting new game)
+     */
+    static clearAutoSave(): boolean {
+        return this.deleteSave(AUTOSAVE_SLOT);
+    }
+
+    /**
      * Clear all saves (for testing/reset)
      */
     static clearAllSaves(): void {

@@ -10,9 +10,245 @@ export interface AircraftType {
     operating_cost: number;
     lease_per_quarter: number;
     year_available: number;
+    year_discontinued?: number; // Year production ended (undefined = still in production)
 }
 
 export const aircraftTypes: AircraftType[] = [
+    // Classic Propeller Era (1955-1960s)
+    {
+        name: 'Douglas DC-6',
+        category: 'Narrow-body',
+        capacity: 102,
+        range: 3800,
+        price: 8000000,
+        operating_cost: 6500,
+        lease_per_quarter: 200000,
+        year_available: 1955,
+        year_discontinued: 1959
+    },
+    {
+        name: 'Lockheed L-1049 Super Constellation',
+        category: 'Narrow-body',
+        capacity: 95,
+        range: 3900,
+        price: 9000000,
+        operating_cost: 6800,
+        lease_per_quarter: 220000,
+        year_available: 1955,
+        year_discontinued: 1958
+    },
+    {
+        name: 'Vickers Viscount',
+        category: 'Regional',
+        capacity: 71,
+        range: 1900,
+        price: 5000000,
+        operating_cost: 4500,
+        lease_per_quarter: 150000,
+        year_available: 1955,
+        year_discontinued: 1964
+    },
+
+    // Early Jet Era (1958-1969)
+    {
+        name: 'Boeing 707-320',
+        category: 'Narrow-body',
+        capacity: 189,
+        range: 6800,
+        price: 15000000,
+        operating_cost: 9500,
+        lease_per_quarter: 400000,
+        year_available: 1958,
+        year_discontinued: 1979
+    },
+    {
+        name: 'Douglas DC-8-50',
+        category: 'Narrow-body',
+        capacity: 189,
+        range: 6300,
+        price: 14000000,
+        operating_cost: 9200,
+        lease_per_quarter: 380000,
+        year_available: 1960,
+        year_discontinued: 1972
+    },
+    {
+        name: 'Boeing 727-100',
+        category: 'Narrow-body',
+        capacity: 131,
+        range: 2500,
+        price: 11000000,
+        operating_cost: 7500,
+        lease_per_quarter: 300000,
+        year_available: 1963,
+        year_discontinued: 1984
+    },
+    {
+        name: 'Boeing 727-200',
+        category: 'Narrow-body',
+        capacity: 189,
+        range: 2900,
+        price: 13000000,
+        operating_cost: 8200,
+        lease_per_quarter: 350000,
+        year_available: 1967,
+        year_discontinued: 1984
+    },
+    {
+        name: 'Douglas DC-9-30',
+        category: 'Narrow-body',
+        capacity: 115,
+        range: 2200,
+        price: 10000000,
+        operating_cost: 7000,
+        lease_per_quarter: 280000,
+        year_available: 1967,
+        year_discontinued: 1982
+    },
+    {
+        name: 'BAC One-Eleven',
+        category: 'Regional',
+        capacity: 89,
+        range: 1900,
+        price: 8000000,
+        operating_cost: 5800,
+        lease_per_quarter: 220000,
+        year_available: 1965,
+        year_discontinued: 1984
+    },
+
+    // Wide-body Revolution (1970-1979)
+    {
+        name: 'Boeing 747-100',
+        category: 'Jumbo',
+        capacity: 366,
+        range: 6100,
+        price: 120000000,
+        operating_cost: 22000,
+        lease_per_quarter: 3000000,
+        year_available: 1970,
+        year_discontinued: 1986
+    },
+    {
+        name: 'McDonnell Douglas DC-10-10',
+        category: 'Wide-body',
+        capacity: 270,
+        range: 6200,
+        price: 95000000,
+        operating_cost: 18000,
+        lease_per_quarter: 2400000,
+        year_available: 1971,
+        year_discontinued: 1989
+    },
+    {
+        name: 'Lockheed L-1011-1',
+        category: 'Wide-body',
+        capacity: 256,
+        range: 5600,
+        price: 90000000,
+        operating_cost: 17500,
+        lease_per_quarter: 2300000,
+        year_available: 1972,
+        year_discontinued: 1984
+    },
+    {
+        name: 'Airbus A300B2',
+        category: 'Wide-body',
+        capacity: 266,
+        range: 2900,
+        price: 75000000,
+        operating_cost: 14000,
+        lease_per_quarter: 1900000,
+        year_available: 1974,
+        year_discontinued: 1984
+    },
+    {
+        name: 'Boeing 747-200',
+        category: 'Jumbo',
+        capacity: 366,
+        range: 6900,
+        price: 140000000,
+        operating_cost: 23000,
+        lease_per_quarter: 3500000,
+        year_available: 1971,
+        year_discontinued: 1991
+    },
+
+    // 1980s Era
+    {
+        name: 'Boeing 767-200',
+        category: 'Wide-body',
+        capacity: 181,
+        range: 4800,
+        price: 65000000,
+        operating_cost: 12000,
+        lease_per_quarter: 1600000,
+        year_available: 1982
+    },
+    {
+        name: 'Airbus A310-200',
+        category: 'Wide-body',
+        capacity: 220,
+        range: 4300,
+        price: 70000000,
+        operating_cost: 13000,
+        lease_per_quarter: 1750000,
+        year_available: 1983
+    },
+    {
+        name: 'Boeing 737-200',
+        category: 'Narrow-body',
+        capacity: 130,
+        range: 2650,
+        price: 25000000,
+        operating_cost: 7000,
+        lease_per_quarter: 650000,
+        year_available: 1968,
+        year_discontinued: 1988
+    },
+    {
+        name: 'Airbus A320-100',
+        category: 'Narrow-body',
+        capacity: 150,
+        range: 3000,
+        price: 35000000,
+        operating_cost: 7800,
+        lease_per_quarter: 850000,
+        year_available: 1988
+    },
+    {
+        name: 'McDonnell Douglas MD-81',
+        category: 'Narrow-body',
+        capacity: 155,
+        range: 2900,
+        price: 32000000,
+        operating_cost: 7600,
+        lease_per_quarter: 800000,
+        year_available: 1980,
+        year_discontinued: 1999
+    },
+    {
+        name: 'Fokker F28',
+        category: 'Regional',
+        capacity: 85,
+        range: 1700,
+        price: 18000000,
+        operating_cost: 5000,
+        lease_per_quarter: 450000,
+        year_available: 1969,
+        year_discontinued: 1987
+    },
+    {
+        name: 'BAe 146-200',
+        category: 'Regional',
+        capacity: 85,
+        range: 2100,
+        price: 20000000,
+        operating_cost: 5200,
+        lease_per_quarter: 500000,
+        year_available: 1983
+    },
+
     // Regional Jets (10 total)
     {
         name: 'ATR 42',
@@ -22,7 +258,7 @@ export const aircraftTypes: AircraftType[] = [
         price: 12000000,
         operating_cost: 2800,
         lease_per_quarter: 350000,
-        year_available: 1992
+        year_available: 1985
     },
     {
         name: 'ATR 72',
@@ -32,7 +268,7 @@ export const aircraftTypes: AircraftType[] = [
         price: 16000000,
         operating_cost: 3200,
         lease_per_quarter: 450000,
-        year_available: 1992
+        year_available: 1989
     },
     {
         name: 'Embraer ERJ-145',
@@ -102,7 +338,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 22000000,
         operating_cost: 4000,
         lease_per_quarter: 600000,
-        year_available: 1992
+        year_available: 1992,
+        year_discontinued: 1997
     },
     {
         name: 'Fokker 100',
@@ -112,7 +349,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 28000000,
         operating_cost: 5000,
         lease_per_quarter: 700000,
-        year_available: 1992
+        year_available: 1992,
+        year_discontinued: 1997
     },
 
     // Narrow-body (12 total)
@@ -214,7 +452,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 65000000,
         operating_cost: 11000,
         lease_per_quarter: 1500000,
-        year_available: 1992
+        year_available: 1992,
+        year_discontinued: 2004
     },
     {
         name: 'Boeing 757-300',
@@ -224,7 +463,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 75000000,
         operating_cost: 12500,
         lease_per_quarter: 1750000,
-        year_available: 1999
+        year_available: 1999,
+        year_discontinued: 2004
     },
     {
         name: 'McDonnell Douglas MD-80',
@@ -234,7 +474,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 36000000,
         operating_cost: 8400,
         lease_per_quarter: 900000,
-        year_available: 1992
+        year_available: 1992,
+        year_discontinued: 1999
     },
 
     // Wide-body (15 total)
@@ -336,7 +577,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 145000000,
         operating_cost: 22000,
         lease_per_quarter: 3500000,
-        year_available: 1993
+        year_available: 1993,
+        year_discontinued: 2011
     },
     {
         name: 'Airbus A340-300',
@@ -346,7 +588,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 155000000,
         operating_cost: 23000,
         lease_per_quarter: 3700000,
-        year_available: 1993
+        year_available: 1993,
+        year_discontinued: 2011
     },
     {
         name: 'Airbus A340-500',
@@ -356,7 +599,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 175000000,
         operating_cost: 24500,
         lease_per_quarter: 4200000,
-        year_available: 2002
+        year_available: 2002,
+        year_discontinued: 2011
     },
     {
         name: 'Airbus A340-600',
@@ -366,7 +610,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 185000000,
         operating_cost: 26000,
         lease_per_quarter: 4500000,
-        year_available: 2002
+        year_available: 2002,
+        year_discontinued: 2011
     },
     {
         name: 'Airbus A350-900',
@@ -389,17 +634,7 @@ export const aircraftTypes: AircraftType[] = [
         year_available: 2011
     },
 
-    // Jumbo/Ultra long-haul (5 total)
-    {
-        name: 'Boeing 747-200',
-        category: 'Jumbo',
-        capacity: 366,
-        range: 6900,
-        price: 150000000,
-        operating_cost: 24000,
-        lease_per_quarter: 3800000,
-        year_available: 1992
-    },
+    // Jumbo/Ultra long-haul (3 total - 747-100 and 747-200 in earlier sections)
     {
         name: 'Boeing 747-300',
         category: 'Jumbo',
@@ -408,7 +643,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 165000000,
         operating_cost: 24500,
         lease_per_quarter: 4100000,
-        year_available: 1992
+        year_available: 1983,
+        year_discontinued: 1990
     },
     {
         name: 'Boeing 747-400',
@@ -441,7 +677,7 @@ export const aircraftTypes: AircraftType[] = [
         year_available: 2007
     },
 
-    // Other Wide-body
+    // Other Wide-body (DC-10 and L-1011 already in 1970s section)
     {
         name: 'McDonnell Douglas MD-11',
         category: 'Wide-body',
@@ -450,27 +686,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 120000000,
         operating_cost: 20000,
         lease_per_quarter: 3000000,
-        year_available: 1992
-    },
-    {
-        name: 'McDonnell Douglas DC-10',
-        category: 'Wide-body',
-        capacity: 270,
-        range: 6200,
-        price: 110000000,
-        operating_cost: 19500,
-        lease_per_quarter: 2800000,
-        year_available: 1992
-    },
-    {
-        name: 'Lockheed L-1011',
-        category: 'Wide-body',
-        capacity: 256,
-        range: 5600,
-        price: 105000000,
-        operating_cost: 19000,
-        lease_per_quarter: 2700000,
-        year_available: 1992
+        year_available: 1990,
+        year_discontinued: 2000
     },
 
     // Supersonic (1 total)
@@ -482,7 +699,8 @@ export const aircraftTypes: AircraftType[] = [
         price: 250000000,
         operating_cost: 35000,
         lease_per_quarter: 6000000,
-        year_available: 1992
+        year_available: 1976,
+        year_discontinued: 2003
     },
 
     // Cargo (6 total)
@@ -554,7 +772,48 @@ export const aircraftTypes: AircraftType[] = [
     }
 ];
 
-// Get available aircraft for a given year
+// Get available aircraft for a given year (introduced and still in production)
 export function getAvailableAircraft(year: number): AircraftType[] {
-    return aircraftTypes.filter(aircraft => aircraft.year_available <= year);
+    return aircraftTypes.filter(aircraft =>
+        aircraft.year_available <= year &&
+        (!aircraft.year_discontinued || aircraft.year_discontinued > year)
+    );
+}
+
+// Get production status of an aircraft for a given year
+export function getProductionStatus(aircraft: AircraftType, year: number): 'not-available' | 'coming-soon' | 'in-production' | 'ending-soon' | 'discontinued' {
+    // Not yet available
+    if (aircraft.year_available > year) {
+        // Coming next year
+        if (aircraft.year_available === year + 1) {
+            return 'coming-soon';
+        }
+        return 'not-available';
+    }
+
+    // Already discontinued
+    if (aircraft.year_discontinued && aircraft.year_discontinued <= year) {
+        return 'discontinued';
+    }
+
+    // Will be discontinued next year
+    if (aircraft.year_discontinued && aircraft.year_discontinued === year + 1) {
+        return 'ending-soon';
+    }
+
+    // Currently in production
+    return 'in-production';
+}
+
+// Get aircraft that will be introduced next year
+export function getUpcomingAircraft(year: number): AircraftType[] {
+    return aircraftTypes.filter(aircraft => aircraft.year_available === year + 1);
+}
+
+// Get aircraft that will be discontinued next year
+export function getEndingProductionAircraft(year: number): AircraftType[] {
+    return aircraftTypes.filter(aircraft =>
+        aircraft.year_discontinued === year + 1 &&
+        aircraft.year_available <= year
+    );
 }

@@ -1679,3 +1679,281 @@ input[type="range"]::-moz-range-thumb {
     font-size: 14px;
     text-align: center;
 }
+
+/* ========================================
+   NEW GAME SETUP MODAL
+   ======================================== */
+
+.new-game-setup {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.setup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-dim);
+}
+
+.setup-section:last-of-type {
+    border-bottom: none;
+}
+
+.setup-section h3 {
+    color: var(--color-text-bright);
+    font-size: 20px;
+    text-shadow: 0 0 5px var(--color-text-bright);
+    margin-bottom: 8px;
+}
+
+/* Airline Name Input */
+.airline-name-input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--color-text);
+    color: var(--color-text-bright);
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+    text-shadow: 0 0 3px var(--color-text-bright);
+}
+
+.airline-name-input:focus {
+    outline: none;
+    border-color: var(--color-text-bright);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+/* Year Options */
+.year-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.year-option {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--color-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.year-option:hover {
+    border-color: var(--color-text);
+    background: rgba(0, 170, 0, 0.1);
+}
+
+.year-option.selected {
+    border-color: var(--color-text-bright);
+    background: rgba(0, 170, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.year-option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.year-option .year {
+    color: var(--color-text-bright);
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 5px var(--color-text-bright);
+}
+
+.era-badge {
+    color: var(--color-info);
+    font-size: 16px;
+    padding: 2px 8px;
+    border: 1px solid var(--color-info);
+    background: rgba(0, 170, 255, 0.1);
+}
+
+.year-option-description {
+    color: var(--color-text);
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.year-option-stats {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.year-info {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-text);
+}
+
+.year-info p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: var(--color-text);
+}
+
+.year-info strong {
+    color: var(--color-text-bright);
+}
+
+/* Difficulty Buttons */
+.difficulty-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.difficulty-btn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--color-dim);
+    color: var(--color-text);
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.difficulty-btn:hover {
+    border-color: var(--color-text);
+    background: rgba(0, 170, 0, 0.1);
+}
+
+.difficulty-btn.active {
+    border-color: var(--color-text-bright);
+    color: var(--color-text-bright);
+    text-shadow: 0 0 5px var(--color-text-bright);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.difficulty-btn.active.easy {
+    background: rgba(0, 170, 0, 0.2);
+}
+
+.difficulty-btn.active.normal {
+    background: rgba(0, 170, 255, 0.2);
+    border-color: var(--color-info);
+    color: var(--color-info);
+    text-shadow: 0 0 5px var(--color-info);
+}
+
+.difficulty-btn.active.hard {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: var(--color-error);
+    color: var(--color-error);
+    text-shadow: 0 0 5px var(--color-error);
+}
+
+/* Difficulty Details */
+.difficulty-details {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-text);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.difficulty-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: var(--color-text);
+}
+
+.difficulty-row .value {
+    color: var(--color-text-bright);
+    font-weight: bold;
+}
+
+/* ========================================
+   AIRCRAFT PRODUCTION STATUS
+   ======================================== */
+
+/* Production status badge */
+.production-badge {
+    display: inline-block;
+    margin-left: 12px;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 2px;
+    font-weight: bold;
+    text-shadow: none;
+}
+
+.production-badge.ending {
+    background: rgba(255, 170, 0, 0.2);
+    border: 1px solid var(--color-warning);
+    color: var(--color-warning);
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(255, 170, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(255, 170, 0, 0.6);
+    }
+}
+
+/* Aircraft item ending soon */
+.aircraft-item.ending-soon {
+    border-left: 3px solid var(--color-warning);
+}
+
+.aircraft-item.ending-soon:hover {
+    border-left-color: var(--color-warning);
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
+}
+
+/* Production warning text */
+.production-warning {
+    background: rgba(255, 170, 0, 0.1);
+    border: 1px solid var(--color-warning);
+    color: var(--color-warning);
+    padding: 12px;
+    margin-top: 12px;
+    text-align: center;
+    font-weight: bold;
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+/* Warning detail row */
+.detail-row.warning {
+    background: rgba(255, 170, 0, 0.1);
+    padding: 8px;
+    margin: 8px 0;
+    border-left: 3px solid var(--color-warning);
+}
+
+.detail-row.warning .warning-value {
+    color: var(--color-warning);
+    font-weight: bold;
+}
+
+/* Aircraft details heading with badge */
+.aircraft-details h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}

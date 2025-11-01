@@ -4,7 +4,7 @@ import { GameState } from '../models/GameState';
 import { CONFIG } from '../utils/config';
 import { calculateDistance, formatMoney, clamp, generateId } from '../utils/helpers';
 import { getRandomEvent } from '../data/events';
-import { AircraftType } from '../data/aircraft';
+import { AircraftType, getUpcomingAircraft, getEndingProductionAircraft } from '../data/aircraft';
 import { Airport } from '../data/airports';
 import { Route, ActiveEvent } from '../models/types';
 
@@ -31,8 +31,8 @@ export class GameEngine {
     }
 
     // Initialize new game
-    initialize(): void {
-        this.state.initialize();
+    initialize(startYear?: number, startingCash?: number, airlineName?: string): void {
+        this.state.initialize(startYear, startingCash, airlineName);
     }
 
     // === AIRCRAFT MANAGEMENT ===
@@ -573,6 +573,25 @@ export class GameEngine {
 
         // Simulate competitor activity
         this.simulateCompetitors();
+
+        // Check for aircraft announcements (only on Q1)
+        if (this.state.quarter === 1) {
+            // Warn about upcoming aircraft
+            const upcomingAircraft = getUpcomingAircraft(this.state.year);
+            if (upcomingAircraft.length > 0) {
+                upcomingAircraft.forEach(aircraft => {
+                    this.state.addNews(`INDUSTRY NEWS: ${aircraft.name} will enter production next year!`);
+                });
+            }
+
+            // Warn about aircraft ending production
+            const endingAircraft = getEndingProductionAircraft(this.state.year);
+            if (endingAircraft.length > 0) {
+                endingAircraft.forEach(aircraft => {
+                    this.state.addNews(`INDUSTRY NEWS: ${aircraft.name} production ending next year - last chance to order!`);
+                });
+            }
+        }
 
         // Check game over
         if (this.state.cash < CONFIG.BANKRUPTCY_THRESHOLD) {

@@ -62,7 +62,17 @@ export class GameState {
     }
 
     // Initialize new game
-    initialize(): void {
+    initialize(startYear?: number, startingCash?: number, airlineName?: string): void {
+        // Set custom parameters if provided
+        if (startYear !== undefined) {
+            this.year = startYear;
+        }
+        if (startingCash !== undefined) {
+            this.cash = startingCash;
+        }
+        if (airlineName !== undefined && airlineName.trim().length > 0) {
+            this.playerAirline = airlineName.trim();
+        }
         // Clone airport data
         this.airports = deepClone(airports);
 
@@ -86,12 +96,44 @@ export class GameState {
             }
         });
 
-        // Add starting aircraft
+        // Add starting aircraft appropriate for the era
+        // Find aircraft available for the current year
+        const availableAircraft = aircraftTypes.filter(a => a.year_available <= this.year);
+
+        // Pick a suitable starting aircraft based on era
+        let startingAircraft;
+        if (availableAircraft.length === 0) {
+            // Fallback to first aircraft if somehow none available
+            startingAircraft = aircraftTypes[0];
+        } else if (this.year < 1960) {
+            // Propeller era - use DC-6 or similar
+            startingAircraft = availableAircraft.find(a => a.name.includes('DC-6')) || availableAircraft[0];
+        } else if (this.year < 1970) {
+            // Early jet era - use 707 or DC-8
+            startingAircraft = availableAircraft.find(a => a.name.includes('707')) ||
+                             availableAircraft.find(a => a.name.includes('DC-8')) ||
+                             availableAircraft[availableAircraft.length - 1];
+        } else if (this.year < 1980) {
+            // Wide-body era - use DC-10 or 747
+            startingAircraft = availableAircraft.find(a => a.name.includes('DC-10')) ||
+                             availableAircraft.find(a => a.name.includes('747-100')) ||
+                             availableAircraft[availableAircraft.length - 1];
+        } else if (this.year < 1992) {
+            // 1980s - use 737 or A320
+            startingAircraft = availableAircraft.find(a => a.name.includes('737')) ||
+                             availableAircraft.find(a => a.name.includes('767')) ||
+                             availableAircraft[availableAircraft.length - 1];
+        } else {
+            // Modern era - use 737-300 as default
+            startingAircraft = availableAircraft.find(a => a.name.includes('737-300')) ||
+                             availableAircraft[availableAircraft.length - 1];
+        }
+
         for (let i = 0; i < CONFIG.STARTING_AIRCRAFT_COUNT; i++) {
             this.fleet.push({
                 id: i + 1,
-                type: aircraftTypes[2], // Boeing 737-300
-                name: `Phoenix ${i + 1}`,
+                type: startingAircraft,
+                name: `${this.playerAirline.split(' ')[0]} ${i + 1}`,
                 assigned_route: null,
                 owned: true,
                 age: 0

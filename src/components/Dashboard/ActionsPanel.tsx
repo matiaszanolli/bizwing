@@ -13,11 +13,12 @@ import { PreQuarterReviewModal } from '../Modals/PreQuarterReviewModal';
 import { PostQuarterResultsModal } from '../Modals/PostQuarterResultsModal';
 import { HelpModal } from '../Modals/HelpModal';
 import { FirstTimeTutorialModal } from '../Modals/FirstTimeTutorialModal';
-import { CONFIG } from '../../utils/config';
+import { NewGameSetupModal } from '../Modals/NewGameSetupModal';
+import { CONFIG, DifficultyLevel, DIFFICULTY } from '../../utils/config';
 import { formatMoney } from '../../utils/helpers';
 
 export function ActionsPanel() {
-    const { engine, state, forceUpdate } = useGame();
+    const { engine, state, forceUpdate, startNewGame } = useGame();
     const [showBuyAircraft, setShowBuyAircraft] = useState(false);
     const [showCreateRoute, setShowCreateRoute] = useState(false);
     const [showBuyAirport, setShowBuyAirport] = useState(false);
@@ -30,11 +31,12 @@ export function ActionsPanel() {
     const [quarterResults, setQuarterResults] = useState({ revenue: 0, expenses: 0, profit: 0 });
     const [showHelp, setShowHelp] = useState(false);
     const [showFirstTimeTutorial, setShowFirstTimeTutorial] = useState(false);
+    const [showNewGameSetup, setShowNewGameSetup] = useState(false);
 
     // Check if this is the first time playing
     React.useEffect(() => {
         const tutorialCompleted = localStorage.getItem('bizwing_tutorial_completed');
-        if (!tutorialCompleted && state.quarter === 1 && state.year === 1992) {
+        if (!tutorialCompleted && state.quarter === 1 && state.year === CONFIG.STARTING_YEAR) {
             // Show tutorial on first load
             const timer = setTimeout(() => {
                 setShowFirstTimeTutorial(true);
@@ -42,6 +44,22 @@ export function ActionsPanel() {
             return () => clearTimeout(timer);
         }
     }, []);
+
+    const handleNewGame = (startYear: number, difficulty: DifficultyLevel, airlineName: string) => {
+        if (confirm('Start a new game? Your current progress will be lost.')) {
+            const difficultySettings = DIFFICULTY[difficulty];
+            startNewGame(startYear, difficultySettings.startingCash, airlineName);
+            setShowNewGameSetup(false);
+
+            // Clear tutorial flag to show it again
+            localStorage.removeItem('bizwing_tutorial_completed');
+
+            // Show tutorial after a short delay
+            setTimeout(() => {
+                setShowFirstTimeTutorial(true);
+            }, 500);
+        }
+    };
 
     const handleAdvanceTurnClick = () => {
         // Show pre-quarter review first
@@ -118,6 +136,9 @@ export function ActionsPanel() {
                 </div>
 
                 <div className="button-group save-load-group">
+                    <button className="btn-secondary" onClick={() => setShowNewGameSetup(true)}>
+                        New Game
+                    </button>
                     <button className="btn-secondary" onClick={() => setShowSave(true)}>
                         Save Game
                     </button>
@@ -183,6 +204,11 @@ export function ActionsPanel() {
             <FirstTimeTutorialModal
                 isOpen={showFirstTimeTutorial}
                 onClose={() => setShowFirstTimeTutorial(false)}
+            />
+            <NewGameSetupModal
+                isOpen={showNewGameSetup}
+                onConfirm={handleNewGame}
+                onCancel={() => setShowNewGameSetup(false)}
             />
         </>
     );

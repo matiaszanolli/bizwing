@@ -11,6 +11,7 @@ interface GameContextType {
     forceUpdate: () => void;
     saveGame: (slotId?: number) => boolean;
     loadGame: (slotId: number) => boolean;
+    startNewGame: (startYear: number, startingCash: number, airlineName: string) => void;
 }
 
 const GameContext = createContext<GameContextType | null>(null);
@@ -61,6 +62,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         return false;
     }, [engine, forceUpdate]);
 
+    // Start new game with custom settings
+    const startNewGame = useCallback((startYear: number, startingCash: number, airlineName: string) => {
+        // Clear auto-save
+        SaveManager.clearAutoSave();
+        // Initialize new game with custom settings
+        engine.initialize(startYear, startingCash, airlineName);
+        forceUpdate();
+        console.log(`[GameProvider] New game started: ${startYear}, ${airlineName}`);
+    }, [engine, forceUpdate]);
+
     // Auto-save on state changes (debounced)
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -74,7 +85,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         state: engine.state,
         forceUpdate,
         saveGame,
-        loadGame
+        loadGame,
+        startNewGame
     };
 
     return (
