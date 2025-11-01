@@ -4,11 +4,15 @@ import React, { useState } from 'react';
 import { useGame } from '../../contexts/GameContext';
 import { BuyAircraftModal } from '../Modals/BuyAircraftModal';
 import { CreateRouteModal } from '../Modals/CreateRouteModal';
+import { BuyAirportSlotModal } from '../Modals/BuyAirportSlotModal';
+import { TakeLoanModal } from '../Modals/TakeLoanModal';
 
 export function ActionsPanel() {
     const { engine, forceUpdate } = useGame();
     const [showBuyAircraft, setShowBuyAircraft] = useState(false);
     const [showCreateRoute, setShowCreateRoute] = useState(false);
+    const [showBuyAirport, setShowBuyAirport] = useState(false);
+    const [showTakeLoan, setShowTakeLoan] = useState(false);
 
     const handleAdvanceTurn = () => {
         const result = engine.advanceTurn();
@@ -35,7 +39,10 @@ export function ActionsPanel() {
                     <button className="btn-secondary" onClick={() => setShowCreateRoute(true)}>
                         Create Route
                     </button>
-                    <button className="btn-secondary" disabled>
+                    <button className="btn-secondary" onClick={() => setShowBuyAirport(true)}>
+                        Buy Airport Slot
+                    </button>
+                    <button className="btn-secondary" onClick={() => setShowTakeLoan(true)}>
                         Take Loan
                     </button>
                 </div>
@@ -51,6 +58,14 @@ export function ActionsPanel() {
             <CreateRouteModal
                 isOpen={showCreateRoute}
                 onClose={() => setShowCreateRoute(false)}
+            />
+            <BuyAirportSlotModal
+                isOpen={showBuyAirport}
+                onClose={() => setShowBuyAirport(false)}
+            />
+            <TakeLoanModal
+                isOpen={showTakeLoan}
+                onClose={() => setShowTakeLoan(false)}
             />
         </>
     );
