@@ -74,40 +74,109 @@ export function FleetPanel() {
                         const maintenanceMultiplier = engine.getMaintenanceMultiplier(ageYears);
                         const fuelEfficiency = engine.getFuelEfficiencyMultiplier(ageYears);
 
+                        // Calculate condition percentage for progress bar
+                        const maxAge = 100; // Maximum practical age in years
+                        const conditionPercentage = Math.max(0, Math.min(100, ((maxAge - ageYears) / maxAge) * 100));
+
+                        // Get aircraft type icon
+                        const getAircraftIcon = (typeName: string): string => {
+                            if (typeName.includes('Regional')) return '🛩';
+                            if (typeName.includes('Narrow')) return '✈';
+                            if (typeName.includes('Wide')) return '🛫';
+                            if (typeName.includes('Super')) return '🛬';
+                            return '✈';
+                        };
+
                         return (
-                            <div key={aircraft.id} className="fleet-item">
-                                <strong>{aircraft.name}</strong>
-                                <div>{aircraft.type.name}</div>
-                                <div className="fleet-details">
-                                    {aircraft.owned ? 'Owned' : 'Leased'} •
-                                    Age: {ageYears}y ({aircraft.age}Q) •
-                                    {aircraft.assigned_route ? ' In use' : ' Available'}
+                            <div key={aircraft.id} className={`aircraft-card ${!isAvailable ? 'in-use' : ''} ${aircraft.owned ? 'owned' : 'leased'}`}>
+                                {/* Aircraft Header */}
+                                <div className="aircraft-card-header">
+                                    <div className="aircraft-icon-section">
+                                        <span className="aircraft-icon">{getAircraftIcon(aircraft.type.name)}</span>
+                                        <div className="aircraft-title-section">
+                                            <div className="aircraft-name">{aircraft.name}</div>
+                                            <div className="aircraft-type">{aircraft.type.name}</div>
+                                        </div>
+                                    </div>
+                                    <div className="aircraft-status-badges">
+                                        {aircraft.owned ? (
+                                            <span className="ownership-badge owned">OWNED</span>
+                                        ) : (
+                                            <span className="ownership-badge leased">LEASED</span>
+                                        )}
+                                        {!isAvailable && (
+                                            <span className="status-badge active">ACTIVE</span>
+                                        )}
+                                    </div>
                                 </div>
-                                <div className="fleet-condition">
-                                    <span style={{ color: conditionInfo.color }}>
-                                        {conditionInfo.icon} {conditionInfo.condition}
-                                    </span>
-                                    {ageYears > 0 && (
-                                        <span className="condition-details">
-                                            {' '}• Maint: {((maintenanceMultiplier - 1) * 100).toFixed(0)}% • Fuel: +{((fuelEfficiency - 1) * 100).toFixed(0)}%
+
+                                {/* Condition Bar */}
+                                <div className="condition-bar-container">
+                                    <div className="condition-bar-header">
+                                        <span className="condition-label">CONDITION</span>
+                                        <span className="condition-value" style={{ color: conditionInfo.color }}>
+                                            {conditionInfo.icon} {conditionInfo.condition}
                                         </span>
+                                    </div>
+                                    <div className="condition-bar-background">
+                                        <div
+                                            className={`condition-bar ${conditionInfo.condition.toLowerCase()}`}
+                                            style={{ width: `${conditionPercentage}%` }}
+                                        >
+                                            <div className="condition-bar-shine"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Aircraft Stats Grid */}
+                                <div className="aircraft-stats-grid">
+                                    <div className="aircraft-stat">
+                                        <span className="stat-label">Age</span>
+                                        <span className="stat-value">{ageYears} years</span>
+                                        <span className="stat-subvalue">{aircraft.age} quarters</span>
+                                    </div>
+                                    {aircraft.assigned_route && (
+                                        <div className="aircraft-stat">
+                                            <span className="stat-label">Route</span>
+                                            <span className="stat-value">
+                                                {aircraft.assigned_route.from} → {aircraft.assigned_route.to}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {ageYears > 0 && (
+                                        <>
+                                            <div className="aircraft-stat">
+                                                <span className="stat-label">Maintenance</span>
+                                                <span className="stat-value degraded">
+                                                    +{((maintenanceMultiplier - 1) * 100).toFixed(0)}%
+                                                </span>
+                                            </div>
+                                            <div className="aircraft-stat">
+                                                <span className="stat-label">Fuel Cost</span>
+                                                <span className="stat-value degraded">
+                                                    +{((fuelEfficiency - 1) * 100).toFixed(0)}%
+                                                </span>
+                                            </div>
+                                        </>
                                     )}
                                 </div>
+
+                                {/* Aircraft Actions */}
                                 {isAvailable && (
-                                    <div className="fleet-actions">
+                                    <div className="aircraft-card-actions">
                                         {aircraft.owned ? (
                                             <button
-                                                className="btn-small btn-secondary"
+                                                className="btn-small btn-warning"
                                                 onClick={() => setAircraftToRemove({ aircraft, type: 'sell' })}
                                             >
-                                                Sell (${formatMoney(resaleValue)})
+                                                💰 Sell ${formatMoney(resaleValue)}
                                             </button>
                                         ) : (
                                             <button
                                                 className="btn-small btn-secondary"
                                                 onClick={() => setAircraftToRemove({ aircraft, type: 'return' })}
                                             >
-                                                Return Lease
+                                                ↩ Return Lease
                                             </button>
                                         )}
                                     </div>

@@ -17,7 +17,6 @@ export function Dashboard() {
                 <aside className="left-panel">
                     <FleetPanel />
                     <RoutesPanel />
-                    <ActionsPanel />
                 </aside>
                 <section className="center-panel">
                     <Globe3D />
@@ -25,6 +24,7 @@ export function Dashboard() {
                 <aside className="right-panel">
                     <FinancialPanel />
                     <NewsPanel />
+                    <ActionsPanel />
                 </aside>
             </main>
         </div>
