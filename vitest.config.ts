@@ -26,5 +26,9 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, './src'),
         },
+        conditions: ['development', 'browser'],
+    },
+    define: {
+        'process.env.NODE_ENV': '"test"',
     },
 });
