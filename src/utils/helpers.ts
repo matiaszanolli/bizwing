@@ -7,11 +7,11 @@ export function formatMoney(amount: number): string {
     return Math.floor(amount).toLocaleString();
 }
 
-// Calculate distance between two points (airports)
-export function calculateDistance(from: Airport, to: Airport): number {
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
-    return Math.floor(Math.sqrt(dx * dx + dy * dy) * 10);
+// Calculate distance between two points
+export function calculateDistance(x1: number, y1: number, x2: number, y2: number): number {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    return Math.sqrt(dx * dx + dy * dy);
 }
 
 // Deep clone an object

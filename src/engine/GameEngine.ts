@@ -26,8 +26,8 @@ interface TurnResult {
 export class GameEngine {
     state: GameState;
 
-    constructor() {
-        this.state = new GameState();
+    constructor(state?: GameState) {
+        this.state = state || new GameState();
     }
 
     // Initialize new game
@@ -78,24 +78,37 @@ export class GameEngine {
 
     // === AIRCRAFT MANAGEMENT ===
 
-    buyAircraft(planeType: AircraftType): boolean {
-        if (this.state.canAfford(planeType.price)) {
-            this.state.cash -= planeType.price;
-            const newId = generateId();
-            this.state.fleet.push({
-                id: newId,
-                type: planeType,
-                name: `Phoenix ${newId}`,
-                assigned_route: null,
-                owned: true,
-                age: 0
-            });
-            this.state.addNews(`Purchased ${planeType.name} for $${formatMoney(planeType.price)}`);
-            return true;
-        } else {
+    buyAircraft(planeType: AircraftType, owned: boolean = true, customName?: string): { success: boolean; error?: string } {
+        // If buying (owned), check if player can afford it
+        if (owned && !this.state.canAfford(planeType.price)) {
             this.state.addNews('Insufficient funds to purchase aircraft!');
-            return false;
+            return { success: false, error: 'Insufficient funds' };
         }
+
+        // Deduct cost for owned aircraft
+        if (owned) {
+            this.state.cash -= planeType.price;
+        }
+
+        const newId = generateId();
+        const aircraftName = customName || `Phoenix ${newId}`;
+
+        this.state.fleet.push({
+            id: newId,
+            type: planeType,
+            name: aircraftName,
+            assigned_route: null,
+            owned: owned,
+            age: 0
+        });
+
+        if (owned) {
+            this.state.addNews(`Purchased ${planeType.name} for $${formatMoney(planeType.price)}`);
+        } else {
+            this.state.addNews(`Leased ${planeType.name} for $${formatMoney(planeType.lease_per_quarter)}/quarter`);
+        }
+
+        return { success: true };
     }
 
     leaseAircraft(planeType: AircraftType): boolean {
@@ -211,7 +224,7 @@ export class GameEngine {
         }
 
         // Check range
-        const distance = calculateDistance(from, to);
+        const distance = Math.floor(calculateDistance(from.x, from.y, to.x, to.y) * 10);
         if (distance > aircraft.type.range) {
             return {
                 success: false,
@@ -705,7 +718,7 @@ export class GameEngine {
 
         // Check game over
         if (this.state.cash < CONFIG.BANKRUPTCY_THRESHOLD) {
-            return { gameOver: true, reason: 'bankruptcy' };
+            return { gameOver: true, victory: false, reason: 'bankruptcy' };
         }
 
         // Check for emergency loan requirement
@@ -720,7 +733,7 @@ export class GameEngine {
 
         // Check win condition
         if (this.state.year >= CONFIG.VICTORY_YEAR) {
-            return { victory: true, score: this.calculateScore() };
+            return { gameOver: true, victory: true, score: this.calculateScore() };
         }
 
         return { continue: true };
