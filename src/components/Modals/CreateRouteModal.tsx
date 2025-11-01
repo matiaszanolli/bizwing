@@ -31,7 +31,7 @@ export function CreateRouteModal({ isOpen, onClose }: Props) {
 
         if (!from || !to || !aircraft) return null;
 
-        const distance = calculateDistance(from, to);
+        const distance = calculateDistance(from.lat, from.lon, to.lat, to.lon);
         const canReach = distance <= aircraft.type.range;
 
         return {

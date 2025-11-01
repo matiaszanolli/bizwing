@@ -2388,3 +2388,52 @@ input[type="range"]::-moz-range-thumb {
     color: var(--color-dim);
     font-style: italic;
 }
+
+/* Globe tooltip */
+.globe-tooltip {
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid var(--color-primary);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--color-text-bright);
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3);
+    backdrop-filter: blur(4px);
+}
+
+.tooltip-title {
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}
+
+.tooltip-details {
+    font-size: 12px;
+    color: var(--color-text);
+    line-height: 1.4;
+}
+
+.tooltip-status {
+    margin-top: 4px;
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    font-size: 11px;
+    display: inline-block;
+}
+
+.tooltip-status.owned {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.tooltip-status.competitor {
+    background: rgba(255, 85, 0, 0.2);
+    color: #ff5500;
+    border: 1px solid rgba(255, 85, 0, 0.3);
+}

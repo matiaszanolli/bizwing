@@ -223,8 +223,8 @@ export class GameEngine {
             return { success: false, error: 'You must own slots at the destination airport!' };
         }
 
-        // Check range
-        const distance = Math.floor(calculateDistance(from.x, from.y, to.x, to.y) * 10);
+        // Check range (distance is in km from Haversine formula)
+        const distance = Math.floor(calculateDistance(from.lat, from.lon, to.lat, to.lon));
         if (distance > aircraft.type.range) {
             return {
                 success: false,
