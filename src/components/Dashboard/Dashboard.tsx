@@ -4,6 +4,7 @@ import React from 'react';
 import { Header } from '../Layout/Header';
 import { FleetPanel } from './FleetPanel';
 import { RoutesPanel } from './RoutesPanel';
+import { FinancialPanel } from './FinancialPanel';
 import { NewsPanel } from './NewsPanel';
 import { ActionsPanel } from './ActionsPanel';
 
@@ -24,6 +25,7 @@ export function Dashboard() {
                     </div>
                 </section>
                 <aside className="right-panel">
+                    <FinancialPanel />
                     <NewsPanel />
                 </aside>
             </main>

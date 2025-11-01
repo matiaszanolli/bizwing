@@ -1052,3 +1052,203 @@ body {
 .loan-warning strong {
     color: #ff0000;
 }
+
+/* Financial Panel */
+.financial-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.financial-section {
+    background: #001020;
+    border: 1px solid #004080;
+    padding: 12px;
+}
+
+.section-title {
+    color: var(--color-accent);
+    font-size: 13px;
+    margin: 0 0 10px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #004080;
+}
+
+.financial-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.financial-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 6px 8px;
+    background: #000;
+}
+
+.financial-row span:first-child {
+    color: #00cc00;
+}
+
+.financial-row.revenue-row {
+    background: #001a00;
+}
+
+.financial-row.expense-row {
+    background: #1a0000;
+}
+
+.financial-row.total-row {
+    background: #002040;
+    border: 2px solid var(--color-primary);
+    margin-top: 4px;
+    font-weight: bold;
+}
+
+.financial-row.total-row span:first-child {
+    color: var(--color-accent);
+}
+
+/* Loans List */
+.loans-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.loan-item {
+    background: #000;
+    border: 1px solid #004080;
+    padding: 10px;
+}
+
+.loan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #004080;
+}
+
+.loan-amount {
+    color: var(--color-accent);
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.loan-remaining {
+    color: var(--color-text);
+    font-size: 11px;
+}
+
+.loan-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.loan-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 10px;
+}
+
+.loan-detail span:first-child {
+    color: #00cc00;
+}
+
+.loan-detail span:last-child {
+    color: var(--color-text);
+    font-size: 11px;
+}
+
+.loan-progress {
+    height: 4px;
+    background: #002040;
+    border: 1px solid #004080;
+    position: relative;
+    overflow: hidden;
+}
+
+.loan-progress-bar {
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.3s ease;
+}
+
+/* Financial Health */
+.health-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.health-indicator {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    background: #000;
+    border: 1px solid #004080;
+}
+
+.indicator-label {
+    color: #00cc00;
+    font-size: 10px;
+}
+
+.health-indicator span:last-child {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Financial Alerts */
+.financial-alerts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.alert {
+    padding: 10px;
+    font-size: 11px;
+    line-height: 1.4;
+    border: 2px solid;
+}
+
+.alert-warning {
+    background: #201000;
+    border-color: #ff8800;
+    color: #ffcc88;
+}
+
+.alert-danger {
+    background: #400000;
+    border-color: #ff0000;
+    color: #ffaaaa;
+    font-weight: bold;
+}
+
+.alert-success {
+    background: #001a00;
+    border-color: var(--color-primary);
+    color: #88ff88;
+}
+
+/* Color utilities */
+.positive {
+    color: var(--color-primary);
+}
+
+.negative {
+    color: #ff4444;
+}
+
+.warning {
+    color: #ff8800;
+}
