@@ -10,8 +10,9 @@ import { airports } from '../../data/airports';
 import { Airport } from '../../data/airports';
 import { Route } from '../../models/types';
 import { formatMoney } from '../../utils/helpers';
+import { AirportDetailsModal } from '../Modals/AirportDetailsModal';
 
-// Generate a simple world map texture
+// Generate a simple world map texture with continents
 function generateWorldMapTexture(): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
     const size = 2048;
@@ -19,100 +20,300 @@ function generateWorldMapTexture(): THREE.CanvasTexture {
     canvas.height = size / 2;
     const ctx = canvas.getContext('2d')!;
 
-    // Ocean background - darker for better contrast
-    ctx.fillStyle = '#082818';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Fill with ocean color - dark blue-green
+    ctx.fillStyle = '#0a2820';
+    ctx.fillRect(0, 0, size, size / 2);
 
-    // Simplified continent shapes with better positioning
-    // Using equirectangular projection coordinates
-    ctx.fillStyle = '#2a6d3f';
+    // Land color - earth green
+    ctx.fillStyle = '#2d5a3f';
 
-    // Americas (left side of map)
+    // Helper to convert lat/lon to pixel coordinates (equirectangular projection)
+    const toPixel = (lon: number, lat: number): [number, number] => {
+        const x = ((lon + 180) / 360) * size;
+        const y = ((90 - lat) / 180) * (size / 2);
+        return [x, y];
+    };
+
+    // Draw continents with more detailed outlines
     // North America
     ctx.beginPath();
-    ctx.ellipse(400, 300, 200, 220, 0.3, 0, Math.PI * 2);
+    ctx.moveTo(...toPixel(-169, 65));
+    ctx.lineTo(...toPixel(-168, 68));
+    ctx.lineTo(...toPixel(-165, 70));
+    ctx.lineTo(...toPixel(-156, 71));
+    ctx.lineTo(...toPixel(-141, 70));
+    ctx.lineTo(...toPixel(-130, 69));
+    ctx.lineTo(...toPixel(-95, 69));
+    ctx.lineTo(...toPixel(-80, 68));
+    ctx.lineTo(...toPixel(-70, 67));
+    ctx.lineTo(...toPixel(-60, 65));
+    ctx.lineTo(...toPixel(-55, 62));
+    ctx.lineTo(...toPixel(-52, 58));
+    ctx.lineTo(...toPixel(-52, 50));
+    ctx.lineTo(...toPixel(-55, 48));
+    ctx.lineTo(...toPixel(-60, 46));
+    ctx.lineTo(...toPixel(-63, 44));
+    ctx.lineTo(...toPixel(-65, 42));
+    ctx.lineTo(...toPixel(-75, 36));
+    ctx.lineTo(...toPixel(-80, 30));
+    ctx.lineTo(...toPixel(-81, 26));
+    ctx.lineTo(...toPixel(-81, 22));
+    ctx.lineTo(...toPixel(-83, 18));
+    ctx.lineTo(...toPixel(-87, 16));
+    ctx.lineTo(...toPixel(-92, 15));
+    ctx.lineTo(...toPixel(-97, 16));
+    ctx.lineTo(...toPixel(-105, 17));
+    ctx.lineTo(...toPixel(-110, 16));
+    ctx.lineTo(...toPixel(-115, 16));
+    ctx.lineTo(...toPixel(-118, 17));
+    ctx.lineTo(...toPixel(-122, 20));
+    ctx.lineTo(...toPixel(-125, 25));
+    ctx.lineTo(...toPixel(-130, 32));
+    ctx.lineTo(...toPixel(-132, 40));
+    ctx.lineTo(...toPixel(-135, 48));
+    ctx.lineTo(...toPixel(-140, 54));
+    ctx.lineTo(...toPixel(-145, 58));
+    ctx.lineTo(...toPixel(-155, 60));
+    ctx.lineTo(...toPixel(-162, 62));
+    ctx.lineTo(...toPixel(-169, 65));
+    ctx.closePath();
     ctx.fill();
 
     // South America
     ctx.beginPath();
-    ctx.ellipse(500, 650, 100, 200, 0.2, 0, Math.PI * 2);
+    ctx.moveTo(...toPixel(-81, 12));
+    ctx.lineTo(...toPixel(-78, 10));
+    ctx.lineTo(...toPixel(-73, 7));
+    ctx.lineTo(...toPixel(-68, 2));
+    ctx.lineTo(...toPixel(-62, 0));
+    ctx.lineTo(...toPixel(-57, -2));
+    ctx.lineTo(...toPixel(-48, -2));
+    ctx.lineTo(...toPixel(-42, -1));
+    ctx.lineTo(...toPixel(-38, 0));
+    ctx.lineTo(...toPixel(-35, 2));
+    ctx.lineTo(...toPixel(-35, 5));
+    ctx.lineTo(...toPixel(-35, -5));
+    ctx.lineTo(...toPixel(-36, -12));
+    ctx.lineTo(...toPixel(-38, -18));
+    ctx.lineTo(...toPixel(-42, -24));
+    ctx.lineTo(...toPixel(-46, -28));
+    ctx.lineTo(...toPixel(-50, -32));
+    ctx.lineTo(...toPixel(-54, -38));
+    ctx.lineTo(...toPixel(-58, -44));
+    ctx.lineTo(...toPixel(-62, -50));
+    ctx.lineTo(...toPixel(-66, -54));
+    ctx.lineTo(...toPixel(-70, -55));
+    ctx.lineTo(...toPixel(-73, -54));
+    ctx.lineTo(...toPixel(-74, -50));
+    ctx.lineTo(...toPixel(-75, -45));
+    ctx.lineTo(...toPixel(-76, -38));
+    ctx.lineTo(...toPixel(-77, -30));
+    ctx.lineTo(...toPixel(-78, -22));
+    ctx.lineTo(...toPixel(-79, -16));
+    ctx.lineTo(...toPixel(-81, 12));
+    ctx.closePath();
     ctx.fill();
 
-    // Central America connector
-    ctx.fillRect(380, 450, 80, 100);
-
-    // Europe (center-left)
+    // Europe
     ctx.beginPath();
-    ctx.ellipse(1050, 280, 140, 100, -0.2, 0, Math.PI * 2);
+    ctx.moveTo(...toPixel(-10, 70));
+    ctx.lineTo(...toPixel(-5, 71));
+    ctx.lineTo(...toPixel(0, 70));
+    ctx.lineTo(...toPixel(5, 69));
+    ctx.lineTo(...toPixel(10, 68));
+    ctx.lineTo(...toPixel(15, 66));
+    ctx.lineTo(...toPixel(20, 64));
+    ctx.lineTo(...toPixel(25, 62));
+    ctx.lineTo(...toPixel(30, 60));
+    ctx.lineTo(...toPixel(35, 58));
+    ctx.lineTo(...toPixel(38, 56));
+    ctx.lineTo(...toPixel(40, 54));
+    ctx.lineTo(...toPixel(42, 50));
+    ctx.lineTo(...toPixel(40, 47));
+    ctx.lineTo(...toPixel(37, 45));
+    ctx.lineTo(...toPixel(32, 43));
+    ctx.lineTo(...toPixel(25, 42));
+    ctx.lineTo(...toPixel(18, 41));
+    ctx.lineTo(...toPixel(12, 40));
+    ctx.lineTo(...toPixel(6, 39));
+    ctx.lineTo(...toPixel(0, 38));
+    ctx.lineTo(...toPixel(-5, 37));
+    ctx.lineTo(...toPixel(-9, 36));
+    ctx.lineTo(...toPixel(-10, 40));
+    ctx.lineTo(...toPixel(-10, 50));
+    ctx.lineTo(...toPixel(-10, 60));
+    ctx.lineTo(...toPixel(-10, 70));
+    ctx.closePath();
     ctx.fill();
 
-    // Africa (center)
+    // Africa
     ctx.beginPath();
-    ctx.ellipse(1100, 520, 160, 220, 0, 0, Math.PI * 2);
+    ctx.moveTo(...toPixel(-17, 37));
+    ctx.lineTo(...toPixel(-11, 35));
+    ctx.lineTo(...toPixel(-5, 33));
+    ctx.lineTo(...toPixel(0, 31));
+    ctx.lineTo(...toPixel(8, 31));
+    ctx.lineTo(...toPixel(15, 30));
+    ctx.lineTo(...toPixel(25, 30));
+    ctx.lineTo(...toPixel(32, 31));
+    ctx.lineTo(...toPixel(38, 31));
+    ctx.lineTo(...toPixel(43, 30));
+    ctx.lineTo(...toPixel(48, 28));
+    ctx.lineTo(...toPixel(51, 25));
+    ctx.lineTo(...toPixel(51, 20));
+    ctx.lineTo(...toPixel(50, 15));
+    ctx.lineTo(...toPixel(48, 10));
+    ctx.lineTo(...toPixel(48, 5));
+    ctx.lineTo(...toPixel(48, 0));
+    ctx.lineTo(...toPixel(48, -5));
+    ctx.lineTo(...toPixel(48, -10));
+    ctx.lineTo(...toPixel(48, -15));
+    ctx.lineTo(...toPixel(47, -20));
+    ctx.lineTo(...toPixel(45, -25));
+    ctx.lineTo(...toPixel(42, -29));
+    ctx.lineTo(...toPixel(38, -32));
+    ctx.lineTo(...toPixel(33, -34));
+    ctx.lineTo(...toPixel(26, -35));
+    ctx.lineTo(...toPixel(20, -34));
+    ctx.lineTo(...toPixel(16, -30));
+    ctx.lineTo(...toPixel(14, -25));
+    ctx.lineTo(...toPixel(12, -18));
+    ctx.lineTo(...toPixel(10, -10));
+    ctx.lineTo(...toPixel(7, -2));
+    ctx.lineTo(...toPixel(3, 5));
+    ctx.lineTo(...toPixel(-2, 10));
+    ctx.lineTo(...toPixel(-8, 15));
+    ctx.lineTo(...toPixel(-12, 20));
+    ctx.lineTo(...toPixel(-15, 26));
+    ctx.lineTo(...toPixel(-17, 32));
+    ctx.lineTo(...toPixel(-17, 37));
+    ctx.closePath();
     ctx.fill();
 
-    // Asia (right-center) - largest landmass
+    // Asia (large continent)
     ctx.beginPath();
-    ctx.ellipse(1500, 300, 300, 220, 0, 0, Math.PI * 2);
+    ctx.moveTo(...toPixel(26, 77));
+    ctx.lineTo(...toPixel(40, 76));
+    ctx.lineTo(...toPixel(60, 76));
+    ctx.lineTo(...toPixel(80, 74));
+    ctx.lineTo(...toPixel(100, 71));
+    ctx.lineTo(...toPixel(120, 68));
+    ctx.lineTo(...toPixel(140, 66));
+    ctx.lineTo(...toPixel(160, 67));
+    ctx.lineTo(...toPixel(170, 68));
+    ctx.lineTo(...toPixel(178, 70));
+    ctx.lineTo(...toPixel(180, 68));
+    ctx.lineTo(...toPixel(175, 62));
+    ctx.lineTo(...toPixel(170, 58));
+    ctx.lineTo(...toPixel(165, 54));
+    ctx.lineTo(...toPixel(158, 50));
+    ctx.lineTo(...toPixel(150, 47));
+    ctx.lineTo(...toPixel(142, 45));
+    ctx.lineTo(...toPixel(135, 42));
+    ctx.lineTo(...toPixel(128, 38));
+    ctx.lineTo(...toPixel(122, 33));
+    ctx.lineTo(...toPixel(118, 28));
+    ctx.lineTo(...toPixel(115, 22));
+    ctx.lineTo(...toPixel(112, 16));
+    ctx.lineTo(...toPixel(108, 10));
+    ctx.lineTo(...toPixel(104, 6));
+    ctx.lineTo(...toPixel(98, 5));
+    ctx.lineTo(...toPixel(92, 5));
+    ctx.lineTo(...toPixel(85, 6));
+    ctx.lineTo(...toPixel(78, 8));
+    ctx.lineTo(...toPixel(70, 10));
+    ctx.lineTo(...toPixel(62, 12));
+    ctx.lineTo(...toPixel(55, 13));
+    ctx.lineTo(...toPixel(48, 14));
+    ctx.lineTo(...toPixel(43, 18));
+    ctx.lineTo(...toPixel(40, 25));
+    ctx.lineTo(...toPixel(38, 32));
+    ctx.lineTo(...toPixel(36, 40));
+    ctx.lineTo(...toPixel(33, 48));
+    ctx.lineTo(...toPixel(30, 58));
+    ctx.lineTo(...toPixel(28, 68));
+    ctx.lineTo(...toPixel(26, 77));
+    ctx.closePath();
     ctx.fill();
 
-    // Australia (right-lower)
+    // Southeast Asia & Indonesia
     ctx.beginPath();
-    ctx.ellipse(1650, 720, 120, 90, 0, 0, Math.PI * 2);
+    ctx.moveTo(...toPixel(95, 28));
+    ctx.lineTo(...toPixel(100, 26));
+    ctx.lineTo(...toPixel(105, 24));
+    ctx.lineTo(...toPixel(110, 22));
+    ctx.lineTo(...toPixel(115, 20));
+    ctx.lineTo(...toPixel(122, 18));
+    ctx.lineTo(...toPixel(128, 16));
+    ctx.lineTo(...toPixel(135, 15));
+    ctx.lineTo(...toPixel(140, 16));
+    ctx.lineTo(...toPixel(142, 10));
+    ctx.lineTo(...toPixel(140, 5));
+    ctx.lineTo(...toPixel(135, 0));
+    ctx.lineTo(...toPixel(130, -3));
+    ctx.lineTo(...toPixel(123, -5));
+    ctx.lineTo(...toPixel(115, -6));
+    ctx.lineTo(...toPixel(108, -5));
+    ctx.lineTo(...toPixel(102, -3));
+    ctx.lineTo(...toPixel(98, 0));
+    ctx.lineTo(...toPixel(95, 5));
+    ctx.lineTo(...toPixel(93, 12));
+    ctx.lineTo(...toPixel(92, 20));
+    ctx.lineTo(...toPixel(95, 28));
+    ctx.closePath();
     ctx.fill();
 
-    // Greenland
+    // Australia
     ctx.beginPath();
-    ctx.ellipse(650, 180, 60, 80, 0.3, 0, Math.PI * 2);
+    ctx.moveTo(...toPixel(113, -10));
+    ctx.lineTo(...toPixel(118, -11));
+    ctx.lineTo(...toPixel(125, -12));
+    ctx.lineTo(...toPixel(132, -14));
+    ctx.lineTo(...toPixel(138, -16));
+    ctx.lineTo(...toPixel(144, -18));
+    ctx.lineTo(...toPixel(149, -20));
+    ctx.lineTo(...toPixel(153, -23));
+    ctx.lineTo(...toPixel(154, -28));
+    ctx.lineTo(...toPixel(153, -33));
+    ctx.lineTo(...toPixel(151, -37));
+    ctx.lineTo(...toPixel(148, -40));
+    ctx.lineTo(...toPixel(144, -42));
+    ctx.lineTo(...toPixel(138, -43));
+    ctx.lineTo(...toPixel(132, -43));
+    ctx.lineTo(...toPixel(125, -42));
+    ctx.lineTo(...toPixel(119, -40));
+    ctx.lineTo(...toPixel(115, -37));
+    ctx.lineTo(...toPixel(113, -32));
+    ctx.lineTo(...toPixel(113, -26));
+    ctx.lineTo(...toPixel(113, -18));
+    ctx.lineTo(...toPixel(113, -10));
+    ctx.closePath();
     ctx.fill();
 
-    // Antarctica (bottom strip)
-    ctx.fillRect(0, 920, canvas.width, 104);
+    // Antarctica - bottom strip
+    ctx.fillRect(0, toPixel(0, -60)[1], size, (size / 2) - toPixel(0, -60)[1]);
 
-    // Add terrain variation with lighter green
-    ctx.fillStyle = '#3a8d5f';
+    // Add lighter terrain highlights for depth
+    ctx.fillStyle = '#3d7a5f';
     ctx.globalAlpha = 0.4;
 
-    // Mountain/terrain details on major landmasses
-    const terrainSpots = [
-        // North America mountains
-        [350, 280], [420, 300], [450, 320],
-        // South America Andes
-        [480, 600], [490, 650], [500, 700],
-        // European Alps
-        [1050, 300], [1080, 290],
-        // African highlands
-        [1100, 480], [1120, 550],
-        // Asian mountains
-        [1450, 280], [1500, 270], [1550, 290], [1600, 300],
-        // Australian interior
-        [1650, 720]
-    ];
-
-    terrainSpots.forEach(([x, y]) => {
-        const radius = 20 + Math.random() * 30;
+    // Random mountain/terrain highlights
+    for (let i = 0; i < 40; i++) {
+        const x = Math.random() * size;
+        const y = Math.random() * (size / 2);
+        const radius = 15 + Math.random() * 40;
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, Math.PI * 2);
         ctx.fill();
-    });
-
-    ctx.globalAlpha = 1.0;
-
-    // Add coastline highlights
-    ctx.strokeStyle = '#4aad7f';
-    ctx.lineWidth = 2;
-    ctx.globalAlpha = 0.3;
-
-    // Draw subtle outlines on continents
-    ctx.strokeRect(200, 200, 400, 400); // Americas rough outline
-    ctx.strokeRect(900, 200, 400, 400); // Europe-Africa outline
-    ctx.strokeRect(1200, 200, 600, 400); // Asia outline
+    }
 
     ctx.globalAlpha = 1.0;
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.needsUpdate = true;
+
     return texture;
 }
 
@@ -402,29 +603,25 @@ const AtmosphereMaterial = () => {
     );
 };
 
-function GlobeScene() {
+interface GlobeSceneProps {
+    onSelectAirport: (airport: Airport | null) => void;
+}
+
+function GlobeSceneWithSelection({ onSelectAirport }: GlobeSceneProps) {
     const globeRef = useRef<THREE.Mesh>(null);
     const atmosphereRef = useRef<THREE.Mesh>(null);
     const { state, engine } = useGame();
     const [hoveredAirport, setHoveredAirport] = useState<Airport | null>(null);
-    const [selectedAirport, setSelectedAirport] = useState<Airport | null>(null);
 
     // Generate world map texture once
     const worldMapTexture = useMemo(() => {
         const texture = generateWorldMapTexture();
-        // Rotate texture to align with globe coordinates
-        texture.rotation = Math.PI;
-        texture.center.set(0.5, 0.5);
         texture.needsUpdate = true;
         return texture;
     }, []);
 
-    // Auto-rotate globe slowly
+    // Pulsing atmosphere animation (removed auto-rotate to keep texture aligned with airports)
     useFrame(({ clock }) => {
-        if (globeRef.current) {
-            globeRef.current.rotation.y += 0.001;
-        }
-        // Pulsing atmosphere
         if (atmosphereRef.current) {
             const scale = 1 + Math.sin(clock.elapsedTime * 0.5) * 0.02;
             atmosphereRef.current.scale.set(scale, scale, scale);
@@ -471,7 +668,7 @@ function GlobeScene() {
     return (
         <group>
             {/* Globe sphere with world map texture */}
-            <Sphere ref={globeRef} args={[5, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
+            <Sphere ref={globeRef} args={[5, 64, 64]} rotation={[0, 0, 0]}>
                 <meshPhongMaterial
                     map={worldMapTexture}
                     emissive="#002a1a"
@@ -525,7 +722,7 @@ function GlobeScene() {
                     isCompetitor={airport.isCompetitor}
                     hasRoutes={airport.hasRoutes}
                     onHover={setHoveredAirport}
-                    onClick={setSelectedAirport}
+                    onClick={onSelectAirport}
                 />
             ))}
 
@@ -557,6 +754,9 @@ function GlobeScene() {
 }
 
 export function Globe3D() {
+    const { state } = useGame();
+    const [selectedAirport, setSelectedAirport] = useState<Airport | null>(null);
+
     return (
         <div className="globe-container">
             <Canvas
@@ -566,7 +766,7 @@ export function Globe3D() {
                     background: 'radial-gradient(circle at center, #0a1628 0%, #000000 100%)'
                 }}
             >
-                <GlobeScene />
+                <GlobeSceneWithSelection onSelectAirport={setSelectedAirport} />
                 <OrbitControls
                     enableZoom={true}
                     enablePan={false}
@@ -610,9 +810,18 @@ export function Globe3D() {
                     </div>
                 </div>
                 <div className="globe-hint">
-                    Drag to rotate • Scroll to zoom
+                    Drag to rotate • Scroll to zoom • Click airport for details
                 </div>
             </div>
+
+            {/* Airport Details Modal */}
+            {selectedAirport && (
+                <AirportDetailsModal
+                    airport={selectedAirport}
+                    gameState={state}
+                    onClose={() => setSelectedAirport(null)}
+                />
+            )}
         </div>
     );
 }

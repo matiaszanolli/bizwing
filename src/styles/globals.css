@@ -2437,3 +2437,189 @@ input[type="range"]::-moz-range-thumb {
     color: #ff5500;
     border: 1px solid rgba(255, 85, 0, 0.3);
 }
+
+/* =========================== */
+/* Airport Details Modal       */
+/* =========================== */
+
+.airport-section {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+.airport-section h3 {
+    color: var(--color-text-bright);
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-border);
+    text-shadow: 0 0 5px var(--color-text-bright);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+.info-item .label {
+    font-size: 12px;
+    color: var(--color-dim);
+    text-transform: uppercase;
+}
+
+.info-item .value {
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.info-item .value.owned {
+    color: var(--color-text-bright);
+    text-shadow: 0 0 3px var(--color-text-bright);
+}
+
+.info-item .value.competitor {
+    color: var(--color-error);
+}
+
+.info-item .value.available {
+    color: var(--color-warning);
+}
+
+.routes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.route-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.route-direction {
+    font-size: 16px;
+    color: var(--color-text-bright);
+    font-weight: bold;
+}
+
+.route-destination {
+    font-size: 14px;
+    color: var(--color-text-bright);
+    font-weight: bold;
+}
+
+.route-distance {
+    font-size: 13px;
+    color: var(--color-dim);
+}
+
+.route-aircraft {
+    font-size: 12px;
+    color: var(--color-text);
+    margin-bottom: 4px;
+    padding-left: 24px;
+}
+
+.route-stats {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--color-text);
+    padding-left: 24px;
+}
+
+.aircraft-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.aircraft-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+.aircraft-name {
+    font-size: 14px;
+    color: var(--color-text-bright);
+    font-weight: bold;
+}
+
+.aircraft-type {
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+.aircraft-age {
+    font-size: 12px;
+    color: var(--color-dim);
+}
+
+.no-activity {
+    text-align: center;
+    padding: 20px;
+    color: var(--color-dim);
+}
+
+.no-activity p {
+    margin: 6px 0;
+    font-size: 14px;
+}
+
+.purchase-info {
+    padding: 12px;
+    background: rgba(0, 170, 0, 0.05);
+    border: 1px solid var(--color-border);
+}
+
+.info-message {
+    font-size: 14px;
+    color: var(--color-text);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 12px;
+    border-top: 1px solid var(--color-border);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.close-button {
+    background: none;
+    border: 1px solid var(--color-error);
+    color: var(--color-error);
+    font-size: 24px;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    line-height: 1;
+    font-family: 'VT323', monospace;
+    transition: all 0.15s;
+}
+
+.close-button:hover {
+    background: rgba(255, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
