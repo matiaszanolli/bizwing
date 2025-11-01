@@ -3,12 +3,15 @@
 import React, { useState, useMemo } from 'react';
 import { useGame } from '../../contexts/GameContext';
 import { formatMoney } from '../../utils/helpers';
+import { ConfirmModal } from '../Modals/ConfirmModal';
+import { Route } from '../../models/types';
 
 type SortOption = 'profit' | 'revenue' | 'distance' | 'none';
 
 export function RoutesPanel() {
-    const { state, engine } = useGame();
+    const { state, engine, forceUpdate } = useGame();
     const [sortBy, setSortBy] = useState<SortOption>('none');
+    const [routeToDelete, setRouteToDelete] = useState<Route | null>(null);
 
     // Calculate route metrics and sort
     const sortedRoutes = useMemo(() => {
@@ -34,6 +37,14 @@ export function RoutesPanel() {
             }
         });
     }, [state.routes, sortBy, engine]);
+
+    const handleDeleteRoute = () => {
+        if (routeToDelete) {
+            engine.deleteRoute(routeToDelete);
+            forceUpdate();
+            setRouteToDelete(null);
+        }
+    };
 
     return (
         <div className="panel routes-panel">
@@ -93,11 +104,29 @@ export function RoutesPanel() {
                                         <span className="negative">${formatMoney(cost)}</span>
                                     </div>
                                 </div>
+                                <div className="route-actions">
+                                    <button
+                                        className="btn-small btn-danger"
+                                        onClick={() => setRouteToDelete(route)}
+                                    >
+                                        Delete Route
+                                    </button>
+                                </div>
                             </div>
                         );
                     })
                 )}
             </div>
+
+            <ConfirmModal
+                isOpen={routeToDelete !== null}
+                onClose={() => setRouteToDelete(null)}
+                onConfirm={handleDeleteRoute}
+                title="Delete Route?"
+                message={routeToDelete ? `Are you sure you want to delete the route from ${routeToDelete.from} to ${routeToDelete.to}? The aircraft ${routeToDelete.aircraft.name} will become available for assignment.` : ''}
+                confirmText="Delete Route"
+                isDestructive={true}
+            />
         </div>
     );
 }

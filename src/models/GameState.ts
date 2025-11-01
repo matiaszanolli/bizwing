@@ -33,6 +33,10 @@ export class GameState {
     fuelPrice: number;
     economicCondition: number;
 
+    // Financial health tracking
+    consecutiveLosses: number;
+    lastQuarterProfit: number;
+
     constructor() {
         this.year = CONFIG.STARTING_YEAR;
         this.quarter = CONFIG.STARTING_QUARTER;
@@ -52,6 +56,9 @@ export class GameState {
         this.advertisingBudget = 0;
         this.fuelPrice = 1.0;
         this.economicCondition = 1.0;
+
+        this.consecutiveLosses = 0;
+        this.lastQuarterProfit = 0;
     }
 
     // Initialize new game

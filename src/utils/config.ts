@@ -15,6 +15,7 @@ export const CONFIG = {
 
     // Interest rates
     LOAN_INTEREST_RATE: 0.02, // 2% per quarter
+    EMERGENCY_LOAN_INTEREST_RATE: 0.05, // 5% per quarter (harsh!)
 
     // Costs
     AIRPORT_MAINTENANCE_PER_QUARTER: 500000,
@@ -44,6 +45,9 @@ export const CONFIG = {
 
     // Win/Loss conditions
     BANKRUPTCY_THRESHOLD: -10000000,
+    LOW_CASH_WARNING_THRESHOLD: 5000000, // Warn when cash drops below $5M
+    EMERGENCY_LOAN_MIN_AMOUNT: 10000000, // Minimum $10M emergency loan
+    CONSECUTIVE_LOSSES_FOR_EMERGENCY: 2, // 2 quarters of losses triggers emergency
     VICTORY_YEAR: 2000,
 
     // Scoring

@@ -8,15 +8,19 @@ import { CreateRouteModal } from '../Modals/CreateRouteModal';
 import { BuyAirportSlotModal } from '../Modals/BuyAirportSlotModal';
 import { TakeLoanModal } from '../Modals/TakeLoanModal';
 import { SaveLoadModal } from '../Modals/SaveLoadModal';
+import { EmergencyLoanModal } from '../Modals/EmergencyLoanModal';
+import { CONFIG } from '../../utils/config';
+import { formatMoney } from '../../utils/helpers';
 
 export function ActionsPanel() {
-    const { engine, forceUpdate } = useGame();
+    const { engine, state, forceUpdate } = useGame();
     const [showBuyAircraft, setShowBuyAircraft] = useState(false);
     const [showCreateRoute, setShowCreateRoute] = useState(false);
     const [showBuyAirport, setShowBuyAirport] = useState(false);
     const [showTakeLoan, setShowTakeLoan] = useState(false);
     const [showSave, setShowSave] = useState(false);
     const [showLoad, setShowLoad] = useState(false);
+    const [showEmergencyLoan, setShowEmergencyLoan] = useState(false);
 
     const handleAdvanceTurn = () => {
         const result = engine.advanceTurn();
@@ -26,6 +30,10 @@ export function ActionsPanel() {
             alert(`Game Over! Reason: ${result.reason}`);
         } else if (result.victory) {
             alert(`Victory! Your score: ${result.score}`);
+        } else if (result.emergencyLoanRequired) {
+            setShowEmergencyLoan(true);
+        } else if (result.lowCashWarning) {
+            alert(`WARNING: Cash reserves low ($${formatMoney(state.cash)})! You posted a loss this quarter. Take action to avoid bankruptcy!`);
         }
     };
 
@@ -36,6 +44,7 @@ export function ActionsPanel() {
         setShowTakeLoan(false);
         setShowSave(false);
         setShowLoad(false);
+        // Don't close emergency loan - player must make a choice
     };
 
     // Keyboard shortcuts
@@ -105,6 +114,10 @@ export function ActionsPanel() {
                 isOpen={showLoad}
                 onClose={() => setShowLoad(false)}
                 mode="load"
+            />
+            <EmergencyLoanModal
+                isOpen={showEmergencyLoan}
+                onClose={() => setShowEmergencyLoan(false)}
             />
         </>
     );

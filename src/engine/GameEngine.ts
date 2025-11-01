@@ -19,6 +19,8 @@ interface TurnResult {
     victory?: boolean;
     score?: number;
     continue?: boolean;
+    emergencyLoanRequired?: boolean;
+    lowCashWarning?: boolean;
 }
 
 export class GameEngine {
@@ -67,6 +69,65 @@ export class GameEngine {
         });
         this.state.addNews(`Leased ${planeType.name} for $${formatMoney(planeType.lease_per_quarter)}/quarter`);
         return true;
+    }
+
+    sellAircraft(aircraftId: number): { success: boolean; error?: string; amount?: number } {
+        const aircraft = this.state.findAircraft(aircraftId);
+
+        if (!aircraft) {
+            return { success: false, error: 'Aircraft not found!' };
+        }
+
+        if (!aircraft.owned) {
+            return { success: false, error: 'Cannot sell leased aircraft! (You can only return it)' };
+        }
+
+        if (aircraft.assigned_route) {
+            return { success: false, error: 'Cannot sell aircraft assigned to a route! Remove it from the route first.' };
+        }
+
+        // Calculate resale value (depreciation based on age)
+        const baseValue = aircraft.type.price;
+        const depreciationRate = 0.10; // 10% per quarter
+        const depreciationFactor = Math.pow(1 - depreciationRate, aircraft.age);
+        const resaleValue = Math.floor(baseValue * depreciationFactor * 0.6); // Resale at 60% of depreciated value
+
+        // Remove aircraft from fleet
+        const aircraftIndex = this.state.fleet.findIndex(a => a.id === aircraftId);
+        if (aircraftIndex !== -1) {
+            this.state.fleet.splice(aircraftIndex, 1);
+        }
+
+        // Add cash from sale
+        this.state.cash += resaleValue;
+
+        this.state.addNews(`Sold ${aircraft.type.name} for $${formatMoney(resaleValue)}`);
+        return { success: true, amount: resaleValue };
+    }
+
+    returnLeasedAircraft(aircraftId: number): { success: boolean; error?: string } {
+        const aircraft = this.state.findAircraft(aircraftId);
+
+        if (!aircraft) {
+            return { success: false, error: 'Aircraft not found!' };
+        }
+
+        if (aircraft.owned) {
+            return { success: false, error: 'This aircraft is owned, not leased! Use "Sell" instead.' };
+        }
+
+        if (aircraft.assigned_route) {
+            return { success: false, error: 'Cannot return aircraft assigned to a route! Remove it from the route first.' };
+        }
+
+        // Remove aircraft from fleet
+        const aircraftIndex = this.state.fleet.findIndex(a => a.id === aircraftId);
+        if (aircraftIndex !== -1) {
+            this.state.fleet.splice(aircraftIndex, 1);
+        }
+
+        this.state.addNews(`Returned leased ${aircraft.type.name}`);
+        return { success: true };
     }
 
     // === AIRPORT MANAGEMENT ===
@@ -133,6 +194,27 @@ export class GameEngine {
         return { success: true };
     }
 
+    deleteRoute(route: Route): boolean {
+        // Find the index of the route
+        const routeIndex = this.state.routes.findIndex(r =>
+            r.from === route.from && r.to === route.to && r.aircraft.id === route.aircraft.id
+        );
+
+        if (routeIndex === -1) {
+            return false;
+        }
+
+        // Unassign aircraft
+        const aircraft = route.aircraft;
+        aircraft.assigned_route = null;
+
+        // Remove route
+        this.state.routes.splice(routeIndex, 1);
+
+        this.state.addNews(`Route closed: ${route.from} → ${route.to}`);
+        return true;
+    }
+
     // === FINANCIAL MANAGEMENT ===
 
     takeLoan(amount: number, quarters: number): boolean {
@@ -152,6 +234,28 @@ export class GameEngine {
         this.state.loans.push(loan);
         this.state.cash += amount;
         this.state.addNews(`Loan approved: $${formatMoney(amount)} over ${quarters} quarters`);
+        return true;
+    }
+
+    takeEmergencyLoan(amount: number): boolean {
+        const interestRate = CONFIG.EMERGENCY_LOAN_INTEREST_RATE;
+        const quarters = 12; // Fixed 3-year term for emergency loans
+        const quarterlyPayment = (amount * interestRate) / (1 - Math.pow(1 + interestRate, -quarters));
+        const principalPayment = amount / quarters;
+
+        const loan = {
+            original_amount: amount,
+            remaining: amount,
+            quarterly_payment: quarterlyPayment,
+            principal_payment: principalPayment,
+            quarters_remaining: quarters,
+            interest_rate: interestRate
+        };
+
+        this.state.loans.push(loan);
+        this.state.cash += amount;
+        this.state.consecutiveLosses = 0; // Reset counter after emergency loan
+        this.state.addNews(`EMERGENCY LOAN: $${formatMoney(amount)} at ${(interestRate * 100).toFixed(0)}% interest over ${quarters} quarters`);
         return true;
     }
 
@@ -375,6 +479,14 @@ export class GameEngine {
         const profit = revenue - expenses;
 
         this.state.cash += profit;
+        this.state.lastQuarterProfit = profit;
+
+        // Track consecutive losses
+        if (profit < 0) {
+            this.state.consecutiveLosses++;
+        } else {
+            this.state.consecutiveLosses = 0;
+        }
 
         // Update reputation based on performance
         if (profit > 0 && this.state.routes.length > 0) {
@@ -427,6 +539,16 @@ export class GameEngine {
         // Check game over
         if (this.state.cash < CONFIG.BANKRUPTCY_THRESHOLD) {
             return { gameOver: true, reason: 'bankruptcy' };
+        }
+
+        // Check for emergency loan requirement
+        if (this.state.consecutiveLosses >= CONFIG.CONSECUTIVE_LOSSES_FOR_EMERGENCY) {
+            return { emergencyLoanRequired: true };
+        }
+
+        // Check for low cash warning
+        if (this.state.cash < CONFIG.LOW_CASH_WARNING_THRESHOLD && profit < 0) {
+            return { lowCashWarning: true, continue: true };
         }
 
         // Check win condition
