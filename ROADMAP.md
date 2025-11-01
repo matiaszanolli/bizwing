@@ -155,6 +155,38 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
   - Yield management (overbooking)
 
 #### Hub System
+- [ ] **Hub Selection & Continental Strategy**
+  - Choose initial hub at game start (strategic decision)
+  - Hub selection modal showing airport difficulty levels
+  - **One hub per continent rule** (6 continents: North America, South America, Europe, Africa, Asia, Oceania)
+  - Continental restrictions force strategic expansion planning
+  - Hub purchase costs increase with each additional hub
+  - Visual indicators on globe showing owned hubs vs available continents
+  - **Map-based interactions**: Purchase slots, select hubs, create routes directly via globe interface
+
+- [ ] **Airport Economic Indicators**
+  - **Tourism Score (0-100)**: Affects leisure passenger demand
+  - **Business Score (0-100)**: Affects business class demand
+  - **Difficulty Rating**: Easy/Medium/Hard based on scores
+    - Easy: High tourism + high business (JFK, LHR, DXB) → High starting capital, strong demand
+    - Medium: Balanced or specialized airports → Normal starting conditions
+    - Hard: Low scores (emerging markets, smaller airports) → Lower starting capital, growth challenge
+  - Display scores in hub selection modal with visual indicators
+  - Color-coded airports by difficulty on globe
+
+- [ ] **Dynamic Economic System**
+  - **Quarterly Recalculation**: Tourism/business scores change every quarter
+  - **Seasonal Variations**: Summer tourism spikes, winter business travel patterns
+  - **Random Events**: Festivals, conferences, economic changes affect local scores
+  - **Long-term Trends**: Emerging markets grow, established markets mature
+  - **Player Impact**: Successful routes boost both tourism and business scores for connected cities
+  - **Regional Economic Factors**:
+    - GDP growth rate per region (affects demand)
+    - Political stability (affects reliability and safety perception)
+    - Fuel prices (regional variations)
+    - Exchange rates (affects international travel)
+    - Natural disasters/pandemics (temporary score crashes)
+
 - [ ] Connection Flights
   - Passengers transfer at hubs
   - Revenue bonus for connections

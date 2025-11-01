@@ -14,9 +14,11 @@ import { PostQuarterResultsModal } from '../Modals/PostQuarterResultsModal';
 import { HelpModal } from '../Modals/HelpModal';
 import { FirstTimeTutorialModal } from '../Modals/FirstTimeTutorialModal';
 import { NewGameSetupModal } from '../Modals/NewGameSetupModal';
+import { HubSelectionModal } from '../Modals/HubSelectionModal';
 import { RouteManagerModal } from '../Modals/RouteManagerModal';
 import { CONFIG, DifficultyLevel, DIFFICULTY } from '../../utils/config';
 import { formatMoney } from '../../utils/helpers';
+import { Airport } from '../../data/airports';
 
 export function ActionsPanel() {
     const { engine, state, forceUpdate, startNewGame } = useGame();
@@ -33,7 +35,9 @@ export function ActionsPanel() {
     const [showHelp, setShowHelp] = useState(false);
     const [showFirstTimeTutorial, setShowFirstTimeTutorial] = useState(false);
     const [showNewGameSetup, setShowNewGameSetup] = useState(false);
+    const [showHubSelection, setShowHubSelection] = useState(false);
     const [showRouteManager, setShowRouteManager] = useState(false);
+    const [newGameSettings, setNewGameSettings] = useState<{ startYear: number; difficulty: DifficultyLevel; airlineName: string } | null>(null);
 
     // Check if this is the first time playing
     React.useEffect(() => {
@@ -49,18 +53,50 @@ export function ActionsPanel() {
 
     const handleNewGame = (startYear: number, difficulty: DifficultyLevel, airlineName: string) => {
         if (confirm('Start a new game? Your current progress will be lost.')) {
-            const difficultySettings = DIFFICULTY[difficulty];
-            startNewGame(startYear, difficultySettings.startingCash, airlineName);
+            // Store settings and move to hub selection
+            setNewGameSettings({ startYear, difficulty, airlineName });
             setShowNewGameSetup(false);
-
-            // Clear tutorial flag to show it again
-            localStorage.removeItem('bizwing_tutorial_completed');
-
-            // Show tutorial after a short delay
-            setTimeout(() => {
-                setShowFirstTimeTutorial(true);
-            }, 500);
+            setShowHubSelection(true);
         }
+    };
+
+    const handleHubSelection = (selectedHub: Airport) => {
+        if (!newGameSettings) return;
+
+        const { startYear, difficulty, airlineName } = newGameSettings;
+        const difficultySettings = DIFFICULTY[difficulty];
+
+        // Determine starting capital based on hub difficulty
+        let startingCash = difficultySettings.startingCash;
+        if (selectedHub.difficulty === 'Easy') {
+            startingCash = 15000000; // $15M
+        } else if (selectedHub.difficulty === 'Medium') {
+            startingCash = 10000000; // $10M
+        } else {
+            startingCash = 6000000; // $6M
+        }
+
+        // Start the game
+        startNewGame(startYear, startingCash, airlineName);
+
+        // Mark the selected airport as hub and owned
+        const airport = engine.getState().airports.find(a => a.id === selectedHub.id);
+        if (airport) {
+            airport.owned = true;
+            airport.is_hub = true;
+        }
+
+        forceUpdate();
+        setShowHubSelection(false);
+        setNewGameSettings(null);
+
+        // Clear tutorial flag to show it again
+        localStorage.removeItem('bizwing_tutorial_completed');
+
+        // Show tutorial after a short delay
+        setTimeout(() => {
+            setShowFirstTimeTutorial(true);
+        }, 500);
     };
 
     const handleAdvanceTurnClick = () => {
@@ -214,6 +250,15 @@ export function ActionsPanel() {
                 isOpen={showNewGameSetup}
                 onConfirm={handleNewGame}
                 onCancel={() => setShowNewGameSetup(false)}
+            />
+            <HubSelectionModal
+                isOpen={showHubSelection}
+                onConfirm={handleHubSelection}
+                onCancel={() => {
+                    setShowHubSelection(false);
+                    setNewGameSettings(null);
+                    setShowNewGameSetup(true); // Go back to game setup
+                }}
             />
             <RouteManagerModal
                 isOpen={showRouteManager}
