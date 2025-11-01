@@ -226,3 +226,365 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #006000;
 }
+
+/* Modal System */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 128, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--color-bg-panel);
+    border: 3px solid var(--color-primary);
+    max-width: 800px;
+    max-height: 80vh;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.modal-header h2 {
+    color: var(--color-accent);
+    font-size: 18px;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-family: monospace;
+    line-height: 1;
+    padding: 0;
+}
+
+.modal-close:hover {
+    background: var(--color-button-hover);
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Buy Aircraft Modal */
+.aircraft-selection {
+    display: flex;
+    gap: 20px;
+    min-height: 400px;
+}
+
+.aircraft-list {
+    flex: 1;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid var(--color-primary);
+}
+
+.aircraft-item {
+    padding: 10px;
+    border-bottom: 1px solid #004000;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.aircraft-item:hover {
+    background: #000060;
+}
+
+.aircraft-item.selected {
+    background: #004000;
+    border-left: 3px solid var(--color-accent);
+}
+
+.aircraft-name {
+    font-weight: bold;
+    color: var(--color-accent);
+    margin-bottom: 4px;
+}
+
+.aircraft-category {
+    font-size: 11px;
+    color: #00cc00;
+    margin-bottom: 4px;
+}
+
+.aircraft-stats {
+    display: flex;
+    gap: 15px;
+    font-size: 10px;
+}
+
+.aircraft-details {
+    flex: 1;
+    border: 1px solid var(--color-primary);
+    padding: 15px;
+}
+
+.aircraft-details h3 {
+    color: var(--color-accent);
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.detail-grid {
+    margin-bottom: 20px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #004000;
+    font-size: 12px;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.price-buy {
+    color: var(--color-accent);
+    font-weight: bold;
+}
+
+.price-lease {
+    color: #00cccc;
+    font-weight: bold;
+}
+
+.aircraft-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.warning-text {
+    margin-top: 10px;
+    padding: 8px;
+    background: #400000;
+    border: 1px solid #ff0000;
+    color: #ff6666;
+    font-size: 11px;
+}
+
+/* Create Route Modal */
+.route-creation {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.route-section {
+    padding: 15px;
+    border: 1px solid var(--color-primary);
+    background: #000020;
+}
+
+.route-section h3 {
+    color: var(--color-accent);
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.airport-selectors {
+    display: flex;
+    gap: 15px;
+}
+
+.selector-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.selector-group label {
+    font-size: 12px;
+    color: var(--color-primary);
+}
+
+.airport-select {
+    background: var(--color-bg-panel);
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+}
+
+.airport-select option {
+    background: var(--color-bg-panel);
+    color: var(--color-primary);
+}
+
+/* Aircraft Grid */
+.aircraft-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.aircraft-card {
+    padding: 12px;
+    border: 2px solid #004000;
+    background: var(--color-bg-panel);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.aircraft-card:hover:not(.disabled) {
+    border-color: var(--color-primary);
+    background: #000060;
+}
+
+.aircraft-card.selected {
+    border-color: var(--color-accent);
+    background: #004000;
+}
+
+.aircraft-card.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.aircraft-card-name {
+    font-weight: bold;
+    color: var(--color-accent);
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.aircraft-card-type {
+    font-size: 11px;
+    color: #00cc00;
+    margin-bottom: 8px;
+}
+
+.aircraft-card-stats {
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.error-text {
+    color: #ff6666;
+    font-weight: bold;
+}
+
+/* Frequency Control */
+.frequency-control {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.frequency-control label {
+    font-size: 12px;
+    color: var(--color-primary);
+}
+
+.frequency-slider {
+    width: 100%;
+    height: 6px;
+    background: #004000;
+    outline: none;
+    border: 1px solid var(--color-primary);
+}
+
+.frequency-slider::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--color-accent);
+    cursor: pointer;
+    border: 2px solid var(--color-primary);
+}
+
+.frequency-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--color-accent);
+    cursor: pointer;
+    border: 2px solid var(--color-primary);
+}
+
+.frequency-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #00cc00;
+}
+
+/* Route Summary */
+.route-summary {
+    padding: 15px;
+    border: 2px solid var(--color-accent);
+    background: #001000;
+}
+
+.route-summary h3 {
+    color: var(--color-accent);
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.summary-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid #004000;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-row span:first-child {
+    color: #00cc00;
+}
+
+.summary-row span:last-child {
+    color: var(--color-accent);
+    font-weight: bold;
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.modal-actions .btn-primary,
+.modal-actions .btn-secondary {
+    flex: 1;
+}

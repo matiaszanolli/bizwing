@@ -3,6 +3,7 @@
 import React from 'react';
 import { Header } from '../Layout/Header';
 import { FleetPanel } from './FleetPanel';
+import { RoutesPanel } from './RoutesPanel';
 import { NewsPanel } from './NewsPanel';
 import { ActionsPanel } from './ActionsPanel';
 
@@ -13,6 +14,7 @@ export function Dashboard() {
             <main className="dashboard-main">
                 <aside className="left-panel">
                     <FleetPanel />
+                    <RoutesPanel />
                     <ActionsPanel />
                 </aside>
                 <section className="center-panel">

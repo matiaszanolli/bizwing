@@ -627,3 +627,497 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 **Last Updated:** October 31, 2025
 **Current Version:** v0.2.0
 **Next Milestone:** v0.3 (Polish & Playability)
+
+---
+
+### v0.8 - "Aircraft Lifecycle Management" (Target: 3-4 months)
+
+**Priority: Medium - Adds Strategic Depth**
+
+> **New Feature Category**: Manage your fleet beyond just buying and assigning aircraft. Aircraft age, break down, can be bought used, restored, or upgraded.
+
+#### Aircraft Maintenance System
+- [ ] **Scheduled Maintenance**
+  - Aircraft require maintenance every X quarters
+  - Miss maintenance = increased breakdown risk
+  - Maintenance costs scale with aircraft age
+  - Choose maintenance quality (cheap = risky, premium = extends life)
+  
+- [ ] **Breakdown Events**
+  - Random breakdowns based on age + maintenance history
+  - Aircraft grounded for 1-3 quarters
+  - Emergency repairs cost 2-3x normal maintenance
+  - Route disruption = lost revenue + reputation hit
+  
+- [ ] **Aging Mechanics**
+  - Operating costs increase 5% per year of age
+  - Passenger confidence decreases (older planes = lower load factor)
+  - After 15+ years: "vintage" status (novelty appeal OR reliability concerns)
+
+#### Airport Ground Services
+- [ ] **Service Crew Management**
+  - Hire ground crew at owned airports
+  - Crew quality affects:
+    - Turnaround time (more flights per aircraft)
+    - Maintenance quality (fewer breakdowns)
+    - Passenger satisfaction (reputation boost)
+  
+- [ ] **Ground Service Contracts**
+  - Choose between in-house crew vs outsourcing
+  - In-house = higher upfront cost, better quality, more control
+  - Outsourced = cheaper, flexible, but variable quality
+  
+- [ ] **Facility Upgrades**
+  - Upgrade hangars for better maintenance
+  - Build dedicated terminals for premium service
+  - Invest in fuel efficiency equipment
+
+#### Secondary Aircraft Market
+- [ ] **Used Aircraft Store**
+  - Buy aircraft at 30-70% discount based on age/condition
+  - Competitors sell their old fleet
+  - Inspect before buying (hidden defects possible!)
+  - "As-is" purchases = gamble on maintenance needs
+  
+- [ ] **Aircraft Condition Ratings**
+  - Excellent (90-100%): Like new, minimal maintenance
+  - Good (70-89%): Well maintained, reliable
+  - Fair (50-69%): Shows age, regular maintenance needed
+  - Poor (30-49%): High risk, cheap but expensive to maintain
+  - Critical (<30%): Should be retired or restored
+  
+- [ ] **Selling Your Fleet**
+  - Retire old aircraft and sell them
+  - Sale price based on condition rating
+  - Option to "trade in" when buying new aircraft
+
+#### Long-term Aircraft Projects
+- [ ] **Aircraft Restoration**
+  - Restore poor-condition aircraft over 2-4 quarters
+  - Gradual improvement: Critical → Poor → Fair → Good
+  - Cheaper than buying new, but requires time investment
+  - Restoration quality depends on:
+    - Money invested per quarter
+    - Maintenance crew skill level
+    - Luck (sometimes you find unexpected damage)
+  
+- [ ] **Aircraft Refurbishment/Modernization**
+  - Upgrade old aircraft with modern tech
+  - Add WiFi, entertainment systems (+passenger appeal)
+  - Engine upgrades (better fuel efficiency)
+  - Cabin reconfiguration (change capacity)
+  - Takes 1-2 quarters, aircraft unavailable during work
+  
+- [ ] **Custom Aircraft Modifications**
+  - Convert passenger aircraft to cargo (or vice versa)
+  - VIP/Executive configuration (low capacity, high prestige)
+  - Budget configuration (high capacity, low comfort)
+  - Each configuration affects operating costs and appeal
+
+#### Strategic Gameplay Impact
+
+**Resource Management Trade-offs:**
+- Buy new = expensive, reliable, no surprises
+- Buy used = cheap, risky, requires expertise
+- Restore = patient strategy, pays off long-term
+- Refurbish = modernize aging fleet without full replacement
+
+**New Strategic Decisions:**
+- When to retire vs restore aging aircraft?
+- Build maintenance expertise or outsource?
+- Buy premium maintenance to extend aircraft life?
+- Gamble on cheap used aircraft or pay for reliability?
+
+**Economic Depth:**
+- Aircraft depreciation becomes real consideration
+- Maintenance budgets = ongoing operational cost
+- Ground crew salaries = fixed costs per airport
+- Secondary market creates liquidity (can sell to raise cash)
+
+---
+
+**Success Criteria for v0.8:**
+- ✓ Players have meaningful decisions about fleet lifecycle
+- ✓ Aircraft age is not just a number, it affects gameplay
+- ✓ Used market creates opportunities for skilled players
+- ✓ Maintenance system adds realism without micromanagement
+- ✓ Ground services differentiate premium vs budget airlines
+- ✓ Long-term projects reward patient strategic planning
+
+**Balancing Notes:**
+- Don't make maintenance so punishing it's un-fun
+- Used aircraft should be risky but rewarding
+- Restoration should take real time but be worthwhile
+- Ground crew should matter but not overwhelm other decisions
+
+
+#### Realistic Aircraft Economics
+
+**Core Principle**: Aircraft are expensive capital assets. Scrapping should be a LAST resort.
+
+##### Restoration vs Disposal Decision Tree
+
+```
+Aircraft Condition Critical (<30%)
+│
+├─ Option 1: Sell "As-Is"
+│  └─ Value: 10-20% of original price
+│     (Mostly scrap value + some usable parts)
+│
+├─ Option 2: Part Out (Disassemble)
+│  └─ Value: 20-30% of original price
+│     Takes 2 quarters, airport hangar space needed
+│     Sell engines, avionics, landing gear separately
+│
+└─ Option 3: Restore ⭐ (Often Best Choice)
+   └─ Cost: 40-60% of original price over 3-4 quarters
+      Final Value: 70-80% of original (Good condition)
+      ROI: Positive! Worth more than selling as-is
+```
+
+##### Economic Realism Features
+
+- [ ] **Restoration ROI Calculator**
+  - Show projected value after restoration vs sell now
+  - Factor in: current condition, age, model demand
+  - "This aircraft is worth $8M restored vs $2M as-is - restore!"
+  
+- [ ] **Parts Market**
+  - Disassemble aircraft → get parts inventory
+  - Use parts to reduce maintenance costs on similar aircraft
+  - Sell parts to other airlines (small passive income)
+  - Example: "Engine from retired 737 can maintain your 737 fleet cheaper"
+
+- [ ] **Condition-Based Decisions**
+  - **Excellent→Good** (90-70%): Just maintain normally
+  - **Good→Fair** (70-50%): Minor overhaul (1 quarter, modest cost)
+  - **Fair→Poor** (50-30%): Major overhaul (2 quarters, significant cost)
+  - **Poor→Critical** (<30%): DECISION POINT
+    - Young aircraft (<10 years): Almost always restore
+    - Mid-age (10-20 years): Calculate ROI
+    - Old aircraft (>20 years): Consider retirement
+
+- [ ] **Aircraft Salvage Value Logic**
+  ```
+  Base Scrap Value = 10% of original price
+  + Parts Value = 15% if disassembled
+  + Collector Value = +20% if historic/rare model
+  - Age Penalty = -5% per decade
+  ```
+
+- [ ] **Restoration Success Rates**
+  - Not all restorations succeed!
+  - Success depends on:
+    - Initial condition (Poor = 90% success, Critical = 60%)
+    - Investment level (cheap restoration = risky)
+    - Maintenance crew skill
+  - Failed restoration = wasted money, aircraft unsalvageable
+  - Adds risk/reward decision-making
+
+##### Real-World Scenarios
+
+**Scenario 1: Young Aircraft Breakdown**
+- Boeing 777, 5 years old, Critical condition (accident damage)
+- Original: $160M | As-is: $15M | Restored: $120M
+- **Decision**: RESTORE (cost $80M, gain $105M value)
+
+**Scenario 2: Aging Workhorse**
+- Boeing 737, 18 years old, Poor condition
+- Original: $35M | As-is: $4M | Restored: $18M
+- **Decision**: Calculate if restoration ($20M) worth it
+  - Keep flying 5+ more years? → Restore
+  - Replacing with modern fleet? → Sell/Part out
+
+**Scenario 3: Ancient Relic**
+- MD-11, 25 years old, Critical condition
+- Original: $120M | As-is: $3M | Parts: $8M | Collector: $15M
+- **Decision**: Part out OR sell to collector/museum
+
+**Scenario 4: Parts Supply Chain**
+- Own 5x Boeing 767s, all aging
+- One suffers catastrophic failure
+- **Smart Move**: Part it out, use parts for other 4 aircraft
+  - Reduces their maintenance costs 30% for 3 years
+  - Extends fleet life without buying new
+
+##### Gameplay Impact
+
+**Strategic Considerations:**
+- Building a "restoration expertise" becomes valuable skill
+- Buying cheap critical aircraft to restore = profit opportunity
+- Parts inventory from retired aircraft = competitive advantage
+- Mixed fleet (same models) = better parts synergy
+
+**Economic Realism:**
+- Aircraft value doesn't disappear overnight
+- Maintenance history affects resale value
+- Specialist knowledge (restoration) is rewarded
+- Long-term fleet planning matters
+
+**Player Decisions:**
+- "Should I restore this cheap 777 or buy a new one?"
+- "Keep parts from retirement for my fleet or sell them?"
+- "Invest in restoration skills or just buy new aircraft?"
+- "Build relationships with parts suppliers/brokers?"
+
+---
+
+**Balancing Goal**: Make restoration a viable, realistic strategy without making it overpowered. Players should feel rewarded for smart fleet management decisions.
+
+
+---
+
+### v0.9 - "Dynamic World Events" (Target: 4-5 months)
+
+**Priority: High - Adds Unpredictability & Replayability**
+
+> **Core Concept**: The world doesn't stay static. Economic booms, natural disasters, political conflicts, and business opportunities create a living, breathing simulation that requires constant adaptation.
+
+#### Event System Architecture
+
+**Current State (v0.2):**
+- ✅ Basic random events (10 types)
+- ✅ Fuel price fluctuations
+- ✅ Economic condition multipliers
+- ❌ Events are generic and forgettable
+- ❌ No geographic specificity
+- ❌ No player agency in responding
+
+**Enhanced Event System:**
+
+##### Event Categories & Examples
+
+**1. Economic Events** 💰
+- [ ] **Regional Economic Boom**
+  - Affects: Specific continent/region
+  - Effect: +40% passenger demand in region
+  - Duration: 4-8 quarters
+  - Example: "Asian Tiger Economies boom! Demand surge in Hong Kong, Singapore, Tokyo"
+  
+- [ ] **Recession/Depression**
+  - Affects: Global or regional
+  - Effect: -35% demand, reduced ticket prices
+  - Duration: 6-12 quarters
+  - Example: "Dot-com bubble bursts! Tech sector collapse affects business travel"
+  
+- [ ] **Currency Crisis**
+  - Affects: Specific country/region
+  - Effect: Routes to/from affected areas become 50% less profitable
+  - Duration: 4 quarters
+  - Player Response: Reduce service or wait it out?
+
+**2. Natural Disasters** 🌪️
+- [ ] **Hurricanes/Typhoons**
+  - Affects: Specific airports (Caribbean, Pacific)
+  - Effect: Airport closed 1-2 quarters, routes disrupted
+  - Warning: 1 quarter advance notice
+  - Player Response: Reroute aircraft, temporary suspend service
+  
+- [ ] **Earthquakes**
+  - Affects: Seismic zones (Japan, California, Chile)
+  - Effect: Airport damaged, capacity reduced 50%
+  - Duration: 2-4 quarters for repairs
+  - Example: "Major earthquake hits Tokyo! Narita Airport operating at half capacity"
+  
+- [ ] **Volcanic Eruptions**
+  - Affects: Nearby airports + air traffic
+  - Effect: Ash cloud grounds flights in region
+  - Duration: 1-2 quarters
+  - Example: "Icelandic volcano erupts! European airspace chaos"
+  
+- [ ] **Pandemics/Health Crises**
+  - Affects: Global or regional
+  - Effect: -60% international travel, quarantine requirements
+  - Duration: 4-12 quarters (serious impact!)
+  - Player Response: Focus on cargo? Domestic routes? Survive until it passes?
+
+**3. Political/Conflict Events** ⚔️
+- [ ] **Regional Conflicts/Wars**
+  - Affects: Conflict zones + surrounding regions
+  - Effect: Airspace closed, demand destroyed
+  - Duration: Variable (2-20 quarters)
+  - Example: "Middle East conflict escalates - avoid airspace or risk it?"
+  
+- [ ] **Trade Wars/Sanctions**
+  - Affects: Specific country pairs
+  - Effect: Reduced business travel, tariffs on fuel
+  - Duration: 4-16 quarters
+  - Example: "US-China trade tensions! Corporate travel budget cuts"
+  
+- [ ] **Border Closures**
+  - Affects: Specific countries
+  - Effect: Routes banned temporarily
+  - Duration: 2-6 quarters
+  - Example: "Immigration crisis! Country X closes borders to foreign carriers"
+  
+- [ ] **Diplomatic Breakthroughs**
+  - Affects: Previously hostile regions
+  - Effect: New routes open, demand surge
+  - Duration: Permanent (new opportunity!)
+  - Example: "Cold War ends! Eastern Europe opens to Western airlines!"
+
+**4. Industry Events** ✈️
+- [ ] **Fuel Crisis (Oil Shock)**
+  - Affects: Global
+  - Effect: +50-100% fuel costs
+  - Duration: 4-8 quarters
+  - Player Response: Fuel-efficient aircraft become critical
+  
+- [ ] **Technology Breakthroughs**
+  - Affects: Aircraft manufacturers
+  - Effect: New aircraft available early, or existing aircraft upgraded
+  - Example: "Boeing unveils revolutionary engine! 30% better fuel economy"
+  
+- [ ] **Safety Incidents**
+  - Affects: Specific aircraft model or airline
+  - Effect: Grounding, passenger confidence loss
+  - Duration: 2-4 quarters investigation + fixes
+  - Example: "737 MAX grounded worldwide pending investigation"
+  
+- [ ] **Airline Bankruptcies**
+  - Affects: Competitor airlines
+  - Effect: Routes/slots/aircraft become available for purchase
+  - Opportunity: Buy assets at discount!
+  - Example: "Pan Am declares bankruptcy! Assets liquidation sale"
+  
+- [ ] **Labor Strikes**
+  - Affects: Your airline or competitors
+  - Effect: Operations disrupted, costs increase
+  - Duration: 1-2 quarters
+  - Player Choice: Meet demands (expensive) or tough it out (reputation hit)?
+
+**5. Business Opportunities** 📈
+- [ ] **Major Events (Olympics, World Cup)**
+  - Affects: Host city/country
+  - Effect: +200% demand for 1-2 quarters
+  - Advance Notice: 4-8 quarters
+  - Player Decision: Build capacity early or miss opportunity?
+  
+- [ ] **Corporate Relocations**
+  - Affects: Specific city pairs
+  - Effect: New permanent business travel demand
+  - Example: "Tech giant opens Singapore office! SFO-SIN route potential"
+  
+- [ ] **Tourism Campaigns**
+  - Affects: Specific destinations
+  - Effect: +30% leisure travel
+  - Duration: 4-8 quarters
+  - Example: "Visit Thailand campaign succeeds! Bangkok tourism boom"
+  
+- [ ] **Government Contracts**
+  - Affects: Your airline (if you bid)
+  - Effect: Guaranteed revenue for X quarters
+  - Requirement: Meet specific criteria (aircraft count, routes, reputation)
+  - Example: "Military transport contract available - 10 cargo aircraft needed"
+
+**6. Random Serendipitous Events** 🎲
+- [ ] **VIP Travel**
+  - Effect: Single huge payment, reputation boost
+  - Example: "Royal family books charter flight! $5M revenue + prestige"
+  
+- [ ] **Movie/Celebrity Endorsement**
+  - Effect: Reputation +10, demand boost for 4 quarters
+  - Example: "Hollywood film features your airline! Brand awareness soars"
+  
+- [ ] **Acquisition Offers**
+  - Effect: Another airline wants to buy you out
+  - Player Choice: Sell and "win" early? Or refuse and keep playing?
+  
+- [ ] **Hostile Takeover Attempts**
+  - Effect: Rival tries to buy your airline
+  - Defense: Spend cash to buy shares, or risk losing control
+
+#### Event System Mechanics
+
+##### Geographic Specificity
+- [ ] **Region-Based Events**
+  - Events target specific continents/countries/cities
+  - "European debt crisis" affects only European routes
+  - "Pacific typhoon season" only affects Pacific airports
+  
+- [ ] **Cascading Effects**
+  - Hub disruption affects all routes through that hub
+  - Regional recession spreads to trading partners
+  - Disaster in one city affects nearby cities
+
+##### Player Agency
+- [ ] **Event Responses**
+  - Not just "event happens, you suffer"
+  - Give players choices:
+    - Reroute around conflict zones
+    - Stockpile fuel before crisis
+    - Bid on government contracts
+    - Insurance policies (pay premium, get disaster protection)
+  
+- [ ] **Event Warnings**
+  - Some events give advance notice
+  - "Hurricane forming - 1 quarter warning"
+  - "Trade tensions escalating - prepare for sanctions"
+  - Reward players who pay attention and plan ahead
+
+##### Event Probability & Balance
+- [ ] **Weighted Probabilities**
+  - Common: Economic fluctuations (30% chance per quarter)
+  - Uncommon: Natural disasters (10% chance)
+  - Rare: Major conflicts, breakthroughs (5% chance)
+  - Very Rare: Acquisition offers, celebrity events (1% chance)
+  
+- [ ] **Historical Events (Optional Mode)**
+  - Play through real historical timeline
+  - 1990s: Gulf War, Asian Financial Crisis, 9/11
+  - 2000s: SARS, Great Recession, Arab Spring
+  - Adds educational value + predictability for planning
+
+##### Storytelling & Immersion
+- [ ] **News Headlines**
+  - Events announced with dramatic headlines
+  - "BREAKING: Earthquake Strikes Tokyo! Narita Airport Damaged"
+  - Photos/icons for major events
+  
+- [ ] **Event Chains**
+  - Events can trigger other events
+  - "Oil price spike → Airline bankruptcies → Acquisition opportunities"
+  - Creates narrative arcs across multiple quarters
+  
+- [ ] **Competitor Reactions**
+  - AI competitors also respond to events
+  - "Global Airways cancels all Middle East routes due to conflict"
+  - "Sky Connect buys bankrupt airline's assets"
+
+#### Gameplay Impact
+
+**Strategic Depth:**
+- Route diversification becomes crucial (don't rely on one region)
+- Insurance/hedging strategies emerge
+- Timing decisions matter (expand before boom, contract before recession)
+
+**Risk Management:**
+- Events create unavoidable losses sometimes
+- Players must build cash reserves for bad times
+- "Boring but stable" strategies have value
+
+**Replayability:**
+- Every playthrough has different event sequences
+- Historical mode offers structured challenge
+- Event combinations create unique scenarios
+
+**Emotional Investment:**
+- Overcoming disasters feels rewarding
+- Capitalizing on opportunities feels clever
+- Unpredictability keeps players engaged
+
+---
+
+**Success Criteria for v0.9:**
+- ✓ Events feel consequential, not just flavor text
+- ✓ Players can respond strategically to events
+- ✓ Geographic specificity makes world feel real
+- ✓ Event chains create emergent narratives
+- ✓ Balance: Events create challenge without being unfair
+
+**Design Principles:**
+- Events should create DECISIONS, not just randomness
+- Give advance warning when possible (fair play)
+- Make events geographically/historically plausible
+- Ensure some events create opportunities, not just penalties
+
