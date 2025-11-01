@@ -1,0 +1,32 @@
+.
+|-- ARCHITECTURE.md
+|-- CONTRIBUTING.md
+|-- DIRECTORY_STRUCTURE.txt
+|-- docs
+|   `-- architecture-diagram.txt
+|-- game.js
+|-- index.html
+|-- js
+|   |-- data
+|   |   |-- aircraft.js
+|   |   |-- airports.js
+|   |   |-- competitors.js
+|   |   `-- events.js
+|   |-- engine
+|   |   |-- GameController.js
+|   |   `-- GameEngine.js
+|   |-- main.js
+|   |-- models
+|   |   `-- GameState.js
+|   |-- ui
+|   |   |-- modals.js
+|   |   `-- renderer.js
+|   `-- utils
+|       |-- config.js
+|       `-- helpers.js
+|-- MIGRATION.md
+|-- README.md
+|-- REFACTORING_SUMMARY.md
+`-- style.css
+
+8 directories, 22 files

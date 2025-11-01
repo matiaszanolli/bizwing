@@ -1,0 +1,250 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background: #000080;
+    color: #00ff00;
+    overflow: hidden;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 10px;
+}
+
+header {
+    background: #000040;
+    padding: 15px;
+    border: 2px solid #00ff00;
+    margin-bottom: 10px;
+}
+
+header h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #ffff00;
+}
+
+#game-info {
+    display: flex;
+    justify-content: space-around;
+    font-size: 14px;
+}
+
+main {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    overflow: hidden;
+}
+
+#left-panel, #center-panel, #right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+#left-panel {
+    flex: 1;
+}
+
+#center-panel {
+    flex: 2;
+}
+
+#right-panel {
+    flex: 1;
+}
+
+.panel {
+    background: #000040;
+    border: 2px solid #00ff00;
+    padding: 10px;
+    min-height: 150px;
+}
+
+.panel h2 {
+    font-size: 14px;
+    color: #ffff00;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 5px;
+}
+
+.action-btn, .main-action-btn {
+    background: #004000;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.action-btn:hover, .main-action-btn:hover {
+    background: #006000;
+}
+
+.main-action-btn {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px;
+    color: #ffff00;
+}
+
+footer {
+    margin-top: 10px;
+}
+
+#world-map {
+    width: 100%;
+    height: 300px;
+    background: #001040;
+}
+
+.city {
+    cursor: pointer;
+}
+
+.city circle {
+    fill: #00ff00;
+    stroke: #ffff00;
+    stroke-width: 1;
+}
+
+.city text {
+    fill: #00ff00;
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+}
+
+.city:hover circle {
+    fill: #ffff00;
+}
+
+.route-line {
+    stroke: #ff00ff;
+    stroke-width: 2;
+    stroke-dasharray: 5,5;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #000080;
+    border: 3px solid #ffff00;
+    padding: 20px;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    color: #ffff00;
+    margin-bottom: 15px;
+}
+
+.close-modal {
+    background: #400000;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    margin-top: 10px;
+}
+
+.plane-option, .airport-item, .route-item, .competitor-item, .news-item {
+    padding: 8px;
+    margin: 5px 0;
+    background: #001040;
+    border: 1px solid #00ff00;
+    font-size: 11px;
+}
+
+.plane-option {
+    cursor: pointer;
+}
+
+.plane-option:hover {
+    background: #002060;
+    border-color: #ffff00;
+}
+
+#route-form label {
+    display: block;
+    margin: 10px 0;
+}
+
+#route-form select, #route-form input {
+    background: #000040;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 5px;
+    font-family: 'Courier New', monospace;
+    margin-left: 10px;
+}
+
+.airport-item.owned {
+    border-color: #ffff00;
+    background: #004040;
+}
+
+.airport-item.clickable {
+    cursor: pointer;
+}
+
+.airport-item.clickable:hover {
+    background: #002060;
+}
+
+#financial-report div, #fleet-list div {
+    margin: 5px 0;
+    font-size: 11px;
+}
+
+.profit-positive {
+    color: #00ff00;
+}
+
+.profit-negative {
+    color: #ff0000;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000040;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border: 1px solid #000080;
+}

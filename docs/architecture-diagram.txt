@@ -1,0 +1,231 @@
+AEROBIZ SUPERSONIC - ARCHITECTURE DIAGRAM
+=========================================
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                          BROWSER (index.html)                        │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │                         User Interface                          │ │
+│  │  Header | Map | Fleet | Routes | Airports | Competitors | News │ │
+│  └────────────┬─────────────────────────────────────────┬──────────┘ │
+│               │                                          │            │
+│               │ DOM Events                    DOM Updates│            │
+│               ▼                                          │            │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │                      main.js (Entry Point)                      │ │
+│  │                  Bootstraps GameController                      │ │
+│  └─────────────────────────────┬──────────────────────────────────┘ │
+└────────────────────────────────┼────────────────────────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │   GameController        │
+                    │   (Coordinator)         │
+                    │                         │
+                    │  • Event Handlers       │
+                    │  • Orchestration        │
+                    │  • Render Calls         │
+                    └─┬───────────┬─────────┬─┘
+                      │           │         │
+         ┌────────────┘           │         └──────────────┐
+         │                        │                        │
+         ▼                        ▼                        ▼
+┌─────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│  UIRenderer     │    │   GameEngine     │    │  ModalManager    │
+│  (View Layer)   │    │   (Game Logic)   │    │  (Dialogs)       │
+├─────────────────┤    ├──────────────────┤    ├──────────────────┤
+│ • renderAll()   │    │ • buyAircraft()  │    │ • showBuyPlane() │
+│ • renderHeader()│    │ • createRoute()  │    │ • showRoute()    │
+│ • renderMap()   │    │ • advanceTurn()  │    │ • showLoan()     │
+│ • renderFleet() │    │ • calculate...() │    │ • closeAll()     │
+│ • renderRoutes()│    │ • simulate...()  │    └──────────────────┘
+│ • renderNews()  │    │ • process...()   │
+└────────┬────────┘    └─────────┬────────┘
+         │                       │
+         │ reads                 │ mutates
+         │                       │
+         └──────────┬────────────┘
+                    │
+                    ▼
+          ┌──────────────────┐
+          │    GameState     │
+          │    (Model)       │
+          ├──────────────────┤
+          │ • year           │
+          │ • quarter        │
+          │ • cash           │
+          │ • reputation     │
+          │ • fleet[]        │
+          │ • routes[]       │
+          │ • airports[]     │
+          │ • competitors[]  │
+          │ • loans[]        │
+          │ • events[]       │
+          └────────┬─────────┘
+                   │
+                   │ references
+                   │
+      ┌────────────┼────────────┐
+      │            │            │
+      ▼            ▼            ▼
+┌──────────┐ ┌──────────┐ ┌──────────┐
+│  Data    │ │  Utils   │ │  Models  │
+├──────────┤ ├──────────┤ ├──────────┤
+│aircraft  │ │ config   │ │GameState │
+│airports  │ │ helpers  │ └──────────┘
+│events    │ └──────────┘
+│competitors
+└──────────┘
+
+DATA FLOW
+─────────
+
+User Action → GameController → GameEngine → GameState → UIRenderer → DOM
+
+
+EXAMPLE: Buying an Aircraft
+────────────────────────────
+
+1. User clicks "Buy Aircraft" button
+   ↓
+2. GameController.setupEventListeners() catches click
+   ↓
+3. Calls ModalManager.showBuyPlane()
+   ↓
+4. User selects aircraft, clicks buy
+   ↓
+5. Calls GameEngine.buyAircraft(planeType)
+   ↓
+6. GameEngine mutates GameState.fleet and .cash
+   ↓
+7. GameController.render() called
+   ↓
+8. UIRenderer.renderAll() updates DOM
+   ↓
+9. User sees new aircraft in fleet list
+
+
+MODULE DEPENDENCIES
+───────────────────
+
+main.js
+  └── GameController
+        ├── GameEngine
+        │     └── GameState
+        │           └── data/* (aircraft, airports, etc)
+        ├── UIRenderer
+        │     └── GameEngine (for calculations)
+        └── ModalManager
+              └── GameEngine (for actions)
+
+utils/* used by all modules
+
+
+KEY DESIGN PRINCIPLES
+─────────────────────
+
+1. SEPARATION OF CONCERNS
+   - Data in data/
+   - Logic in engine/
+   - UI in ui/
+   - Utils in utils/
+
+2. SINGLE RESPONSIBILITY
+   - Each module has one job
+   - Classes are focused
+   - Functions do one thing
+
+3. DEPENDENCY INJECTION
+   - Components receive dependencies
+   - Easy to test and swap
+   - No tight coupling
+
+4. IMMUTABILITY (where possible)
+   - Data files are static
+   - Config is constant
+   - State mutations are explicit
+
+5. MODULARITY
+   - ES6 modules
+   - Clean imports/exports
+   - Tree-shakable
+
+
+FILE STRUCTURE
+──────────────
+
+js/
+├── main.js                    # Entry point (20 lines)
+│
+├── data/                      # Static game data
+│   ├── aircraft.js            # 14 aircraft types + helper
+│   ├── airports.js            # 31 airports + helpers
+│   ├── competitors.js         # 3 AI profiles + factory
+│   └── events.js              # 10 event templates + helper
+│
+├── models/                    # Data structures
+│   └── GameState.js           # Central state (150 lines)
+│
+├── engine/                    # Core game logic
+│   ├── GameEngine.js          # All calculations (400 lines)
+│   └── GameController.js      # Event handling (150 lines)
+│
+├── ui/                        # User interface
+│   ├── renderer.js            # DOM rendering (250 lines)
+│   └── modals.js              # Popup management (150 lines)
+│
+└── utils/                     # Shared utilities
+    ├── config.js              # Constants (100 lines)
+    └── helpers.js             # Utility functions (150 lines)
+
+Total: ~1,500 lines vs 860 lines in monolithic game.js
+Benefit: Organization, maintainability, testability
+
+
+TESTING STRATEGY
+────────────────
+
+Unit Tests (Future):
+  └── Test each module in isolation
+
+Integration Tests (Future):
+  └── Test module interactions
+
+Manual Testing (Current):
+  └── Play game + console debugging
+
+Access Points:
+  window.game.state            # Inspect state
+  window.game.engine          # Call engine methods
+  window.game.renderer        # Force re-render
+
+
+EXTENDING THE GAME
+──────────────────
+
+Add Feature → Pick Module:
+
+New aircraft type?     → data/aircraft.js
+New airport?           → data/airports.js
+New event?             → data/events.js
+New calculation?       → engine/GameEngine.js
+New UI panel?          → ui/renderer.js
+New modal?             → ui/modals.js
+New constant?          → utils/config.js
+New helper function?   → utils/helpers.js
+
+
+PERFORMANCE NOTES
+─────────────────
+
+Optimizations:
+  ✓ Event delegation for map/lists
+  ✓ Single render call per action
+  ✓ Bounded arrays (news capped at 50)
+  ✓ Efficient Array methods
+  ✓ No polling, event-driven
+
+No optimizations needed:
+  • Game is turn-based
+  • Small data sets (<100 items)
+  • Simple calculations
+  • No real-time requirements

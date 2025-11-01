@@ -1,0 +1,44 @@
+{
+  "name": "aerobiz-supersonic",
+  "version": "0.2.0",
+  "description": "Browser-based airline management simulation inspired by KOEI's Aerobiz Supersonic",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "keywords": [
+    "game",
+    "simulation",
+    "airline",
+    "management",
+    "strategy",
+    "aerobiz"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@react-three/drei": "^9.92.0",
+    "@react-three/fiber": "^8.15.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@types/three": "^0.160.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vitest": "^1.4.0"
+  }
+}

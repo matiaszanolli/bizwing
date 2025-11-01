@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aerobiz Supersonic - Prototype</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <header>
+            <h1>AEROBIZ SUPERSONIC</h1>
+            <div id="game-info">
+                <span id="current-quarter">Q1 1992</span>
+                <span id="player-airline">Your Airline: Phoenix Air</span>
+                <span id="cash">Cash: $50,000,000</span>
+            </div>
+        </header>
+
+        <main>
+            <div id="left-panel">
+                <div class="panel">
+                    <h2>YOUR FLEET</h2>
+                    <div id="fleet-list"></div>
+                    <button id="buy-plane-btn" class="action-btn">Buy Aircraft</button>
+                </div>
+
+                <div class="panel">
+                    <h2>ROUTES</h2>
+                    <div id="routes-list"></div>
+                </div>
+
+                <div class="panel">
+                    <h2>FINANCIAL REPORT</h2>
+                    <div id="financial-report"></div>
+                </div>
+
+                <div class="panel">
+                    <h2>MANAGEMENT</h2>
+                    <button id="take-loan-btn" class="action-btn">Take Loan</button>
+                    <button id="advertising-btn" class="action-btn">Set Advertising</button>
+                </div>
+            </div>
+
+            <div id="center-panel">
+                <div class="panel">
+                    <h2>WORLD MAP</h2>
+                    <svg id="world-map" viewBox="0 0 800 400">
+                        <!-- Major cities as circles -->
+                        <g id="cities"></g>
+                        <g id="routes-display"></g>
+                    </svg>
+                </div>
+
+                <div class="panel">
+                    <h2>AVAILABLE AIRPORTS</h2>
+                    <div id="airports-list"></div>
+                </div>
+            </div>
+
+            <div id="right-panel">
+                <div class="panel">
+                    <h2>COMPETITORS</h2>
+                    <div id="competitors-list"></div>
+                </div>
+
+                <div class="panel">
+                    <h2>NEWS & EVENTS</h2>
+                    <div id="news-feed"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <button id="next-turn-btn" class="main-action-btn">ADVANCE TO NEXT QUARTER</button>
+        </footer>
+    </div>
+
+    <!-- Modal for buying planes -->
+    <div id="buy-plane-modal" class="modal">
+        <div class="modal-content">
+            <h2>PURCHASE AIRCRAFT</h2>
+            <div id="plane-options"></div>
+            <button class="close-modal">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal for creating routes -->
+    <div id="route-modal" class="modal">
+        <div class="modal-content">
+            <h2>CREATE NEW ROUTE</h2>
+            <div id="route-form">
+                <label>From: <select id="route-from"></select></label>
+                <label>To: <select id="route-to"></select></label>
+                <label>Aircraft: <select id="route-aircraft"></select></label>
+                <label>Flights per week: <input type="number" id="flights-per-week" min="1" max="14" value="7"></label>
+                <button id="create-route-btn">Create Route</button>
+            </div>
+            <button class="close-modal">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal for loans -->
+    <div id="loan-modal" class="modal">
+        <div class="modal-content">
+            <h2>TAKE LOAN</h2>
+            <div id="loan-form">
+                <label>Amount: $<input type="number" id="loan-amount" min="1000000" max="100000000" step="1000000" value="10000000"></label>
+                <label>Term (quarters): <input type="number" id="loan-quarters" min="4" max="40" value="20"></label>
+                <div id="loan-info" style="margin: 15px 0; color: #ffff00;"></div>
+                <button id="confirm-loan-btn">Confirm Loan</button>
+            </div>
+            <button class="close-modal">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal for advertising -->
+    <div id="advertising-modal" class="modal">
+        <div class="modal-content">
+            <h2>ADVERTISING BUDGET</h2>
+            <div id="advertising-form">
+                <label>Quarterly Budget: $<input type="number" id="ad-budget" min="0" max="10000000" step="100000" value="0"></label>
+                <p style="margin: 10px 0; font-size: 11px;">
+                    Higher advertising improves reputation.<br>
+                    Current: $<span id="current-ad-budget">0</span>/quarter
+                </p>
+                <button id="confirm-ad-btn">Set Budget</button>
+            </div>
+            <button class="close-modal">Cancel</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
