@@ -11,9 +11,10 @@ import { Airport } from '../../data/airports';
 import { Route } from '../../models/types';
 import { formatMoney } from '../../utils/helpers';
 import { AirportDetailsModal } from '../Modals/AirportDetailsModal';
+import { fetchWorldMapData, drawGeoJSONGeometry } from '../../data/worldMap';
 
-// Generate a simple world map texture with continents
-function generateWorldMapTexture(): THREE.CanvasTexture {
+// Generate world map texture from GeoJSON data
+async function generateWorldMapTextureAsync(): Promise<THREE.CanvasTexture> {
     const canvas = document.createElement('canvas');
     const size = 2048;
     canvas.width = size;
@@ -34,264 +35,18 @@ function generateWorldMapTexture(): THREE.CanvasTexture {
         return [x, y];
     };
 
-    // Draw continents with more detailed outlines
-    // North America
-    ctx.beginPath();
-    ctx.moveTo(...toPixel(-169, 65));
-    ctx.lineTo(...toPixel(-168, 68));
-    ctx.lineTo(...toPixel(-165, 70));
-    ctx.lineTo(...toPixel(-156, 71));
-    ctx.lineTo(...toPixel(-141, 70));
-    ctx.lineTo(...toPixel(-130, 69));
-    ctx.lineTo(...toPixel(-95, 69));
-    ctx.lineTo(...toPixel(-80, 68));
-    ctx.lineTo(...toPixel(-70, 67));
-    ctx.lineTo(...toPixel(-60, 65));
-    ctx.lineTo(...toPixel(-55, 62));
-    ctx.lineTo(...toPixel(-52, 58));
-    ctx.lineTo(...toPixel(-52, 50));
-    ctx.lineTo(...toPixel(-55, 48));
-    ctx.lineTo(...toPixel(-60, 46));
-    ctx.lineTo(...toPixel(-63, 44));
-    ctx.lineTo(...toPixel(-65, 42));
-    ctx.lineTo(...toPixel(-75, 36));
-    ctx.lineTo(...toPixel(-80, 30));
-    ctx.lineTo(...toPixel(-81, 26));
-    ctx.lineTo(...toPixel(-81, 22));
-    ctx.lineTo(...toPixel(-83, 18));
-    ctx.lineTo(...toPixel(-87, 16));
-    ctx.lineTo(...toPixel(-92, 15));
-    ctx.lineTo(...toPixel(-97, 16));
-    ctx.lineTo(...toPixel(-105, 17));
-    ctx.lineTo(...toPixel(-110, 16));
-    ctx.lineTo(...toPixel(-115, 16));
-    ctx.lineTo(...toPixel(-118, 17));
-    ctx.lineTo(...toPixel(-122, 20));
-    ctx.lineTo(...toPixel(-125, 25));
-    ctx.lineTo(...toPixel(-130, 32));
-    ctx.lineTo(...toPixel(-132, 40));
-    ctx.lineTo(...toPixel(-135, 48));
-    ctx.lineTo(...toPixel(-140, 54));
-    ctx.lineTo(...toPixel(-145, 58));
-    ctx.lineTo(...toPixel(-155, 60));
-    ctx.lineTo(...toPixel(-162, 62));
-    ctx.lineTo(...toPixel(-169, 65));
-    ctx.closePath();
-    ctx.fill();
+    // Fetch and draw GeoJSON world map data
+    try {
+        const worldData = await fetchWorldMapData();
 
-    // South America
-    ctx.beginPath();
-    ctx.moveTo(...toPixel(-81, 12));
-    ctx.lineTo(...toPixel(-78, 10));
-    ctx.lineTo(...toPixel(-73, 7));
-    ctx.lineTo(...toPixel(-68, 2));
-    ctx.lineTo(...toPixel(-62, 0));
-    ctx.lineTo(...toPixel(-57, -2));
-    ctx.lineTo(...toPixel(-48, -2));
-    ctx.lineTo(...toPixel(-42, -1));
-    ctx.lineTo(...toPixel(-38, 0));
-    ctx.lineTo(...toPixel(-35, 2));
-    ctx.lineTo(...toPixel(-35, 5));
-    ctx.lineTo(...toPixel(-35, -5));
-    ctx.lineTo(...toPixel(-36, -12));
-    ctx.lineTo(...toPixel(-38, -18));
-    ctx.lineTo(...toPixel(-42, -24));
-    ctx.lineTo(...toPixel(-46, -28));
-    ctx.lineTo(...toPixel(-50, -32));
-    ctx.lineTo(...toPixel(-54, -38));
-    ctx.lineTo(...toPixel(-58, -44));
-    ctx.lineTo(...toPixel(-62, -50));
-    ctx.lineTo(...toPixel(-66, -54));
-    ctx.lineTo(...toPixel(-70, -55));
-    ctx.lineTo(...toPixel(-73, -54));
-    ctx.lineTo(...toPixel(-74, -50));
-    ctx.lineTo(...toPixel(-75, -45));
-    ctx.lineTo(...toPixel(-76, -38));
-    ctx.lineTo(...toPixel(-77, -30));
-    ctx.lineTo(...toPixel(-78, -22));
-    ctx.lineTo(...toPixel(-79, -16));
-    ctx.lineTo(...toPixel(-81, 12));
-    ctx.closePath();
-    ctx.fill();
-
-    // Europe
-    ctx.beginPath();
-    ctx.moveTo(...toPixel(-10, 70));
-    ctx.lineTo(...toPixel(-5, 71));
-    ctx.lineTo(...toPixel(0, 70));
-    ctx.lineTo(...toPixel(5, 69));
-    ctx.lineTo(...toPixel(10, 68));
-    ctx.lineTo(...toPixel(15, 66));
-    ctx.lineTo(...toPixel(20, 64));
-    ctx.lineTo(...toPixel(25, 62));
-    ctx.lineTo(...toPixel(30, 60));
-    ctx.lineTo(...toPixel(35, 58));
-    ctx.lineTo(...toPixel(38, 56));
-    ctx.lineTo(...toPixel(40, 54));
-    ctx.lineTo(...toPixel(42, 50));
-    ctx.lineTo(...toPixel(40, 47));
-    ctx.lineTo(...toPixel(37, 45));
-    ctx.lineTo(...toPixel(32, 43));
-    ctx.lineTo(...toPixel(25, 42));
-    ctx.lineTo(...toPixel(18, 41));
-    ctx.lineTo(...toPixel(12, 40));
-    ctx.lineTo(...toPixel(6, 39));
-    ctx.lineTo(...toPixel(0, 38));
-    ctx.lineTo(...toPixel(-5, 37));
-    ctx.lineTo(...toPixel(-9, 36));
-    ctx.lineTo(...toPixel(-10, 40));
-    ctx.lineTo(...toPixel(-10, 50));
-    ctx.lineTo(...toPixel(-10, 60));
-    ctx.lineTo(...toPixel(-10, 70));
-    ctx.closePath();
-    ctx.fill();
-
-    // Africa
-    ctx.beginPath();
-    ctx.moveTo(...toPixel(-17, 37));
-    ctx.lineTo(...toPixel(-11, 35));
-    ctx.lineTo(...toPixel(-5, 33));
-    ctx.lineTo(...toPixel(0, 31));
-    ctx.lineTo(...toPixel(8, 31));
-    ctx.lineTo(...toPixel(15, 30));
-    ctx.lineTo(...toPixel(25, 30));
-    ctx.lineTo(...toPixel(32, 31));
-    ctx.lineTo(...toPixel(38, 31));
-    ctx.lineTo(...toPixel(43, 30));
-    ctx.lineTo(...toPixel(48, 28));
-    ctx.lineTo(...toPixel(51, 25));
-    ctx.lineTo(...toPixel(51, 20));
-    ctx.lineTo(...toPixel(50, 15));
-    ctx.lineTo(...toPixel(48, 10));
-    ctx.lineTo(...toPixel(48, 5));
-    ctx.lineTo(...toPixel(48, 0));
-    ctx.lineTo(...toPixel(48, -5));
-    ctx.lineTo(...toPixel(48, -10));
-    ctx.lineTo(...toPixel(48, -15));
-    ctx.lineTo(...toPixel(47, -20));
-    ctx.lineTo(...toPixel(45, -25));
-    ctx.lineTo(...toPixel(42, -29));
-    ctx.lineTo(...toPixel(38, -32));
-    ctx.lineTo(...toPixel(33, -34));
-    ctx.lineTo(...toPixel(26, -35));
-    ctx.lineTo(...toPixel(20, -34));
-    ctx.lineTo(...toPixel(16, -30));
-    ctx.lineTo(...toPixel(14, -25));
-    ctx.lineTo(...toPixel(12, -18));
-    ctx.lineTo(...toPixel(10, -10));
-    ctx.lineTo(...toPixel(7, -2));
-    ctx.lineTo(...toPixel(3, 5));
-    ctx.lineTo(...toPixel(-2, 10));
-    ctx.lineTo(...toPixel(-8, 15));
-    ctx.lineTo(...toPixel(-12, 20));
-    ctx.lineTo(...toPixel(-15, 26));
-    ctx.lineTo(...toPixel(-17, 32));
-    ctx.lineTo(...toPixel(-17, 37));
-    ctx.closePath();
-    ctx.fill();
-
-    // Asia (large continent)
-    ctx.beginPath();
-    ctx.moveTo(...toPixel(26, 77));
-    ctx.lineTo(...toPixel(40, 76));
-    ctx.lineTo(...toPixel(60, 76));
-    ctx.lineTo(...toPixel(80, 74));
-    ctx.lineTo(...toPixel(100, 71));
-    ctx.lineTo(...toPixel(120, 68));
-    ctx.lineTo(...toPixel(140, 66));
-    ctx.lineTo(...toPixel(160, 67));
-    ctx.lineTo(...toPixel(170, 68));
-    ctx.lineTo(...toPixel(178, 70));
-    ctx.lineTo(...toPixel(180, 68));
-    ctx.lineTo(...toPixel(175, 62));
-    ctx.lineTo(...toPixel(170, 58));
-    ctx.lineTo(...toPixel(165, 54));
-    ctx.lineTo(...toPixel(158, 50));
-    ctx.lineTo(...toPixel(150, 47));
-    ctx.lineTo(...toPixel(142, 45));
-    ctx.lineTo(...toPixel(135, 42));
-    ctx.lineTo(...toPixel(128, 38));
-    ctx.lineTo(...toPixel(122, 33));
-    ctx.lineTo(...toPixel(118, 28));
-    ctx.lineTo(...toPixel(115, 22));
-    ctx.lineTo(...toPixel(112, 16));
-    ctx.lineTo(...toPixel(108, 10));
-    ctx.lineTo(...toPixel(104, 6));
-    ctx.lineTo(...toPixel(98, 5));
-    ctx.lineTo(...toPixel(92, 5));
-    ctx.lineTo(...toPixel(85, 6));
-    ctx.lineTo(...toPixel(78, 8));
-    ctx.lineTo(...toPixel(70, 10));
-    ctx.lineTo(...toPixel(62, 12));
-    ctx.lineTo(...toPixel(55, 13));
-    ctx.lineTo(...toPixel(48, 14));
-    ctx.lineTo(...toPixel(43, 18));
-    ctx.lineTo(...toPixel(40, 25));
-    ctx.lineTo(...toPixel(38, 32));
-    ctx.lineTo(...toPixel(36, 40));
-    ctx.lineTo(...toPixel(33, 48));
-    ctx.lineTo(...toPixel(30, 58));
-    ctx.lineTo(...toPixel(28, 68));
-    ctx.lineTo(...toPixel(26, 77));
-    ctx.closePath();
-    ctx.fill();
-
-    // Southeast Asia & Indonesia
-    ctx.beginPath();
-    ctx.moveTo(...toPixel(95, 28));
-    ctx.lineTo(...toPixel(100, 26));
-    ctx.lineTo(...toPixel(105, 24));
-    ctx.lineTo(...toPixel(110, 22));
-    ctx.lineTo(...toPixel(115, 20));
-    ctx.lineTo(...toPixel(122, 18));
-    ctx.lineTo(...toPixel(128, 16));
-    ctx.lineTo(...toPixel(135, 15));
-    ctx.lineTo(...toPixel(140, 16));
-    ctx.lineTo(...toPixel(142, 10));
-    ctx.lineTo(...toPixel(140, 5));
-    ctx.lineTo(...toPixel(135, 0));
-    ctx.lineTo(...toPixel(130, -3));
-    ctx.lineTo(...toPixel(123, -5));
-    ctx.lineTo(...toPixel(115, -6));
-    ctx.lineTo(...toPixel(108, -5));
-    ctx.lineTo(...toPixel(102, -3));
-    ctx.lineTo(...toPixel(98, 0));
-    ctx.lineTo(...toPixel(95, 5));
-    ctx.lineTo(...toPixel(93, 12));
-    ctx.lineTo(...toPixel(92, 20));
-    ctx.lineTo(...toPixel(95, 28));
-    ctx.closePath();
-    ctx.fill();
-
-    // Australia
-    ctx.beginPath();
-    ctx.moveTo(...toPixel(113, -10));
-    ctx.lineTo(...toPixel(118, -11));
-    ctx.lineTo(...toPixel(125, -12));
-    ctx.lineTo(...toPixel(132, -14));
-    ctx.lineTo(...toPixel(138, -16));
-    ctx.lineTo(...toPixel(144, -18));
-    ctx.lineTo(...toPixel(149, -20));
-    ctx.lineTo(...toPixel(153, -23));
-    ctx.lineTo(...toPixel(154, -28));
-    ctx.lineTo(...toPixel(153, -33));
-    ctx.lineTo(...toPixel(151, -37));
-    ctx.lineTo(...toPixel(148, -40));
-    ctx.lineTo(...toPixel(144, -42));
-    ctx.lineTo(...toPixel(138, -43));
-    ctx.lineTo(...toPixel(132, -43));
-    ctx.lineTo(...toPixel(125, -42));
-    ctx.lineTo(...toPixel(119, -40));
-    ctx.lineTo(...toPixel(115, -37));
-    ctx.lineTo(...toPixel(113, -32));
-    ctx.lineTo(...toPixel(113, -26));
-    ctx.lineTo(...toPixel(113, -18));
-    ctx.lineTo(...toPixel(113, -10));
-    ctx.closePath();
-    ctx.fill();
-
-    // Antarctica - bottom strip
-    ctx.fillRect(0, toPixel(0, -60)[1], size, (size / 2) - toPixel(0, -60)[1]);
+        for (const feature of worldData.features) {
+            drawGeoJSONGeometry(ctx, feature.geometry, toPixel);
+        }
+    } catch (error) {
+        console.error('Error drawing world map:', error);
+        // Fallback: draw simple continents if GeoJSON fails
+        // You can add fallback drawing here if needed
+    }
 
     // Add lighter terrain highlights for depth
     ctx.fillStyle = '#3d7a5f';
@@ -316,6 +71,34 @@ function generateWorldMapTexture(): THREE.CanvasTexture {
 
     return texture;
 }
+
+// Placeholder function for synchronous texture creation (will be replaced by async version)
+function generateWorldMapTexture(): THREE.CanvasTexture {
+    const canvas = document.createElement('canvas');
+    const size = 2048;
+    canvas.width = size;
+    canvas.height = size / 2;
+    const ctx = canvas.getContext('2d')!;
+
+    // Fill with ocean color - dark blue-green
+    ctx.fillStyle = '#0a2820';
+    ctx.fillRect(0, 0, size, size / 2);
+
+    // Create a placeholder texture that will be updated
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.needsUpdate = true;
+
+    // Load the real data asynchronously and update the texture
+    generateWorldMapTextureAsync().then(updatedTexture => {
+        texture.image = updatedTexture.image;
+        texture.needsUpdate = true;
+    });
+
+    return texture;
+}
+
 
 // Convert latitude/longitude to 3D coordinates on sphere
 // lat/lon are in decimal degrees
