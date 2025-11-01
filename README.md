@@ -1,13 +1,10 @@
-# Aerobiz Supersonic - Prototype
+# BizWing - Airline Management Simulation
 
-A browser-based airline management simulation game inspired by the classic KOEI game Aerobiz Supersonic.
+A browser-based airline management simulation game inspired by the classic KOEI Aerobiz Supersonic series.
 
 ## How to Play
 
-### Current Version (v0.2 - Vanilla JS)
-Simply open `index.html` in any modern web browser. No build process required!
-
-### Future Versions (v0.3+ - React + Three.js)
+### Current Version (v0.3 - React + TypeScript)
 ```bash
 # Install dependencies
 npm install
@@ -18,89 +15,122 @@ npm run dev
 # Build for production
 npm run build
 ```
-See [TECH_STACK.md](TECH_STACK.md) for migration details.
 
 ## Game Features
 
-### Core Mechanics
-- **Fleet Management**: Buy or lease 14 different aircraft types from regional jets to jumbo jets
-  - Regional: Embraer ERJ-145, Bombardier CRJ-200
-  - Narrow-body: Boeing 737-300/800, Airbus A320
-  - Wide-body: Boeing 767/777, Airbus A330/A340, MD-11
-  - Jumbo: Boeing 747-400
-  - Cargo: Boeing 747F, 767F
-  - Supersonic: Concorde
+### Historical Aircraft Catalog (70+ Aircraft)
+- **Propeller Era (1955-1960s)**: DC-6, Super Constellation, Viscount
+- **Early Jet Era (1958-1969)**: Boeing 707, DC-8, 727, DC-9, BAC One-Eleven
+- **Wide-Body Revolution (1970-1979)**: Boeing 747, DC-10, L-1011, Airbus A300
+- **1980s Era**: Boeing 757/767, Airbus A310/A320, MD-80 series
+- **Regional Jets (1985+)**: ATR 42/72, CRJ family, ERJ family, Fokker 70/100
+- **Modern Narrow-body (1992+)**: Boeing 737NG, Airbus A320 family, 757
+- **Modern Wide-body (1992+)**: Boeing 767/777/787, Airbus A330/A340/A350
+- **Jumbo/Ultra Long-haul**: Boeing 747 family, Airbus A380
+- **Cargo Fleet**: Boeing 747F/767F/777F, MD-11F, Airbus A330F
+- **Supersonic**: Concorde (1976-2003)
 
-- **Global Network**: 31 airports across 6 continents
-  - North America: JFK, LAX, ORD, DFW, YYZ, MEX
-  - Europe: LHR, CDG, FRA, AMS, MAD, FCO, SVO
-  - Asia: NRT, HKG, SIN, PEK, ICN, BKK, DEL, BOM
-  - Middle East: DXB, DOH
-  - Africa: JNB, CAI
-  - Oceania: SYD, AKL
-  - South America: GRU, EZE, BOG
+### Aircraft Production Lifecycle
+- **Historical Accuracy**: Aircraft enter and exit production based on real history
+- **Advance Warnings**: Q1 announcements for aircraft launching next year
+- **Production Ending Alerts**: 1-year warning before aircraft discontinued
+- **Visual Indicators**: "ENDING PRODUCTION" badges with pulsing effects
 
-- **Route Management**: Create profitable routes between your hub airports
-  - Competition affects profitability
-  - Distance vs aircraft range constraints
-  - Flexible flight frequencies (1-14 flights/week)
+### Aircraft Age & Maintenance System
+- **5 Condition Tiers**: Excellent (0-5y) → Good (6-10y) → Fair (11-15y) → Poor (16-20y) → Critical (20y+)
+- **Maintenance Cost Multipliers**: Scale from 1.0x to 3.5x based on aircraft age
+- **Fuel Efficiency Degradation**: Older aircraft consume up to 60% more fuel
+- **Fleet Condition Display**: Color-coded indicators showing aircraft health
+- **Maintenance Warnings**: Q1 alerts when aircraft reach critical ages (15, 20, 25+ years)
+- **Strategic Impact**: Forces fleet renewal decisions and long-term planning
+
+### Start Year Selection
+- **Multiple Eras**: Choose from 1955, 1960, 1970, 1980, 1992+
+- **Era-Appropriate Aircraft**: Only aircraft available in your chosen era appear
+- **Historical Progression**: New aircraft become available as years advance
+- **Era-Specific Challenges**: Different starting conditions and aircraft economics
+
+### Expanded Global Network (74 Airports)
+- **North America (15)**: JFK, LAX, ORD, DFW, ATL, MIA, SFO, SEA, YYZ, MEX, etc.
+- **Europe (15)**: LHR, CDG, FRA, AMS, MAD, FCO, SVO, IST, BCN, MUC, etc.
+- **Asia (15)**: NRT, HKG, SIN, PEK, PVG, ICN, BKK, DEL, BOM, KUL, etc.
+- **Middle East (6)**: DXB, DOH, AUH, RUH, TLV, JED
+- **Africa (8)**: JNB, CAI, CPT, LOS, ADD, NBO, CMN, ALG
+- **Oceania (5)**: SYD, MEL, AKL, BNE, PER
+- **South America (10)**: GRU, GIG, EZE, BOG, LIM, SCL, PTY, etc.
+
+### Advanced Airport Filtering
+- **Ownership Filter**: Available, Owned, Competitor, All
+- **Market Size Tiers**: Small (<5M), Medium (5-15M), Large (15-30M), Mega (30M+)
+- **Region Filter**: 7 continental regions plus "All"
+
+### Route Management
+- **Dynamic Profitability**: Competition and aircraft age affect route performance
+- **Distance Constraints**: Aircraft range vs route distance
+- **Flexible Frequencies**: 1-14 flights/week
+- **Suspension System**: Suspend unprofitable routes without deleting them
 
 ### Financial System
-- **Leasing vs Buying**: Choose to purchase aircraft outright or lease quarterly
-- **Loans**: Take loans with 2% quarterly interest to fund expansion
+- **Leasing vs Buying**: Purchase aircraft outright or lease quarterly
+- **Loans**: Take loans with configurable interest rates (varies by difficulty)
 - **Dynamic Economics**: Fuel prices and passenger demand fluctuate
 - **Quarterly Reports**: Track revenue, expenses, and profitability
+- **Age-Based Costs**: Aircraft maintenance and fuel costs increase with age
 
 ### Competition
 - **3 AI Competitors**: Each with different strategies
-  - Aggressive competitors actively expand their networks
-  - Competitors compete for the same airports
-  - Market share affects your route profitability
+- **Aggressive Expansion**: Competitors actively expand their networks
+- **Market Competition**: Shared airports reduce route profitability
+- **Strategic Decisions**: Monitor and respond to competitor moves
 
 ### Reputation System
-- Reputation (0-100) affects passenger demand
-- Improved by:
-  - Profitable operations
-  - Advertising campaigns
-- Damaged by:
-  - Losses and poor performance
-  - Random negative events
+- **Reputation (0-100)**: Affects passenger demand and load factors
+- **Improved by**: Profitable operations, advertising campaigns
+- **Damaged by**: Losses, poor performance, negative events
 
 ### Random Events
-Events occur randomly each quarter (10% chance):
+Events occur randomly each quarter (probability varies by difficulty):
 - **Economic Events**: Booms, recessions, tourism surges
 - **Fuel Events**: Oil crises or price drops
 - **Operational Events**: Strikes, technology breakthroughs
 - **Competitor Events**: Bankruptcy opportunities
 
-Events have duration and can significantly impact gameplay
+### Difficulty Levels
+- **Easy**: $75M starting cash, 1.5% loan interest, 0.7x competitor aggression, 5% event chance
+- **Normal**: $50M starting cash, 2.0% loan interest, 1.0x competitor aggression, 10% event chance
+- **Hard**: $35M starting cash, 2.5% loan interest, 1.3x competitor aggression, 15% event chance
 
-### Advanced Features
-- **Aircraft Aging**: Planes get more expensive to maintain over time
-- **Market Competition**: Route profitability affected by competitor presence
-- **Economic Multipliers**: External factors affect demand and costs
-- **Advertising Budget**: Invest in marketing to boost reputation
+### Save/Load System
+- **Auto-Save**: Automatic save every quarter
+- **Multiple Slots**: 5 save slots with metadata
+- **Save Metadata**: Shows airline name, date, cash, and timestamp
+- **New Game**: Clear auto-save to start fresh
+
+### Tutorial System
+- **Interactive Tutorial**: Step-by-step guidance for new players
+- **Welcome Screen**: Choose airline name, starting year, difficulty
+- **Skip Option**: Experienced players can skip the tutorial
 
 ## Game Controls
 
 ### Main Actions
 - **Buy Aircraft**: Purchase or lease new planes for your fleet
-- **Airport Slots**: Click on available airports to acquire slots
-- **Create Routes**: Click your hub airports on the map to create routes
+- **Buy Airport Slots**: Acquire slots at airports worldwide
+- **Create Routes**: Assign aircraft to routes between owned airports
+- **Manage Routes**: Adjust frequency, suspend, or delete routes
 - **Take Loan**: Borrow money for expansion
 - **Set Advertising**: Allocate quarterly advertising budget
 - **Advance Quarter**: Progress time and execute financial calculations
 
-### Map Legend
-- **Yellow circles**: Your hub airports
-- **Colored circles**: Competitor hubs (color-coded)
-- **Green circles**: Available airports
-- **Magenta lines**: Your active routes
+### Fleet Management
+- **Sell Aircraft**: Sell owned aircraft (depreciation applies)
+- **Return Leased Aircraft**: End lease agreements
+- **Aircraft Aging**: Monitor aircraft condition and plan replacements
 
 ## Winning & Losing
 
 ### Victory
-- Survive until year 2000
+- Survive until year 2000 (or 20 years from start)
 - Score based on:
   - Cash reserves
   - Airports owned
@@ -120,30 +150,38 @@ Events have duration and can significantly impact gameplay
 5. **Reputation Matters**: Higher reputation = better load factors
 6. **Debt Management**: Loans are useful but watch the quarterly payments
 7. **Hub Strategy**: Focus on key hubs rather than spreading too thin
-8. **Aircraft Selection**: Match aircraft capacity to route demand
+8. **Aircraft Selection**: Match aircraft capacity and range to route demand
+9. **Fleet Age Management**: Plan aircraft replacement before maintenance costs spiral
+10. **Era Awareness**: Buy aircraft before they're discontinued
+11. **Market Size**: Target larger airports for better route profitability
+12. **Fuel Efficiency**: Older aircraft become expensive as they age
 
 ## Technical Details
 
-- **Modern ES6 Modules**: Clean, modular architecture
-- **No Build Step**: Runs directly in browser
-- **No Framework Dependencies**: Pure JavaScript/HTML/CSS
+- **React + TypeScript**: Modern, type-safe architecture
+- **Vite**: Fast build tool and dev server
+- **Modular Design**: Clean separation of concerns
 - **Retro Aesthetic**: Terminal-style UI inspired by 1990s business sims
 - **SVG Graphics**: Scalable world map for route visualization
-- **LocalStorage Ready**: Save/load functionality scaffolded
+- **LocalStorage Persistence**: Save/load functionality
 
 ## Project Structure
 
 ```
 aerobiz/
-├── index.html              # Main HTML file
-├── style.css               # Retro terminal styles
-└── js/                     # Modular JavaScript
-    ├── main.js             # Entry point
-    ├── data/               # Game data (aircraft, airports, events, competitors)
-    ├── models/             # GameState class
-    ├── engine/             # Game logic (GameEngine, GameController)
-    ├── ui/                 # Rendering (UIRenderer, ModalManager)
-    └── utils/              # Helpers and configuration
+├── src/
+│   ├── components/
+│   │   ├── Dashboard/          # Main game panels
+│   │   ├── Modals/             # Modal dialogs
+│   │   └── Tutorial/           # Tutorial system
+│   ├── contexts/               # React contexts
+│   ├── data/                   # Game data (aircraft, airports, events)
+│   ├── engine/                 # Game logic
+│   ├── models/                 # TypeScript models
+│   ├── utils/                  # Helpers and configuration
+│   └── styles/                 # CSS styles
+├── public/                     # Static assets
+└── index.html                  # Entry point
 ```
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed documentation.
@@ -153,19 +191,23 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed documentation.
 The game uses a **modular architecture** for maintainability and scalability:
 - **Separation of concerns**: Data, logic, and UI are separate
 - **Easy to extend**: Add new aircraft, airports, or events easily
+- **Type-safe**: TypeScript provides compile-time safety
 - **Testable**: Each module can be unit tested
-- **Debuggable**: Access game state via `window.game` in console
-
-### Future Enhancements (Not Implemented)
-- Connection flights and hub bonuses
-- International regulations and permissions
-- Seasonal demand variations
-- More detailed aircraft specifications
-- Staff management
-- Marketing campaigns by route
-- Save/load functionality
-- Statistics and historical charts
 
 ## Credits
 
 Inspired by **Aerobiz Supersonic** by KOEI (1994)
+
+## Version History
+
+See [ROADMAP.md](ROADMAP.md) for detailed version history and future plans.
+
+**Current Version**: v0.3.0 (November 2025)
+- 70+ historical aircraft (1955-2015)
+- Aircraft production lifecycle with warnings
+- Aircraft age & maintenance penalty system
+- 74 airports across 7 regions
+- Start year selection (1955-1992+)
+- Difficulty levels (Easy, Normal, Hard)
+- Save/load system with multiple slots
+- Interactive tutorial system

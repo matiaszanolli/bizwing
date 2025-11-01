@@ -41,59 +41,61 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
 
 ## Release Milestones
 
-### v0.3 - "Polish & Playability" (Target: 2 weeks)
+### v0.3 - "Polish & Playability" ✅ COMPLETED (November 2025)
 
 **Priority: High - Make it Feel Complete**
 
-#### Turn Management System
-- [ ] Pre-Quarter Review Screen
-  - **"Ready to Advance?"** confirmation with summary
-  - Quick stats: cash, routes, fleet size
-  - Pending actions reminder (executives idle, unprofitable routes, etc.)
-  - Option to cancel and keep planning
+#### Historical Accuracy & Aircraft Management
+- ✅ **Historical Aircraft Catalog**: 70+ aircraft from 1955-2015
+- ✅ **Aircraft Production Lifecycle**: Introduction and discontinuation dates
+- ✅ **Production Warnings**: Q1 announcements for new/ending aircraft
+- ✅ **Aircraft Age & Maintenance System**: 5 condition tiers with penalties
+- ✅ **Fuel Efficiency Degradation**: Age-based fuel consumption increase
+- ✅ **Fleet Condition Display**: Visual indicators in Fleet panel
+- ✅ **Maintenance Warnings**: Q1 alerts for aging aircraft
 
-- [ ] Quarter Planning Checklist
-  - Visual checklist of common tasks
-  - ☐ Review all route profitability
-  - ☐ Assign idle executives
-  - ☐ Check for aircraft deals
-  - ☐ Review competitor activity
-  - ☐ Adjust advertising budget
-  - Auto-check completed items
+#### Start Year & Era Selection
+- ✅ **Multiple Starting Years**: 1955, 1960, 1970, 1980, 1992+
+- ✅ **Dynamic Aircraft Filtering**: Only show era-appropriate aircraft
+- ✅ **Era-Specific Starting Aircraft**: Historically accurate starting fleet
+- ✅ **Historical Progression**: Aircraft availability changes over time
+
+#### Expanded World
+- ✅ **74 Airports**: Across 7 regions globally
+- ✅ **Airport Filtering**: By ownership, market size, region
+- ✅ **Market Size Tiers**: Small, Medium, Large, Mega categories
 
 #### Core Features
-- [ ] Save/Load System
-  - Implement localStorage persistence
-  - Auto-save every turn
-  - Manual save/load buttons
-  - Export/import save files
+- ✅ **Save/Load System**
+  - LocalStorage persistence
+  - Auto-save every quarter
+  - Multiple save slots (5 total)
+  - Save metadata display
 
-- [ ] Tutorial/Help System
-  - Interactive first-time tutorial
-  - In-game help tooltips
-  - Strategy guide section
-  - Keyboard shortcuts reference
+- ✅ **Tutorial/Help System**
+  - Interactive tutorial
+  - Welcome screen
+  - Skip option
 
-- [ ] Quality of Life
-  - Keyboard shortcuts (Space = next turn, etc.)
-  - Route deletion/modification
-  - Aircraft selling/retirement
-  - Quick filters for airports (by region, owned, etc.)
-  - Sort options for routes (by profit, distance, etc.)
+- ✅ **Difficulty Levels**
+  - Easy, Normal, Hard modes
+  - Adjustable parameters
 
-#### Polish
-- [ ] Sound Effects (optional, toggle-able)
-  - Cash register for profit
-  - Jet engine for new route
-  - Alert for events
-- [ ] Animations
-  - Smooth transitions
-  - Route line drawing animation
-  - Number count-up effects
-- [ ] Visual Improvements
-  - Better airport markers
-  - Route thickness by frequency
-  - Color-code profitable vs unprofitable routes
+#### Turn Management System (Deferred to v0.4)
+- [ ] Pre-Quarter Review Screen
+- [ ] Quarter Planning Checklist
+
+#### Quality of Life (Partial - ongoing)
+- ✅ Route deletion/modification
+- ✅ Aircraft selling/retirement
+- ✅ Quick filters for airports
+- [ ] Keyboard shortcuts
+- [ ] Sort options for routes
+
+#### Polish (Deferred to later versions)
+- [ ] Sound Effects
+- [ ] Advanced Animations
+- [ ] Route thickness by frequency
 
 ---
 
@@ -606,6 +608,49 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 
 ## Changelog
 
+### v0.3.0 - November 2025
+- ✨ **Historical Aircraft Availability**: 70+ aircraft spanning 1955-2015
+  - Propeller era (DC-6, Super Constellation, Viscount)
+  - Early jets (707, DC-8, 727, DC-9)
+  - Wide-body revolution (747, DC-10, L-1011, A300)
+  - Modern era (737NG, A320 family, 777, 787, A380)
+  - Cargo fleet (747F, 767F, 777F, MD-11F)
+  - Supersonic (Concorde)
+- ✨ **Aircraft Production Lifecycle**: Aircraft enter and exit production with historical accuracy
+  - Year introduced and year discontinued tracking
+  - Q1 announcements for upcoming aircraft
+  - Production ending warnings (1 year advance notice)
+  - Visual badges for aircraft ending production
+- ✨ **Aircraft Age & Maintenance Penalties**: Comprehensive aging system
+  - 5 condition tiers (Excellent, Good, Fair, Poor, Critical)
+  - Age-based maintenance cost multipliers (1.0x → 3.5x)
+  - Fuel efficiency degradation (0% → +60% consumption)
+  - Fleet panel shows aircraft condition with visual indicators
+  - Q1 maintenance warnings for aging aircraft (15 years, 20 years, milestones)
+- ✨ **Start Year Selection**: Choose your starting era
+  - 1955, 1960, 1970, 1980, 1992+ starting years
+  - Aircraft catalog dynamically filtered by year
+  - Era-appropriate starting aircraft
+  - Historical progression gameplay
+- ✨ **Expanded Airport Network**: 74 airports across 7 regions
+  - North America (15), Europe (15), Asia (15)
+  - Middle East (6), Africa (8), Oceania (5), South America (10)
+  - Advanced filtering (ownership, market size, region)
+  - Market size tiers (Small, Medium, Large, Mega)
+- ✨ **Difficulty Levels**: Easy, Normal, Hard
+  - Adjustable starting cash, interest rates, competitor aggression
+  - Event probability varies by difficulty
+- ✨ **Save/Load System**: Full game persistence
+  - LocalStorage-based save system
+  - Auto-save every quarter
+  - Multiple save slots (5 slots)
+  - Save metadata with airline name, date, financials
+- ✨ **Tutorial System**: Interactive onboarding
+  - Step-by-step guidance for new players
+  - Contextual hints and tooltips
+  - Welcome screen with game setup
+  - Skip tutorial option for experienced players
+
 ### v0.2.0 - October 2025
 - ✨ Modular architecture
 - ✨ 31 airports worldwide
@@ -624,9 +669,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 
 ---
 
-**Last Updated:** October 31, 2025
-**Current Version:** v0.2.0
-**Next Milestone:** v0.3 (Polish & Playability)
+**Last Updated:** November 1, 2025
+**Current Version:** v0.3.0
+**Next Milestone:** v0.4 (Strategic Depth)
 
 ---
 
