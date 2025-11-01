@@ -184,7 +184,8 @@ export class GameEngine {
             to: toId,
             aircraft: aircraft,
             flights_per_week: flightsPerWeek,
-            distance: distance
+            distance: distance,
+            suspended: false
         };
 
         aircraft.assigned_route = route;
@@ -212,6 +213,34 @@ export class GameEngine {
         this.state.routes.splice(routeIndex, 1);
 
         this.state.addNews(`Route closed: ${route.from} → ${route.to}`);
+        return true;
+    }
+
+    suspendRoute(route: Route): boolean {
+        const routeIndex = this.state.routes.findIndex(r =>
+            r.from === route.from && r.to === route.to && r.aircraft.id === route.aircraft.id
+        );
+
+        if (routeIndex === -1) {
+            return false;
+        }
+
+        route.suspended = true;
+        this.state.addNews(`Route suspended: ${route.from} → ${route.to} (aircraft & slots retained)`);
+        return true;
+    }
+
+    resumeRoute(route: Route): boolean {
+        const routeIndex = this.state.routes.findIndex(r =>
+            r.from === route.from && r.to === route.to && r.aircraft.id === route.aircraft.id
+        );
+
+        if (routeIndex === -1) {
+            return false;
+        }
+
+        route.suspended = false;
+        this.state.addNews(`Route resumed: ${route.from} → ${route.to}`);
         return true;
     }
 
@@ -282,7 +311,10 @@ export class GameEngine {
     calculateQuarterlyRevenue(): number {
         let revenue = 0;
         this.state.routes.forEach(route => {
-            revenue += this.calculateRouteRevenue(route);
+            // Skip suspended routes
+            if (!route.suspended) {
+                revenue += this.calculateRouteRevenue(route);
+            }
         });
         return Math.floor(revenue);
     }
@@ -292,6 +324,9 @@ export class GameEngine {
         const to = this.state.findAirport(route.to);
 
         if (!from || !to) return 0;
+
+        // Suspended routes generate no revenue
+        if (route.suspended) return 0;
 
         // Base load factor affected by reputation
         let loadFactor = CONFIG.BASE_LOAD_FACTOR +
@@ -319,10 +354,13 @@ export class GameEngine {
         let expenses = 0;
 
         // Operating costs for routes (affected by fuel prices)
+        // Skip suspended routes - they don't incur operating costs
         this.state.routes.forEach(route => {
-            const flightsPerQuarter = route.flights_per_week * CONFIG.WEEKS_PER_QUARTER;
-            const baseCost = route.aircraft.type.operating_cost * flightsPerQuarter;
-            expenses += baseCost * this.state.fuelPrice;
+            if (!route.suspended) {
+                const flightsPerQuarter = route.flights_per_week * CONFIG.WEEKS_PER_QUARTER;
+                const baseCost = route.aircraft.type.operating_cost * flightsPerQuarter;
+                expenses += baseCost * this.state.fuelPrice;
+            }
         });
 
         // Leasing costs

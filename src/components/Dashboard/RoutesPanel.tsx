@@ -73,13 +73,17 @@ export function RoutesPanel() {
                 ) : (
                     sortedRoutes.map(({ route, revenue, cost, profit }, index) => {
                         const isProfitable = profit > 0;
+                        const routeClass = route.suspended ? 'suspended' : isProfitable ? 'profitable' : 'unprofitable';
 
                         return (
-                            <div key={index} className={`route-item ${isProfitable ? 'profitable' : 'unprofitable'}`}>
+                            <div key={index} className={`route-item ${routeClass}`}>
                                 <div className="route-header">
-                                    <span className="route-cities">{route.from} → {route.to}</span>
-                                    <span className={`route-profit ${isProfitable ? 'positive' : 'negative'}`}>
-                                        {isProfitable ? '+' : ''}{formatMoney(profit)}/Q
+                                    <span className="route-cities">
+                                        {route.from} → {route.to}
+                                        {route.suspended && <span className="suspended-badge"> [SUSPENDED]</span>}
+                                    </span>
+                                    <span className={`route-profit ${route.suspended ? 'neutral' : isProfitable ? 'positive' : 'negative'}`}>
+                                        {route.suspended ? '$0/Q' : `${isProfitable ? '+' : ''}${formatMoney(profit)}/Q`}
                                     </span>
                                 </div>
                                 <div className="route-details">
@@ -105,6 +109,27 @@ export function RoutesPanel() {
                                     </div>
                                 </div>
                                 <div className="route-actions">
+                                    {route.suspended ? (
+                                        <button
+                                            className="btn-small btn-secondary"
+                                            onClick={() => {
+                                                engine.resumeRoute(route);
+                                                forceUpdate();
+                                            }}
+                                        >
+                                            Resume Route
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="btn-small btn-secondary"
+                                            onClick={() => {
+                                                engine.suspendRoute(route);
+                                                forceUpdate();
+                                            }}
+                                        >
+                                            Suspend Route
+                                        </button>
+                                    )}
                                     <button
                                         className="btn-small btn-danger"
                                         onClick={() => setRouteToDelete(route)}

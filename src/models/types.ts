@@ -22,6 +22,7 @@ export interface Route {
     aircraft: FleetAircraft;
     flights_per_week: number;
     distance: number; // km
+    suspended: boolean; // true = route on hold (no revenue/costs, keeps slots & aircraft)
 }
 
 // Loan
