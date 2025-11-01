@@ -1121,3 +1121,479 @@ Aircraft Condition Critical (<30%)
 - Make events geographically/historically plausible
 - Ensure some events create opportunities, not just penalties
 
+---
+
+### v0.10 - "Historical Eras" (Target: TBD)
+
+**Priority: High - Capture Aerobiz Supersonic's Core Magic**
+
+> *"The world in 1960 is fundamentally different from 1990. Your airline must adapt to the times."*
+
+#### Era-Based Gameplay System
+
+One of Aerobiz Supersonic's most compelling features was playing through different historical periods, each with unique challenges, opportunities, and geopolitical constraints. This isn't just cosmetic - it fundamentally changes how you play the game.
+
+##### Three Game Modes
+
+**Mode 1: Classic Campaign (20-Year Span)**
+- [ ] **The Aerobiz Way**
+  - Choose starting year from 1955 onwards (1955, 1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, etc.)
+  - Play exactly 20 years (80 quarters) from that point
+  - **Victory Condition**: Highest net worth at end of 20 years
+  - **Example**: Start 1975 → Play until 1995
+    - Begin with 747s, oil crisis, and Cold War restrictions
+    - End with 777s, Asian growth, and post-Cold War opportunities
+  - Aircraft availability and geopolitical constraints match the era
+  - Historical events occur as appropriate for the time period
+  - **Scoring**: Cash + Asset Value + Route Network Value + Reputation Bonus
+  - Time limit creates urgency and strategic planning
+  - Difficulty levels: Easy (Extra cash), Normal, Hard (Less cash, tougher competitors), Brutal
+
+**Mode 2: Domination (Unlimited Time)**
+- [ ] **Global Conquest**
+  - No time limit - play as long as it takes
+  - **Victory Condition**: #1 market share in ALL 7 continents
+    - North America, South America, Europe, Africa, Asia, Middle East, Oceania
+  - Must maintain dominance for 4 consecutive quarters to win
+  - Choose starting era (1960+) but time progresses realistically
+  - Aircraft technology advances as years pass
+  - Competitors never give up - continuous challenge
+  - Can take 50+ game years if you start small
+  - **Challenge**: Balancing expansion across all continents simultaneously
+  - Late-game competitors will be massive (they grew too!)
+  - **Special mechanic**: Continental dominance meter for each region
+  - Can choose starting location (affects which continent is easiest to dominate first)
+
+**Mode 3: Scenarios (Historical Challenges)**
+- [ ] **Specific Survival/Achievement Challenges**
+
+  **Starting from Scratch:**
+  - "Third World Startup" - Start airline in underdeveloped nation with minimal funds
+    - Small African or Central American nation, 1970s
+    - $500K starting cash (vs normal $5M)
+    - Only DC-9s and 737-200s available initially
+    - Goal: Achieve profitability and expand to 3+ continents
+  - "Eastern Bloc 1970" - Soviet airline with terrible aircraft, survive until capitalism
+    - Start with Tupolev Tu-154s (inefficient but reliable)
+    - Can only fly Warsaw Pact routes initially
+    - Goal: Survive until 1991, then successfully transition to Western aircraft
+  - "Island Nation Challenge" - Start in Caribbean/Pacific with tiny market
+    - Limited domestic demand, must expand internationally
+    - High slot costs at major airports
+    - Goal: Build global network from remote starting point
+  - "Bankruptcy Recovery" - Inherit airline with massive debt
+    - -$2M cash flow per quarter
+    - 8 quarters to achieve profitability or game over
+    - All routes unprofitable, aging fleet
+    - Must cut ruthlessly and rebuild
+
+  **Save the Giants:**
+  - "Save Pan Am (1985)" - Historic airline in decline, prevent 1991 bankruptcy
+    - Start with aging 747 fleet, unprofitable transatlantic routes
+    - Deregulation chaos, fierce competition from upstarts
+    - Union contracts limiting flexibility
+    - Must achieve sustained profitability within 12 quarters
+    - **⭐⭐⭐⭐⭐**: Not just survive but return to profitability AND maintain Pan Am's prestige reputation (90+)
+  - "Save Varig (2000)" - Brazilian giant facing crisis
+    - Massive debt ($500M+), inefficient mixed fleet
+    - Brazilian Real crisis affecting revenue
+    - Government protection eroding
+    - Achieve positive cash flow within 16 quarters
+    - **⭐⭐⭐⭐⭐**: Clear all debt AND establish profitable routes to 4+ continents
+  - "Save Swissair (1998)" - "The Flying Bank" before the fall
+    - Over-expanded with bad acquisitions
+    - Debt from buying stakes in failing carriers
+    - Must divest unprofitable assets without destroying core business
+    - Avoid 2001 bankruptcy (survive until 2002)
+
+  **Historical Gauntlet:**
+  - "9/11 Survivor (2001)" - Your airline on September 10, 2001
+    - Running profitably with 20+ aircraft, coast-to-coast routes
+    - **September 11 event triggers**: Immediate 40% demand drop
+    - Security costs increase 300%
+    - Insurance costs skyrocket
+    - Must survive 12 quarters without bankruptcy
+    - Competitors going bankrupt = acquisition opportunities
+    - **⭐⭐⭐⭐⭐**: Not just survive but acquire failed competitor and emerge stronger
+  - "2020 Pandemic (ULTIMATE CHALLENGE)" - COVID-19 hits your thriving airline
+    - Start March 2020 with large fleet, international routes
+    - **Q2 2020**: 90% passenger demand collapse overnight
+    - Cargo becomes only significant revenue
+    - Government bailouts available (restrictions: no layoffs, no bonuses, routes maintained)
+    - Must survive 8 quarters until recovery begins
+    - Choice: Take bailout with strings OR refuse and cut drastically
+    - **This is the hardest scenario possible**
+    - **⭐⭐⭐⭐⭐**: Survive without bailout AND maintain 80%+ pre-pandemic fleet
+
+  **Strategic Puzzles:**
+  - "Oil Crisis 1973" - You have aging Boeing 707 fleet when fuel triples
+    - October 1973: Oil embargo starts, fuel costs triple
+    - Fleet of 10 707s suddenly hemorrhaging money
+    - Can you modernize fast enough? Or park aircraft and wait it out?
+    - 8 quarters to achieve profitability with new economic reality
+  - "Deregulation Day 1978" - Navigate US airline chaos
+    - October 24, 1978: Airline Deregulation Act passes
+    - Established carrier with fixed routes suddenly facing competition
+    - Low-cost carriers undercutting fares 40%
+    - Must adapt or die: Hub strategy? Match prices? Premium service?
+  - "Gulf War 1990" - Your Middle East routes suddenly closed
+    - August 1990: Iraq invades Kuwait
+    - 40% of your revenue from routes through Gulf region
+    - All Middle East routes suspended or severely limited
+    - Must pivot network within 4 quarters
+
+- [ ] **Scenario Victory Conditions**
+  - Each scenario has specific goals (survive X quarters, achieve profitability, reach market share target)
+  - **Star Rating System**: 1-5 stars based on how well you succeed
+    - ⭐ = Barely survived (met minimum objective)
+    - ⭐⭐ = Survived comfortably
+    - ⭐⭐⭐ = Met all objectives
+    - ⭐⭐⭐⭐ = Exceeded expectations
+    - ⭐⭐⭐⭐⭐ = Legendary performance (thriving airline, maintained prestige, captured opportunities)
+  - Leaderboards for each scenario (based on final net worth or time to completion)
+  - Unlockable scenarios (beat Pan Am ⭐⭐⭐ to unlock Varig, beat 9/11 ⭐⭐⭐ to unlock 2020 Pandemic)
+  - **Scenario Progress Tracking**: See which scenarios you've beaten and at what star level
+
+##### Core Era Mechanics (Shared Across All Modes)
+
+##### Aircraft Availability by Era
+
+The **aircraft catalog changes dramatically** based on era. This was a KEY feature of Aerobiz Supersonic.
+
+**1960s: Jet Age Dawn**
+```
+Available Aircraft:
+- Boeing 707 (long-range workhorse)
+- Douglas DC-8 (competitor to 707)
+- Boeing 727 (tri-jet, medium range)
+- Caravelle (European short-range)
+- Comet 4 (British pioneer, unreliable)
+- Convair 880/990 (niche)
+
+Missing: All wide-bodies, modern jets, regional jets
+Fuel: Cheap but aircraft inefficient
+Range: Limited (no ETOPS, routes must hop continents)
+```
+
+**1970s: Wide-Body Revolution & Oil Crisis**
+```
+New Aircraft:
+- Boeing 747 (game-changer, huge capacity)
+- DC-10 (tri-jet wide-body)
+- Lockheed L-1011 (advanced but troubled)
+- Airbus A300 (European challenger emerges)
+- Boeing 737-200 (early narrow-body workhorse)
+
+Era Challenge: 1973 & 1979 oil shocks
+- Fuel costs TRIPLE mid-decade
+- Inefficient jets (707, DC-8) become unprofitable
+- Forces fleet modernization
+```
+
+**1980s: Deregulation & Competition**
+```
+New Aircraft:
+- Boeing 757/767 (efficient twins)
+- Airbus A310/A320 (fly-by-wire revolution)
+- MD-80 series (DC-9 evolution)
+- Boeing 747-400 (ultra-long range)
+- Fokker 100, BAe 146 (regional jets emerge)
+
+Era Challenge: US Deregulation (1978)
+- Brutal competition, fare wars
+- Hub-and-spoke model dominates
+- LCCs (Low-Cost Carriers) emerge
+- Many airlines go bankrupt
+```
+
+**1990s: Globalization & Consolidation**
+```
+New Aircraft:
+- Boeing 777 (ETOPS revolution, twins cross oceans)
+- Airbus A330/A340 (long-range family)
+- Boeing 737NG (Next Generation)
+- MD-11 (last McDonnell Douglas, flawed)
+- CRJ/ERJ (regional jet boom)
+
+Era Challenge: Asian Financial Crisis (1997-98)
+- Pacific routes collapse
+- Opportunities for expansion (cheap slots/aircraft)
+- 9/11 at era end (2001) - industry transformation
+```
+
+**2000s: Modern Efficiency**
+```
+New Aircraft:
+- Airbus A380 (super-jumbo)
+- Boeing 787 (Dreamliner, composite revolution)
+- Airbus A350 (787 competitor)
+- Boeing 737 MAX (efficiency, later grounded)
+- Bombardier CSeries → Airbus A220
+
+Era Challenge: Great Recession (2008-2009)
+- Massive demand collapse
+- Fuel price volatility
+- Airline consolidation wave
+```
+
+##### Geopolitical Constraints by Era
+
+This is CRUCIAL - where you start your airline determines which manufacturers you can buy from!
+
+**Cold War Era (1960s-1980s):**
+
+```
+Western Airlines (USA, Western Europe, Japan):
+✓ Can buy: Boeing, McDonnell Douglas, Airbus, British aircraft
+✗ Cannot buy: Tupolev, Ilyushin (Soviet aircraft)
+✗ Cannot fly to: USSR, Warsaw Pact nations, China
+✓ Can fly to: Western Europe, Americas, Japan, Middle East
+
+Eastern Airlines (USSR, Eastern Europe):
+✓ Can buy: Tupolev, Ilyushin, Antonov
+✗ Cannot buy: Boeing, McDonnell Douglas, Airbus
+✗ Cannot fly to: Western nations (limited)
+✓ Can fly to: Warsaw Pact, China, Cuba, sympathetic nations
+
+Non-Aligned Airlines (India, Egypt, Yugoslavia):
+✓ Can buy: Both Eastern and Western aircraft (but at premium)
+✓ Can fly to: Both blocs (huge advantage!)
+⚠ Risk: Dependency on volatile alliances
+```
+
+**Post-Cold War (1990s+):**
+- Eastern bloc opens up
+- Soviet aircraft become obsolete
+- Eastern European airlines must re-fleet entirely (opportunity!)
+- New routes to former USSR = gold rush
+- But infrastructure poor, demand uncertain
+
+**Modern Era (2000s+):**
+- China emerges as massive market
+- Middle Eastern carriers dominate (Emirates, Qatar, Etihad)
+- LCCs proliferate globally
+- Open Skies agreements change route economics
+- Chinese aircraft (COMAC) enter market (2010s+)
+
+##### Political Events Affecting Routes
+
+**Era-Specific Route Restrictions:**
+
+**1960s-1970s:**
+- Vietnam War: Southeast Asia routes dangerous/closed
+- Arab-Israeli conflicts: Middle East overflight restricted
+- African decolonization: New nations = new airports opening
+- India-Pakistan conflicts: Subcontinent routing difficult
+
+**1980s:**
+- Cold War peak: No overflying USSR (must route around)
+  - Europe-Japan flights = 12+ hours instead of 9
+  - Creates demand for refueling stops (Anchorage!)
+- Iran-Iraq War: Persian Gulf routes dangerous
+- Falklands War: South Atlantic disrupted
+
+**1990s:**
+- Gulf War (1990-91): Middle East routes suspended temporarily
+- Yugoslav Wars: Balkan routes closed
+- **Cold War ends (1991): MASSIVE opportunity!**
+  - Direct routes to Moscow, Eastern Europe
+  - Ex-Soviet airports hungry for service
+  - Cheap aircraft from failed Eastern carriers
+
+**2000s:**
+- 9/11 (2001): Industry transformation
+  - Security costs soar
+  - US airspace closed temporarily
+  - Many carriers bankrupted
+  - But survivors gain market share
+- Iraq War (2003): Middle East volatility
+- SARS (2003): Asia routes collapse temporarily
+
+##### Starting Location Impact
+
+Where you base your airline dramatically affects strategy:
+
+**USA Start (1960s):**
+- ✓ Access to best aircraft (Boeing, McDonnell Douglas)
+- ✓ Huge domestic market
+- ✓ Strong economy
+- ✗ Cannot reach Eastern bloc
+- ✗ High labor costs
+- Strategy: Dominate Atlantic & Pacific routes
+
+**European Start (1960s):**
+- ✓ Central location, hub potential
+- ✓ Access to Airbus (1970s+)
+- ✗ Fragmented market (many countries)
+- ✗ Strong flag carriers (competition)
+- Strategy: Build hub, connect East-West
+
+**Asian Start (Japan, 1960s):**
+- ✓ Growing economy
+- ✓ Pacific routes to USA
+- ✗ Limited domestic market (small island)
+- ✗ Expensive slots
+- Strategy: Premium service, focus on profitable routes
+
+**Middle East Start (1980s+):**
+- ✓ Geographic advantage (Europe-Asia midpoint)
+- ✓ Low taxes, cheap fuel
+- ✓ 24/7 operations (no curfew)
+- ✗ Small local market (transit focus)
+- Strategy: Become global super-connector
+
+**Eastern Bloc Start (1960s-1980s):**
+- ✓ Captive market (no competition)
+- ✓ Government subsidies
+- ✗ Terrible aircraft (unreliable, inefficient)
+- ✗ Cannot access Western markets
+- Strategy: Survive until 1990s, then modernize!
+
+##### Era-Specific Economic Challenges
+
+**1960s: Infrastructure Limits**
+- Few airports have jet-capable runways
+- Limited navigation technology (must follow established routes)
+- Passenger capacity growing faster than airports
+- Slot availability not yet an issue
+
+**1970s: Oil Crisis Management**
+- Fuel costs become major expense
+- Older aircraft (707, DC-8) hemorrhage money
+- **Strategic choice:** Keep cheap old aircraft or buy expensive but efficient new ones?
+- Some players will go bankrupt if not careful
+
+**1980s: Deregulation Chaos**
+- Fare wars drive prices to historic lows
+- LCCs undercut legacy carriers
+- Hub dominance becomes critical
+- Yield management systems give competitive edge
+
+**1990s: Globalization Complexity**
+- Code-share agreements become important
+- Alliance networks (Star, OneWorld, SkyTeam) form
+- Asian growth offers huge opportunities
+- But Asian Financial Crisis (1997) can destroy Asia-focused airlines
+
+**2000s: Efficiency Wars**
+- Fuel efficiency paramount
+- LCCs dominate short-haul
+- Legacy carriers must compete on service
+- Consolidation: Merge or die
+
+##### Gameplay Implementation
+
+**UI Changes:**
+- [ ] Era selector at game start
+- [ ] "Current Era: 1973" always visible in header
+- [ ] Aircraft catalog filtered by era (with "coming soon" preview)
+- [ ] Route restrictions shown on map (grayed-out regions)
+- [ ] Historical news ticker ("1973: Oil Crisis Begins!")
+- [ ] Era transition cutscene/announcement
+
+**Balance Considerations:**
+- Earlier eras = simpler gameplay (fewer aircraft, fewer routes)
+- Good for beginners: Start in 1960s
+- Expert players: Start in 1990s with full complexity
+- **Challenge Mode:** Start Eastern Bloc 1960, survive to 2000
+
+**Aircraft Data Requirements:**
+- Need introduction/retirement years for each aircraft
+- Era-appropriate pricing (inflation-adjusted)
+- Era-appropriate fuel efficiency
+- Manufacturer availability by era and player location
+
+**Route Data Requirements:**
+- Political bloc membership by nation/era
+- Overflight permissions by era
+- Airport opening/closure dates
+- Slot availability evolution over time
+
+##### Success Criteria
+
+✓ Starting in different eras feels distinctly different
+✓ Geopolitical constraints create meaningful strategy choices
+✓ Aircraft progression feels authentic and impactful
+✓ Cold War restrictions create tension and opportunity
+✓ Era transitions feel momentous (e.g., "Berlin Wall Falls! Eastern Europe Opens!")
+✓ Players want to replay in different eras to experience different challenges
+
+**Design Principles:**
+- Historical accuracy balanced with fun gameplay
+- Era constraints should create interesting decisions, not just frustration
+- Each era should have a "signature challenge" (oil crisis, deregulation, etc.)
+- Non-historians should still understand the basics without Wikipedia
+- Optional "historical mode" vs "inspired by history" mode
+
+##### Example Playthrough: Eastern Bloc 1970s
+
+**Starting Situation:**
+- Based in Moscow, Aeroflot monopoly broken
+- Can only buy Tupolev Tu-154, Ilyushin Il-62
+- Can only fly within Warsaw Pact + Cuba, Vietnam, Syria
+- Fuel is subsidized (cheap)
+- Demand is guaranteed (planned economy)
+
+**Mid-Era (1975):**
+- Expansion to Havana, Hanoi routes
+- Tu-154 reliable but fuel-hungry
+- Cannot compete with Western carriers on efficiency
+- But no Western competition in your markets!
+
+**Late-Era (1979):**
+- Afghanistan War starts - Kabul route suddenly strategic
+- Hints of coming change (Gorbachev era approaching)
+- Must decide: Stick with Soviet aircraft or prepare for future?
+
+**Era Transition (1990):**
+- **Berlin Wall Falls!**
+- Suddenly can access Western markets
+- But aircraft are obsolete
+- Must buy Western aircraft (expensive!) or perish
+- Historic opportunity: Buy cheap slots in former East Germany!
+
+**Strategic Choice:**
+- Take massive loan to buy Boeing 737s?
+- Or try to compete with aging Tu-154s (will fail)?
+- Or merge with Western carrier?
+
+This creates a **unique narrative** impossible in other eras!
+
+---
+
+**Success Criteria for v0.10:**
+
+**Mode 1 (Classic Campaign):**
+- ✓ Can choose any 5-year increment start date from 1955 onwards
+- ✓ 20-year (80 quarter) time limit creates focused strategic gameplay
+- ✓ Net worth scoring system rewards both growth and efficiency
+- ✓ Different eras (1955, 1975, 1995, etc.) play distinctly different
+- ✓ Historical events appropriate to the era occur naturally
+- ✓ Victory feels earned and celebratory
+
+**Mode 2 (Domination):**
+- ✓ Continental dominance tracking works smoothly (7 continents)
+- ✓ Must maintain #1 position for 4 quarters in ALL continents to win
+- ✓ Takes 30-50+ years of gameplay (epic scope)
+- ✓ Competitors scale appropriately over time
+- ✓ Late-game remains challenging (competitors don't give up)
+- ✓ Victory feels like a massive accomplishment
+
+**Mode 3 (Scenarios):**
+- ✓ At least 10 scenarios at launch (starting, save giants, gauntlet, puzzles)
+- ✓ Each scenario has clear objectives and star rating system
+- ✓ 5-star victories are genuinely difficult (< 10% of players)
+- ✓ Historical scenarios feel authentic (Pan Am, Varig, 9/11, COVID)
+- ✓ Scenario progression/unlocking works smoothly
+- ✓ Leaderboards motivate competition
+- ✓ 2020 Pandemic scenario is brutally difficult but fair
+
+**All Modes:**
+- ✓ Aircraft catalog accurately reflects each era
+- ✓ Geopolitical constraints feel authentic (Cold War, etc.)
+- ✓ Starting location (US vs Europe vs Asia vs Middle East vs Eastern Bloc) creates distinct strategies
+- ✓ Players understand historical context without needing to be historians
+- ✓ Cold War mechanics create meaningful strategic choices
+- ✓ Era transitions (where applicable) are dramatic and consequential
+- ✓ Massive replayability: Each mode offers 20+ hours, scenarios add 50+ hours total
+
