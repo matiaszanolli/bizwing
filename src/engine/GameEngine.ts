@@ -257,12 +257,16 @@ export class GameEngine {
         return true;
     }
 
-    suspendRoute(route: Route): boolean {
-        const routeIndex = this.state.routes.findIndex(r =>
-            r.from === route.from && r.to === route.to && r.aircraft.id === route.aircraft.id
-        );
+    suspendRoute(routeOrId: Route | string): boolean {
+        let route: Route | undefined;
 
-        if (routeIndex === -1) {
+        if (typeof routeOrId === 'string') {
+            route = this.state.routes.find(r => r.id === routeOrId);
+        } else {
+            route = routeOrId;
+        }
+
+        if (!route) {
             return false;
         }
 
@@ -271,17 +275,34 @@ export class GameEngine {
         return true;
     }
 
-    resumeRoute(route: Route): boolean {
-        const routeIndex = this.state.routes.findIndex(r =>
-            r.from === route.from && r.to === route.to && r.aircraft.id === route.aircraft.id
-        );
+    resumeRoute(routeOrId: Route | string): boolean {
+        let route: Route | undefined;
 
-        if (routeIndex === -1) {
+        if (typeof routeOrId === 'string') {
+            route = this.state.routes.find(r => r.id === routeOrId);
+        } else {
+            route = routeOrId;
+        }
+
+        if (!route) {
             return false;
         }
 
         route.suspended = false;
         this.state.addNews(`Route resumed: ${route.from} → ${route.to}`);
+        return true;
+    }
+
+    updateRouteFrequency(routeId: string, newFrequency: number): boolean {
+        const route = this.state.routes.find(r => r.id === routeId);
+
+        if (!route || newFrequency < 1 || newFrequency > 14) {
+            return false;
+        }
+
+        const oldFrequency = route.flights_per_week;
+        route.flights_per_week = newFrequency;
+        this.state.addNews(`Route ${route.from} → ${route.to}: frequency changed from ${oldFrequency}/wk to ${newFrequency}/wk`);
         return true;
     }
 
@@ -448,14 +469,41 @@ export class GameEngine {
         return competitors;
     }
 
-    estimateRouteProfitability(route: Route): number {
+    estimateRouteProfitability(route: Route): { revenue: number; expenses: number; profit: number; loadFactor: number } {
+        const from = this.state.findAirport(route.from);
+        const to = this.state.findAirport(route.to);
+
+        if (!from || !to || route.suspended) {
+            return { revenue: 0, expenses: 0, profit: 0, loadFactor: 0 };
+        }
+
+        // Calculate load factor (same logic as calculateRouteRevenue)
+        let loadFactor = CONFIG.BASE_LOAD_FACTOR +
+                        (this.state.reputation - CONFIG.STARTING_REPUTATION) / 200;
+        loadFactor = clamp(loadFactor, 0.4, 0.95);
+        loadFactor *= this.state.economicCondition;
+        const competition = this.calculateRouteCompetition(route);
+        const competitionPenalty = 1 - (competition * CONFIG.COMPETITION_PENALTY_PER_COMPETITOR);
+        loadFactor *= competitionPenalty;
+
+        // Calculate revenue
         const revenue = this.calculateRouteRevenue(route);
+
+        // Calculate expenses
         const flightsPerQuarter = route.flights_per_week * CONFIG.WEEKS_PER_QUARTER;
-        const fuelEfficiencyMultiplier = this.getFuelEfficiencyMultiplier(route.aircraft.age);
+        const ageYears = Math.floor(route.aircraft.age / 4);
+        const fuelEfficiencyMultiplier = this.getFuelEfficiencyMultiplier(ageYears);
         const operatingCost = route.aircraft.type.operating_cost * flightsPerQuarter * this.state.fuelPrice * fuelEfficiencyMultiplier;
         const leaseCost = route.aircraft.owned ? 0 : route.aircraft.type.lease_per_quarter;
-        const maintenanceCost = CONFIG.AIRCRAFT_MAINTENANCE_BASE * this.getMaintenanceMultiplier(route.aircraft.age) / this.state.routes.filter(r => r.aircraft.id === route.aircraft.id).length || 1;
-        return revenue - operatingCost - leaseCost - maintenanceCost;
+        const routesUsingAircraft = this.state.routes.filter(r => r.aircraft.id === route.aircraft.id && !r.suspended).length;
+        const maintenanceCost = routesUsingAircraft > 0
+            ? CONFIG.AIRCRAFT_MAINTENANCE_BASE * this.getMaintenanceMultiplier(ageYears) / routesUsingAircraft
+            : 0;
+
+        const expenses = operatingCost + leaseCost + maintenanceCost;
+        const profit = revenue - expenses;
+
+        return { revenue, expenses, profit, loadFactor };
     }
 
     // === EVENTS ===

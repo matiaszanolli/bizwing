@@ -733,6 +733,26 @@ input[type="range"]::-moz-range-thumb {
     width: 90%;
 }
 
+.modal-large {
+    max-width: 1200px;
+}
+
+.modal-fullscreen {
+    max-width: 95vw;
+    max-height: 95vh;
+    width: 95%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-fullscreen .modal-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -1968,4 +1988,309 @@ input[type="range"]::-moz-range-thumb {
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+}
+
+/* =========================== */
+/* Route Manager Panel         */
+/* =========================== */
+
+.route-manager-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+}
+
+/* Summary Dashboard */
+.route-summary-dashboard {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-border);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.summary-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    background: rgba(0, 170, 0, 0.05);
+    border: 1px solid var(--color-dim);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--color-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--color-text-bright);
+}
+
+.stat-value.profitable {
+    color: var(--color-success);
+}
+
+.stat-value.unprofitable {
+    color: var(--color-danger);
+}
+
+.stat-value.suspended {
+    color: var(--color-warning);
+}
+
+.stat-value.positive {
+    color: var(--color-success);
+}
+
+.stat-value.negative {
+    color: var(--color-danger);
+}
+
+/* Route Controls */
+.route-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-controls label {
+    font-weight: bold;
+    color: var(--color-text-bright);
+}
+
+.filter-controls select {
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.filter-controls select:hover {
+    border-color: var(--color-text-bright);
+}
+
+.filter-controls select:focus {
+    outline: none;
+    border-color: var(--color-text-bright);
+    box-shadow: 0 0 8px rgba(0, 170, 0, 0.3);
+}
+
+/* Bulk Actions */
+.bulk-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.selection-count {
+    font-weight: bold;
+    color: var(--color-text-bright);
+    padding: 6px 10px;
+    background: rgba(0, 170, 0, 0.1);
+    border: 1px solid var(--color-text-bright);
+}
+
+/* Route Table */
+.route-table-container {
+    flex: 1;
+    overflow: auto;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-border);
+}
+
+.route-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.route-table thead {
+    position: sticky;
+    top: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10;
+}
+
+.route-table th {
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: bold;
+    color: var(--color-text-bright);
+    border-bottom: 2px solid var(--color-border);
+    white-space: nowrap;
+}
+
+.route-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+}
+
+.route-table th.sortable:hover {
+    color: var(--color-success);
+    text-shadow: 0 0 8px var(--color-success);
+}
+
+.route-table td {
+    padding: 8px;
+    border-bottom: 1px solid var(--color-dim);
+}
+
+.route-table tbody tr {
+    transition: all 0.2s;
+}
+
+.route-table tbody tr:hover {
+    background: rgba(0, 170, 0, 0.1);
+}
+
+/* Route Row Status Classes */
+.route-row.highly-profitable {
+    border-left: 3px solid #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.route-row.profitable {
+    border-left: 3px solid #7fff00;
+    background: rgba(127, 255, 0, 0.03);
+}
+
+.route-row.marginal {
+    border-left: 3px solid #ffaa00;
+    background: rgba(255, 170, 0, 0.03);
+}
+
+.route-row.unprofitable {
+    border-left: 3px solid #ff5500;
+    background: rgba(255, 85, 0, 0.05);
+}
+
+.route-row.suspended {
+    opacity: 0.6;
+    border-left: 3px solid #666;
+    background: rgba(100, 100, 100, 0.05);
+}
+
+/* Table Cell Styles */
+.route-table .indicator {
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.route-row.highly-profitable .indicator {
+    color: #00ff00;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+}
+
+.route-row.profitable .indicator {
+    color: #7fff00;
+}
+
+.route-row.marginal .indicator {
+    color: #ffaa00;
+}
+
+.route-row.unprofitable .indicator {
+    color: #ff5500;
+}
+
+.route-row.suspended .indicator {
+    color: #666;
+}
+
+.route-table .route-name {
+    font-weight: bold;
+    color: var(--color-text-bright);
+    white-space: nowrap;
+}
+
+.route-table .aircraft-name {
+    color: var(--color-dim);
+    white-space: nowrap;
+}
+
+.route-table .money {
+    text-align: right;
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+}
+
+.route-table .money.positive {
+    color: var(--color-success);
+    font-weight: bold;
+}
+
+.route-table .money.negative {
+    color: var(--color-danger);
+}
+
+.route-table td.warning {
+    color: var(--color-warning);
+    font-weight: bold;
+}
+
+.route-table .empty-routes {
+    text-align: center;
+    padding: 40px;
+    color: var(--color-dim);
+    font-style: italic;
+}
+
+/* Checkbox styling */
+.route-table input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--color-success);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .summary-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .summary-row {
+        grid-template-columns: 1fr;
+    }
+
+    .route-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bulk-actions {
+        justify-content: center;
+    }
 }

@@ -14,6 +14,7 @@ import { PostQuarterResultsModal } from '../Modals/PostQuarterResultsModal';
 import { HelpModal } from '../Modals/HelpModal';
 import { FirstTimeTutorialModal } from '../Modals/FirstTimeTutorialModal';
 import { NewGameSetupModal } from '../Modals/NewGameSetupModal';
+import { RouteManagerModal } from '../Modals/RouteManagerModal';
 import { CONFIG, DifficultyLevel, DIFFICULTY } from '../../utils/config';
 import { formatMoney } from '../../utils/helpers';
 
@@ -32,6 +33,7 @@ export function ActionsPanel() {
     const [showHelp, setShowHelp] = useState(false);
     const [showFirstTimeTutorial, setShowFirstTimeTutorial] = useState(false);
     const [showNewGameSetup, setShowNewGameSetup] = useState(false);
+    const [showRouteManager, setShowRouteManager] = useState(false);
 
     // Check if this is the first time playing
     React.useEffect(() => {
@@ -127,6 +129,9 @@ export function ActionsPanel() {
                     <button className="btn-secondary" onClick={() => setShowCreateRoute(true)}>
                         Create Route
                     </button>
+                    <button className="btn-secondary" onClick={() => setShowRouteManager(true)}>
+                        Route Manager
+                    </button>
                     <button className="btn-secondary" onClick={() => setShowBuyAirport(true)}>
                         Buy Airport Slot
                     </button>
@@ -209,6 +214,10 @@ export function ActionsPanel() {
                 isOpen={showNewGameSetup}
                 onConfirm={handleNewGame}
                 onCancel={() => setShowNewGameSetup(false)}
+            />
+            <RouteManagerModal
+                isOpen={showRouteManager}
+                onClose={() => setShowRouteManager(false)}
             />
         </>
     );
