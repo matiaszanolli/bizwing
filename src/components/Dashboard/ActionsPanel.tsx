@@ -9,6 +9,8 @@ import { BuyAirportSlotModal } from '../Modals/BuyAirportSlotModal';
 import { TakeLoanModal } from '../Modals/TakeLoanModal';
 import { SaveLoadModal } from '../Modals/SaveLoadModal';
 import { EmergencyLoanModal } from '../Modals/EmergencyLoanModal';
+import { PreQuarterReviewModal } from '../Modals/PreQuarterReviewModal';
+import { PostQuarterResultsModal } from '../Modals/PostQuarterResultsModal';
 import { CONFIG } from '../../utils/config';
 import { formatMoney } from '../../utils/helpers';
 
@@ -21,20 +23,44 @@ export function ActionsPanel() {
     const [showSave, setShowSave] = useState(false);
     const [showLoad, setShowLoad] = useState(false);
     const [showEmergencyLoan, setShowEmergencyLoan] = useState(false);
+    const [showPreQuarterReview, setShowPreQuarterReview] = useState(false);
+    const [showPostQuarterResults, setShowPostQuarterResults] = useState(false);
+    const [quarterResults, setQuarterResults] = useState({ revenue: 0, expenses: 0, profit: 0 });
 
-    const handleAdvanceTurn = () => {
+    const handleAdvanceTurnClick = () => {
+        // Show pre-quarter review first
+        setShowPreQuarterReview(true);
+    };
+
+    const handleConfirmAdvance = () => {
+        setShowPreQuarterReview(false);
+
+        // Calculate current quarter financials before advancing
+        const revenue = engine.calculateQuarterlyRevenue();
+        const expenses = engine.calculateQuarterlyExpenses();
+        const profit = revenue - expenses;
+        setQuarterResults({ revenue, expenses, profit });
+
+        // Advance the turn
         const result = engine.advanceTurn();
         forceUpdate();
 
+        // Handle special conditions first
         if (result.gameOver) {
             alert(`Game Over! Reason: ${result.reason}`);
+            return;
         } else if (result.victory) {
             alert(`Victory! Your score: ${result.score}`);
+            return;
         } else if (result.emergencyLoanRequired) {
             setShowEmergencyLoan(true);
+            return;
         } else if (result.lowCashWarning) {
             alert(`WARNING: Cash reserves low ($${formatMoney(state.cash)})! You posted a loss this quarter. Take action to avoid bankruptcy!`);
         }
+
+        // Show post-quarter results
+        setShowPostQuarterResults(true);
     };
 
     const closeAllModals = () => {
@@ -49,7 +75,7 @@ export function ActionsPanel() {
 
     // Keyboard shortcuts
     useKeyboard({
-        ' ': handleAdvanceTurn,  // Space bar to advance turn
+        ' ': handleAdvanceTurnClick,  // Space bar to advance turn
         'escape': closeAllModals  // ESC to close all modals
     });
 
@@ -58,7 +84,7 @@ export function ActionsPanel() {
             <div className="panel actions-panel">
                 <h2>Actions</h2>
                 <div className="button-group">
-                    <button onClick={handleAdvanceTurn} className="btn-primary">
+                    <button onClick={handleAdvanceTurnClick} className="btn-primary">
                         Advance Quarter [Space]
                     </button>
                     <button className="btn-secondary" onClick={() => setShowBuyAircraft(true)}>
@@ -118,6 +144,18 @@ export function ActionsPanel() {
             <EmergencyLoanModal
                 isOpen={showEmergencyLoan}
                 onClose={() => setShowEmergencyLoan(false)}
+            />
+            <PreQuarterReviewModal
+                isOpen={showPreQuarterReview}
+                onClose={() => setShowPreQuarterReview(false)}
+                onConfirm={handleConfirmAdvance}
+            />
+            <PostQuarterResultsModal
+                isOpen={showPostQuarterResults}
+                onClose={() => setShowPostQuarterResults(false)}
+                quarterRevenue={quarterResults.revenue}
+                quarterExpenses={quarterResults.expenses}
+                quarterProfit={quarterResults.profit}
             />
         </>
     );

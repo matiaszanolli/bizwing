@@ -72,8 +72,12 @@ export class SaveManager {
                 // In the future, add migration logic here
             }
 
+            // Restore GameState instance with methods
+            const restoredState = new GameState();
+            Object.assign(restoredState, saveSlot.state);
+
             console.log(`[SaveManager] Loaded from slot ${slotId}`);
-            return saveSlot.state;
+            return restoredState;
         } catch (error) {
             console.error('[SaveManager] Failed to load:', error);
             return null;
