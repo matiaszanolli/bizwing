@@ -7,6 +7,7 @@ import { BuyAircraftModal } from '../Modals/BuyAircraftModal';
 import { CreateRouteModal } from '../Modals/CreateRouteModal';
 import { BuyAirportSlotModal } from '../Modals/BuyAirportSlotModal';
 import { TakeLoanModal } from '../Modals/TakeLoanModal';
+import { SaveLoadModal } from '../Modals/SaveLoadModal';
 
 export function ActionsPanel() {
     const { engine, forceUpdate } = useGame();
@@ -14,6 +15,8 @@ export function ActionsPanel() {
     const [showCreateRoute, setShowCreateRoute] = useState(false);
     const [showBuyAirport, setShowBuyAirport] = useState(false);
     const [showTakeLoan, setShowTakeLoan] = useState(false);
+    const [showSave, setShowSave] = useState(false);
+    const [showLoad, setShowLoad] = useState(false);
 
     const handleAdvanceTurn = () => {
         const result = engine.advanceTurn();
@@ -31,6 +34,8 @@ export function ActionsPanel() {
         setShowCreateRoute(false);
         setShowBuyAirport(false);
         setShowTakeLoan(false);
+        setShowSave(false);
+        setShowLoad(false);
     };
 
     // Keyboard shortcuts
@@ -60,6 +65,16 @@ export function ActionsPanel() {
                         Take Loan
                     </button>
                 </div>
+
+                <div className="button-group save-load-group">
+                    <button className="btn-secondary" onClick={() => setShowSave(true)}>
+                        Save Game
+                    </button>
+                    <button className="btn-secondary" onClick={() => setShowLoad(true)}>
+                        Load Game
+                    </button>
+                </div>
+
                 <p className="help-text">
                     Create routes to start earning revenue! Press [Space] to advance turn, [ESC] to close dialogs.
                 </p>
@@ -80,6 +95,16 @@ export function ActionsPanel() {
             <TakeLoanModal
                 isOpen={showTakeLoan}
                 onClose={() => setShowTakeLoan(false)}
+            />
+            <SaveLoadModal
+                isOpen={showSave}
+                onClose={() => setShowSave(false)}
+                mode="save"
+            />
+            <SaveLoadModal
+                isOpen={showLoad}
+                onClose={() => setShowLoad(false)}
+                mode="load"
             />
         </>
     );
