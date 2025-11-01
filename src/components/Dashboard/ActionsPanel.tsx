@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useGame } from '../../contexts/GameContext';
+import { useKeyboard } from '../../hooks/useKeyboard';
 import { BuyAircraftModal } from '../Modals/BuyAircraftModal';
 import { CreateRouteModal } from '../Modals/CreateRouteModal';
 import { BuyAirportSlotModal } from '../Modals/BuyAirportSlotModal';
@@ -25,13 +26,26 @@ export function ActionsPanel() {
         }
     };
 
+    const closeAllModals = () => {
+        setShowBuyAircraft(false);
+        setShowCreateRoute(false);
+        setShowBuyAirport(false);
+        setShowTakeLoan(false);
+    };
+
+    // Keyboard shortcuts
+    useKeyboard({
+        ' ': handleAdvanceTurn,  // Space bar to advance turn
+        'escape': closeAllModals  // ESC to close all modals
+    });
+
     return (
         <>
             <div className="panel actions-panel">
                 <h2>Actions</h2>
                 <div className="button-group">
                     <button onClick={handleAdvanceTurn} className="btn-primary">
-                        Advance Quarter
+                        Advance Quarter [Space]
                     </button>
                     <button className="btn-secondary" onClick={() => setShowBuyAircraft(true)}>
                         Buy Aircraft
@@ -47,7 +61,7 @@ export function ActionsPanel() {
                     </button>
                 </div>
                 <p className="help-text">
-                    Create routes to start earning revenue!
+                    Create routes to start earning revenue! Press [Space] to advance turn, [ESC] to close dialogs.
                 </p>
             </div>
 

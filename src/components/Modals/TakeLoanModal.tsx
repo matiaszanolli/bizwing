@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Modal } from './Modal';
+import { ConfirmDialog } from './ConfirmDialog';
 import { useGame } from '../../contexts/GameContext';
 import { formatMoney } from '../../utils/helpers';
 import { CONFIG } from '../../utils/config';
@@ -25,6 +26,7 @@ export function TakeLoanModal({ isOpen, onClose }: Props) {
     const { engine, state, forceUpdate } = useGame();
     const [amount, setAmount] = useState(1000000);
     const [quarters, setQuarters] = useState(8);
+    const [showConfirm, setShowConfirm] = useState(false);
 
     // Calculate loan details
     const loanDetails = useMemo(() => {
@@ -48,11 +50,16 @@ export function TakeLoanModal({ isOpen, onClose }: Props) {
             // Reset to defaults
             setAmount(1000000);
             setQuarters(8);
+            setShowConfirm(false);
         }
     };
 
     const handlePresetClick = (presetAmount: number) => {
         setAmount(presetAmount);
+    };
+
+    const handleAcceptLoanClick = () => {
+        setShowConfirm(true);
     };
 
     return (
@@ -191,7 +198,7 @@ export function TakeLoanModal({ isOpen, onClose }: Props) {
                 <div className="modal-actions">
                     <button
                         className="btn-primary"
-                        onClick={handleTakeLoan}
+                        onClick={handleAcceptLoanClick}
                     >
                         Accept Loan
                     </button>
@@ -200,6 +207,17 @@ export function TakeLoanModal({ isOpen, onClose }: Props) {
                     </button>
                 </div>
             </div>
+
+            <ConfirmDialog
+                isOpen={showConfirm}
+                onClose={() => setShowConfirm(false)}
+                onConfirm={handleTakeLoan}
+                title="Confirm Loan"
+                message={`Are you sure you want to take a loan of $${formatMoney(amount)} with quarterly payments of $${formatMoney(loanDetails.quarterlyPayment)}? Failure to make payments will result in bankruptcy!`}
+                confirmText="Yes, Take Loan"
+                cancelText="No, Go Back"
+                dangerous={true}
+            />
         </Modal>
     );
 }

@@ -11,7 +11,11 @@ export function FleetPanel() {
             <h2>Fleet ({state.fleet.length})</h2>
             <div className="fleet-list">
                 {state.fleet.length === 0 ? (
-                    <p>No aircraft</p>
+                    <div className="empty-state">
+                        <p className="empty-icon">✈️</p>
+                        <p className="empty-title">No Aircraft in Fleet</p>
+                        <p className="empty-hint">Click "Buy Aircraft" below to purchase or lease your first plane and start building your airline empire!</p>
+                    </div>
                 ) : (
                     state.fleet.map(aircraft => (
                         <div key={aircraft.id} className="fleet-item">
