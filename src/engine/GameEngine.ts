@@ -6,7 +6,7 @@ import { calculateDistance, formatMoney, clamp, generateId } from '../utils/help
 import { getRandomEvent } from '../data/events';
 import { AircraftType, getUpcomingAircraft, getEndingProductionAircraft } from '../data/aircraft';
 import { Airport } from '../data/airports';
-import { Route, ActiveEvent } from '../models/types';
+import { Route, ActiveEvent, HubMetrics } from '../models/types';
 
 interface RouteCreationResult {
     success: boolean;
@@ -186,18 +186,108 @@ export class GameEngine {
 
     // === AIRPORT MANAGEMENT ===
 
-    buyAirportSlot(airport: Airport): boolean {
-        const slotPrice = airport.market_size * CONFIG.AIRPORT_PRICE_MULTIPLIER;
-
-        if (this.state.canAfford(slotPrice)) {
-            this.state.cash -= slotPrice;
-            airport.owned = true;
-            this.state.addNews(`Acquired slots at ${airport.name}`);
-            return true;
-        } else {
-            this.state.addNews('Insufficient funds to purchase airport slot!');
-            return false;
+    beginSlotNegotiation(airport: Airport): { success: boolean; error?: string; cost?: number; quarters?: number } {
+        // Check if already owned
+        if (airport.owned) {
+            return { success: false, error: 'You already own slots at this airport!' };
         }
+
+        // Check if already negotiating for this airport
+        const existingNegotiation = this.state.slotNegotiations.find(n => n.airport_id === airport.id);
+        if (existingNegotiation) {
+            return { success: false, error: 'Already negotiating for slots at this airport!' };
+        }
+
+        // Check negotiation capacity
+        if (this.state.slotNegotiations.length >= this.state.negotiationCapacity) {
+            return {
+                success: false,
+                error: `Negotiation capacity reached (${this.state.negotiationCapacity} simultaneous negotiations max)!`
+            };
+        }
+
+        // Calculate negotiation time (larger markets take longer)
+        const marketSizeNormalized = airport.market_size / 40000000; // Normalize to 0-1 range
+        const quartersRange = CONFIG.SLOT_NEGOTIATION_QUARTERS_MAX - CONFIG.SLOT_NEGOTIATION_QUARTERS_MIN;
+        const quarters = Math.ceil(
+            CONFIG.SLOT_NEGOTIATION_QUARTERS_MIN + (marketSizeNormalized * quartersRange)
+        );
+
+        // Calculate upfront deposit cost (much cheaper than old system)
+        const depositCost = Math.floor(airport.market_size * CONFIG.AIRPORT_SLOT_DEPOSIT_MULTIPLIER);
+
+        // Check if can afford deposit
+        if (!this.state.canAfford(depositCost)) {
+            return { success: false, error: 'Insufficient funds for negotiation deposit!' };
+        }
+
+        // Pay deposit and start negotiation
+        this.state.cash -= depositCost;
+        this.state.slotNegotiations.push({
+            airport_id: airport.id,
+            quarters_remaining: quarters,
+            slot_count: 1, // For now, always 1 slot
+            cost: depositCost
+        });
+
+        this.state.addNews(`Started slot negotiation at ${airport.name} (${quarters} quarters, deposit: $${(depositCost / 1000000).toFixed(1)}M)`);
+        return { success: true, cost: depositCost, quarters };
+    }
+
+    cancelSlotNegotiation(airportId: string): { success: boolean; error?: string; refund?: number } {
+        const negotiationIndex = this.state.slotNegotiations.findIndex(n => n.airport_id === airportId);
+
+        if (negotiationIndex === -1) {
+            return { success: false, error: 'No active negotiation for this airport!' };
+        }
+
+        const negotiation = this.state.slotNegotiations[negotiationIndex];
+
+        // Refund 50% of deposit if cancelled
+        const refund = Math.floor(negotiation.cost * 0.5);
+        this.state.cash += refund;
+
+        this.state.slotNegotiations.splice(negotiationIndex, 1);
+
+        const airport = this.state.findAirport(airportId);
+        this.state.addNews(`Cancelled slot negotiation at ${airport?.name || airportId} (refund: $${(refund / 1000000).toFixed(1)}M)`);
+
+        return { success: true, refund };
+    }
+
+    processSlotNegotiations(): void {
+        const completedNegotiations: string[] = [];
+
+        // Countdown all active negotiations
+        for (const negotiation of this.state.slotNegotiations) {
+            negotiation.quarters_remaining--;
+
+            // If completed, mark for acquisition
+            if (negotiation.quarters_remaining <= 0) {
+                completedNegotiations.push(negotiation.airport_id);
+            }
+        }
+
+        // Process completed negotiations
+        for (const airportId of completedNegotiations) {
+            const airport = this.state.findAirport(airportId);
+            if (airport) {
+                airport.owned = true;
+                this.state.addNews(`✈️ Slot negotiation completed! Acquired slots at ${airport.name}`);
+            }
+
+            // Remove from negotiations list
+            const index = this.state.slotNegotiations.findIndex(n => n.airport_id === airportId);
+            if (index !== -1) {
+                this.state.slotNegotiations.splice(index, 1);
+            }
+        }
+    }
+
+    // Legacy method for backward compatibility (redirects to negotiation)
+    buyAirportSlot(airport: Airport): boolean {
+        const result = this.beginSlotNegotiation(airport);
+        return result.success;
     }
 
     // === ROUTE MANAGEMENT ===
@@ -420,7 +510,14 @@ export class GameEngine {
         const revenuePerFlight = passengersPerFlight * route.distance * CONFIG.PRICE_PER_KM;
         const flightsPerQuarter = route.flights_per_week * CONFIG.WEEKS_PER_QUARTER;
 
-        return revenuePerFlight * flightsPerQuarter;
+        let quarterlyRevenue = revenuePerFlight * flightsPerQuarter;
+
+        // Apply connection bonus if route has connection data
+        if (route.connections && route.connections.connection_bonus > 0) {
+            quarterlyRevenue *= (1 + route.connections.connection_bonus);
+        }
+
+        return quarterlyRevenue;
     }
 
     // === EXPENSE CALCULATION ===
@@ -679,6 +776,15 @@ export class GameEngine {
         // Simulate competitor activity
         this.simulateCompetitors();
 
+        // Update airport economic indicators (quarterly)
+        this.updateAirportEconomics();
+
+        // Update connection statistics for hub routes (quarterly)
+        this.updateConnectionStatistics();
+
+        // Process slot negotiations (quarterly countdown)
+        this.processSlotNegotiations();
+
         // Check for aircraft announcements (only on Q1)
         if (this.state.quarter === 1) {
             // Warn about upcoming aircraft
@@ -737,6 +843,384 @@ export class GameEngine {
         }
 
         return { continue: true };
+    }
+
+    // === AIRPORT ECONOMICS ===
+
+    /**
+     * Update airport tourism and business scores quarterly
+     * Simulates economic fluctuations and regional factors
+     */
+    updateAirportEconomics(): void {
+        // Regional economic factors (10% chance of regional event)
+        let regionalEvent: { region: string; tourismFactor: number; businessFactor: number; message: string } | null = null;
+
+        if (Math.random() < 0.10) {
+            const regions: Array<{ region: string; tourismFactor: number; businessFactor: number; message: string }> = [
+                {
+                    region: 'North America',
+                    tourismFactor: 1 + (Math.random() * 0.1 - 0.05), // -5% to +5%
+                    businessFactor: 1 + (Math.random() * 0.1 - 0.05),
+                    message: 'North American markets experiencing moderate volatility.'
+                },
+                {
+                    region: 'Europe',
+                    tourismFactor: 1 + (Math.random() * 0.15 - 0.075), // -7.5% to +7.5%
+                    businessFactor: 1 + (Math.random() * 0.1 - 0.05),
+                    message: 'European tourism sector showing strong seasonal trends.'
+                },
+                {
+                    region: 'Asia',
+                    tourismFactor: 1 + (Math.random() * 0.12 - 0.06),
+                    businessFactor: 1 + (Math.random() * 0.15 - 0.075), // -7.5% to +7.5%
+                    message: 'Asian business sector experiencing rapid growth.'
+                },
+                {
+                    region: 'Middle East',
+                    tourismFactor: 1 + (Math.random() * 0.08 - 0.04),
+                    businessFactor: 1 + (Math.random() * 0.12 - 0.06),
+                    message: 'Middle East markets adjusting to oil price fluctuations.'
+                },
+                {
+                    region: 'South America',
+                    tourismFactor: 1 + (Math.random() * 0.1 - 0.05),
+                    businessFactor: 1 + (Math.random() * 0.12 - 0.06),
+                    message: 'South American economies showing emerging market dynamics.'
+                },
+                {
+                    region: 'Africa',
+                    tourismFactor: 1 + (Math.random() * 0.15 - 0.075),
+                    businessFactor: 1 + (Math.random() * 0.1 - 0.05),
+                    message: 'African tourism sector experiencing growth potential.'
+                },
+                {
+                    region: 'Oceania',
+                    tourismFactor: 1 + (Math.random() * 0.12 - 0.06),
+                    businessFactor: 1 + (Math.random() * 0.08 - 0.04),
+                    message: 'Oceania markets maintaining stable conditions.'
+                }
+            ];
+
+            regionalEvent = regions[Math.floor(Math.random() * regions.length)];
+            this.state.addNews(`REGIONAL ECONOMICS: ${regionalEvent.message}`);
+        }
+
+        // Small random fluctuations each quarter (-2 to +2)
+        const minChange = -2;
+        const maxChange = 2;
+
+        this.state.airports.forEach(airport => {
+            // Base random fluctuation for tourism
+            let tourismChange = Math.floor(Math.random() * (maxChange - minChange + 1)) + minChange;
+
+            // Base random fluctuation for business
+            let businessChange = Math.floor(Math.random() * (maxChange - minChange + 1)) + minChange;
+
+            // Apply regional factors if event affects this airport's region
+            if (regionalEvent && airport.region === regionalEvent.region) {
+                // Regional factors affect the magnitude of change
+                tourismChange = Math.floor(tourismChange * regionalEvent.tourismFactor);
+                businessChange = Math.floor(businessChange * regionalEvent.businessFactor);
+
+                // Also apply a small regional boost/penalty
+                const regionalBoost = Math.floor((regionalEvent.tourismFactor - 1) * 10);
+                tourismChange += regionalBoost;
+
+                const regionalBusinessBoost = Math.floor((regionalEvent.businessFactor - 1) * 10);
+                businessChange += regionalBusinessBoost;
+            }
+
+            // Apply changes with bounds
+            airport.tourism_score = clamp(airport.tourism_score + tourismChange, 0, 100);
+            airport.business_score = clamp(airport.business_score + businessChange, 0, 100);
+
+            // Update difficulty based on new scores
+            const avgScore = (airport.tourism_score + airport.business_score) / 2;
+            if (avgScore >= 75) {
+                airport.difficulty = 'Easy';
+            } else if (avgScore >= 55) {
+                airport.difficulty = 'Medium';
+            } else {
+                airport.difficulty = 'Hard';
+            }
+        });
+
+        // Occasionally report significant individual airport changes (3% chance per quarter)
+        if (!regionalEvent && Math.random() < 0.03) {
+            const randomAirport = this.state.airports[Math.floor(Math.random() * this.state.airports.length)];
+            const events = [
+                `Tourism boom in ${randomAirport.name}! Increased visitor numbers reported.`,
+                `Business activity surges in ${randomAirport.name} following major investments.`,
+                `Economic slowdown affects ${randomAirport.name} market conditions.`,
+                `New attractions driving tourism growth in ${randomAirport.name}.`,
+                `Corporate relocations boost ${randomAirport.name} business sector.`
+            ];
+            const randomEvent = events[Math.floor(Math.random() * events.length)];
+            this.state.addNews(randomEvent);
+        }
+    }
+
+    // === HUB MANAGEMENT ===
+
+    /**
+     * Get all player-owned hubs
+     */
+    getPlayerHubs(): Airport[] {
+        return this.state.airports.filter(a => a.owned && a.is_hub);
+    }
+
+    /**
+     * Check if player has a hub in the given continent
+     */
+    hasHubInContinent(continent: string): boolean {
+        return this.getPlayerHubs().some(hub => hub.continent === continent);
+    }
+
+    /**
+     * Get continents where player already has hubs
+     */
+    getHubContinents(): string[] {
+        return this.getPlayerHubs().map(hub => hub.continent);
+    }
+
+    /**
+     * Check if player can establish a hub at the given airport
+     * Returns { canEstablish: boolean, reason?: string }
+     */
+    canEstablishHub(airportId: string): { canEstablish: boolean; reason?: string } {
+        const airport = this.state.airports.find(a => a.id === airportId);
+
+        if (!airport) {
+            return { canEstablish: false, reason: 'Airport not found' };
+        }
+
+        if (!airport.owned) {
+            return { canEstablish: false, reason: 'You must own this airport first' };
+        }
+
+        if (airport.is_hub) {
+            return { canEstablish: false, reason: 'This airport is already a hub' };
+        }
+
+        // Check one hub per continent restriction
+        if (this.hasHubInContinent(airport.continent)) {
+            const existingHub = this.getPlayerHubs().find(h => h.continent === airport.continent);
+            return {
+                canEstablish: false,
+                reason: `You already have a hub in ${airport.continent} (${existingHub?.name})`
+            };
+        }
+
+        return { canEstablish: true };
+    }
+
+    /**
+     * Establish a hub at the given airport
+     * This will be used later when hub purchasing is implemented
+     */
+    establishHub(airportId: string): { success: boolean; error?: string } {
+        const check = this.canEstablishHub(airportId);
+
+        if (!check.canEstablish) {
+            return { success: false, error: check.reason };
+        }
+
+        const airport = this.state.airports.find(a => a.id === airportId);
+        if (!airport) {
+            return { success: false, error: 'Airport not found' };
+        }
+
+        // Calculate hub establishment cost (increases with each hub)
+        const hubCount = this.getPlayerHubs().length;
+        const baseHubCost = 5000000; // $5M base cost
+        const hubCost = baseHubCost * Math.pow(1.5, hubCount); // Exponential increase
+
+        if (!this.state.canAfford(hubCost)) {
+            return { success: false, error: `Insufficient funds. Hub cost: $${formatMoney(hubCost)}` };
+        }
+
+        // Establish the hub
+        airport.is_hub = true;
+        this.state.cash -= hubCost;
+        this.state.addNews(`✈️ Established new hub at ${airport.name}! Cost: $${formatMoney(hubCost)}`);
+
+        return { success: true };
+    }
+
+    // === CONNECTION FLIGHTS ===
+
+    /**
+     * Calculate possible connections through hubs
+     * Returns a map of hub -> list of connection opportunities
+     */
+    calculateHubConnections(): Map<string, Array<{ from: string; to: string; distance: number }>> {
+        const hubConnections = new Map<string, Array<{ from: string; to: string; distance: number }>>();
+        const playerHubs = this.getPlayerHubs();
+
+        // For each hub, find routes that connect through it
+        playerHubs.forEach(hub => {
+            const connections: Array<{ from: string; to: string; distance: number }> = [];
+
+            // Find all routes TO this hub (feeder routes)
+            const inboundRoutes = this.state.routes.filter(r =>
+                !r.suspended && r.to === hub.id
+            );
+
+            // Find all routes FROM this hub (outbound routes)
+            const outboundRoutes = this.state.routes.filter(r =>
+                !r.suspended && r.from === hub.id
+            );
+
+            // Create connections by pairing inbound with outbound
+            inboundRoutes.forEach(inbound => {
+                outboundRoutes.forEach(outbound => {
+                    // Don't connect a route back to itself
+                    if (inbound.from !== outbound.to) {
+                        const totalDistance = inbound.distance + outbound.distance;
+                        connections.push({
+                            from: inbound.from,
+                            to: outbound.to,
+                            distance: totalDistance
+                        });
+                    }
+                });
+            });
+
+            if (connections.length > 0) {
+                hubConnections.set(hub.id, connections);
+            }
+        });
+
+        return hubConnections;
+    }
+
+    /**
+     * Update connection statistics for all routes
+     * Called quarterly during advanceTurn
+     */
+    updateConnectionStatistics(): void {
+        const hubConnections = this.calculateHubConnections();
+
+        // Update hub metrics
+        this.state.hubMetrics = [];
+
+        hubConnections.forEach((connections, hubId) => {
+            const hub = this.state.findAirport(hubId);
+            if (!hub) return;
+
+            // Calculate connections per quarter based on route capacity
+            const hubRoutes = this.state.routes.filter(r =>
+                !r.suspended && (r.from === hubId || r.to === hubId)
+            );
+
+            // Estimate: 20-30% of passengers on hub routes are connections
+            const connectionPercentage = 0.25;
+            let totalConnectingPassengers = 0;
+
+            hubRoutes.forEach(route => {
+                let loadFactor = CONFIG.BASE_LOAD_FACTOR +
+                    (this.state.reputation - CONFIG.STARTING_REPUTATION) / 200;
+                loadFactor = clamp(loadFactor, 0.4, 0.95);
+                loadFactor *= this.state.economicCondition;
+
+                const passengersPerFlight = route.aircraft.type.capacity * loadFactor;
+                const flightsPerQuarter = route.flights_per_week * CONFIG.WEEKS_PER_QUARTER;
+                const routePassengers = passengersPerFlight * flightsPerQuarter;
+
+                totalConnectingPassengers += routePassengers * connectionPercentage;
+            });
+
+            // Calculate hub efficiency based on number of connection opportunities
+            // More connections = better hub efficiency (up to a point)
+            const optimalConnections = 20; // Sweet spot for hub operations
+            const connectionRatio = Math.min(connections.length / optimalConnections, 1.5);
+            let efficiency = 50 + (connectionRatio * 30); // Base 50, up to 95
+
+            // Adjust for hub quality factors
+            const avgScore = (hub.tourism_score + hub.business_score) / 2;
+            efficiency += (avgScore - 50) * 0.2; // Economic strength affects efficiency
+
+            efficiency = clamp(efficiency, 30, 100);
+
+            // Average connection time (estimated based on hub size and efficiency)
+            const avgConnectionTime = 90 + (100 - efficiency) * 0.5; // 90-140 minutes
+
+            // Success rate based on efficiency and schedule coordination
+            const successRate = clamp(0.85 + (efficiency - 50) * 0.003, 0.75, 0.99);
+
+            this.state.hubMetrics.push({
+                airport_id: hubId,
+                efficiency_rating: Math.floor(efficiency),
+                connections_per_quarter: Math.floor(totalConnectingPassengers),
+                avg_connection_time: Math.floor(avgConnectionTime),
+                success_rate: successRate
+            });
+
+            // Update connection stats for routes involving this hub
+            this.updateRouteConnectionStats(hubId, connections, totalConnectingPassengers, efficiency);
+        });
+    }
+
+    /**
+     * Update connection statistics for individual routes
+     */
+    private updateRouteConnectionStats(
+        hubId: string,
+        connections: Array<{ from: string; to: string; distance: number }>,
+        totalConnections: number,
+        hubEfficiency: number
+    ): void {
+        // Find routes that touch this hub
+        const hubRoutes = this.state.routes.filter(r =>
+            !r.suspended && (r.from === hubId || r.to === hubId)
+        );
+
+        hubRoutes.forEach(route => {
+            // Calculate connection bonus based on:
+            // 1. Hub efficiency (higher efficiency = higher bonus)
+            // 2. Number of connection opportunities
+            // 3. Route distance (longer routes get better connection value)
+
+            const efficiencyBonus = (hubEfficiency / 100) * 0.15; // 0-15%
+            const connectionDensity = Math.min(connections.length / 15, 1.0);
+            const densityBonus = connectionDensity * 0.10; // 0-10%
+
+            // Distance bonus: longer routes benefit more from hub connections
+            const distanceBonus = Math.min(route.distance / 5000, 1.0) * 0.05; // 0-5%
+
+            const totalBonus = efficiencyBonus + densityBonus + distanceBonus;
+
+            // Calculate connection quality (0-1)
+            const quality = clamp(hubEfficiency / 100, 0.5, 1.0);
+
+            // Estimate passengers on this specific route
+            const routeConnections = Math.floor(totalConnections / hubRoutes.length);
+
+            // Build connection patterns (top 5)
+            const patterns: string[] = [];
+            const relevantConnections = connections.filter(c =>
+                c.from === route.from || c.to === route.to || c.from === route.to || c.to === route.from
+            ).slice(0, 5);
+
+            relevantConnections.forEach(conn => {
+                patterns.push(`${conn.from}->${hubId}->${conn.to}`);
+            });
+
+            // Update route connection stats
+            route.connections = {
+                connecting_passengers: routeConnections,
+                connection_patterns: patterns,
+                connection_quality: quality,
+                connection_bonus: totalBonus
+            };
+        });
+    }
+
+    /**
+     * Get hub metrics for a specific airport
+     */
+    getHubMetrics(airportId: string): HubMetrics | undefined {
+        return this.state.hubMetrics.find(m => m.airport_id === airportId);
     }
 
     // === SCORING ===

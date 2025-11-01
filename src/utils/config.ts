@@ -47,8 +47,12 @@ export const CONFIG = {
     MAINTENANCE_WARNING_AGE: 15,      // Warn when aircraft reaches this age
     MAINTENANCE_CRITICAL_AGE: 20,     // Critical warning at this age
 
-    // Airport pricing
-    AIRPORT_PRICE_MULTIPLIER: 10, // market_size * this
+    // Airport slot pricing (time-based negotiation system)
+    AIRPORT_SLOT_DEPOSIT_MULTIPLIER: 0.1, // market_size * this (upfront deposit)
+    SLOT_NEGOTIATION_QUARTERS_MIN: 2, // Minimum negotiation time
+    SLOT_NEGOTIATION_QUARTERS_MAX: 4, // Maximum negotiation time (larger airports take longer)
+    SLOT_NEGOTIATION_DEPOSIT_PERCENTAGE: 0.2, // 20% upfront deposit of final cost
+    BASE_NEGOTIATION_CAPACITY: 1, // Start with 1 simultaneous negotiation
 
     // Reputation
     REPUTATION_MIN: 0,

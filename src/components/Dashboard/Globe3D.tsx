@@ -136,22 +136,28 @@ interface AirportMarkerProps {
     airport: Airport;
     isOwned: boolean;
     isCompetitor: boolean;
+    isHub: boolean;
     hasRoutes: boolean;
     onHover: (airport: Airport | null) => void;
     onClick: (airport: Airport) => void;
 }
 
-function AirportMarker({ airport, isOwned, isCompetitor, hasRoutes, onHover, onClick }: AirportMarkerProps) {
+function AirportMarker({ airport, isOwned, isCompetitor, isHub, hasRoutes, onHover, onClick }: AirportMarkerProps) {
     const meshRef = useRef<THREE.Mesh>(null);
     const position = coordsToVector3(airport.lat, airport.lon);
     const [hovered, setHovered] = useState(false);
 
-    // Determine color based on ownership
+    // Determine color based on ownership and hub status
     let color = '#666666';
     let size = 0.08;
     let pulseSpeed = 1;
 
-    if (isOwned) {
+    if (isHub) {
+        // Hubs get special gold/yellow color and larger size
+        color = '#ffd700';
+        size = 0.16;
+        pulseSpeed = 2;
+    } else if (isOwned) {
         color = '#00ff00';
         size = 0.12;
         pulseSpeed = 1.5;
@@ -201,15 +207,37 @@ function AirportMarker({ airport, isOwned, isCompetitor, hasRoutes, onHover, onC
             </Sphere>
 
             {/* Glow effect for owned/competitor airports */}
-            {(isOwned || isCompetitor) && (
+            {(isOwned || isCompetitor || isHub) && (
                 <Sphere args={[size * 1.5, 16, 16]}>
                     <meshBasicMaterial
                         color={color}
                         transparent
-                        opacity={0.2}
+                        opacity={isHub ? 0.3 : 0.2}
                         depthWrite={false}
                     />
                 </Sphere>
+            )}
+
+            {/* Special pulsing ring for hubs */}
+            {isHub && (
+                <>
+                    <Sphere args={[size * 2, 16, 16]}>
+                        <meshBasicMaterial
+                            color="#ffd700"
+                            transparent
+                            opacity={0.15}
+                            depthWrite={false}
+                        />
+                    </Sphere>
+                    <Sphere args={[size * 2.5, 16, 16]}>
+                        <meshBasicMaterial
+                            color="#ffd700"
+                            transparent
+                            opacity={0.1}
+                            depthWrite={false}
+                        />
+                    </Sphere>
+                </>
             )}
 
             {/* Tooltip on hover */}
@@ -219,7 +247,8 @@ function AirportMarker({ airport, isOwned, isCompetitor, hasRoutes, onHover, onC
                         <div className="tooltip-title">{airport.name}</div>
                         <div className="tooltip-details">
                             <div>{airport.country}</div>
-                            {isOwned && <div className="tooltip-status owned">Your Airport</div>}
+                            {isHub && <div className="tooltip-status hub">Hub Airport</div>}
+                            {isOwned && !isHub && <div className="tooltip-status owned">Your Airport</div>}
                             {isCompetitor && <div className="tooltip-status competitor">Competitor</div>}
                             {!isOwned && !isCompetitor && hasRoutes && <div className="tooltip-status">Connected</div>}
                             {!isOwned && !isCompetitor && !hasRoutes && <div className="tooltip-status">Available</div>}
@@ -423,6 +452,7 @@ function GlobeSceneWithSelection({ onSelectAirport }: GlobeSceneProps) {
                 ...airport,
                 isOwned: stateAirport?.owned || false,
                 isCompetitor: !!stateAirport?.competitor_owned,
+                isHub: stateAirport?.is_hub || false,
                 hasRoutes
             };
         });
@@ -503,6 +533,7 @@ function GlobeSceneWithSelection({ onSelectAirport }: GlobeSceneProps) {
                     airport={airport}
                     isOwned={airport.isOwned}
                     isCompetitor={airport.isCompetitor}
+                    isHub={airport.isHub}
                     hasRoutes={airport.hasRoutes}
                     onHover={setHoveredAirport}
                     onClick={onSelectAirport}

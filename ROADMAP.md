@@ -163,6 +163,12 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
   - Hub purchase costs increase with each additional hub
   - Visual indicators on globe showing owned hubs vs available continents
   - **Map-based interactions**: Purchase slots, select hubs, create routes directly via globe interface
+  - **Slot Information Display on Globe**:
+    - Show available slot count below airport markers when hovering or in view
+    - Real-time slot availability updates (e.g., "12/20 slots available")
+    - Visual indicator for slot scarcity (color-coded: green=plenty, yellow=limited, red=full)
+    - Quick slot purchase action from globe interface
+    - Display slot pricing based on airport tier and demand
 
 - [ ] **Airport Economic Indicators**
   - **Tourism Score (0-100)**: Affects leisure passenger demand
@@ -173,6 +179,17 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
     - Hard: Low scores (emerging markets, smaller airports) → Lower starting capital, growth challenge
   - Display scores in hub selection modal with visual indicators
   - Color-coded airports by difficulty on globe
+
+- [ ] **Airport Types & Classifications**
+  - **International Airports**: Large hubs with high capacity (20+ slots), long-haul capable
+  - **Regional Airports**: Medium-sized airports (8-15 slots), domestic & regional focus
+  - **Secondary Airports**: Smaller facilities (4-8 slots), limited operations, lower costs
+  - Different operational characteristics:
+    - International: Higher fees, better facilities, prestige bonus
+    - Regional: Moderate costs, balanced operations
+    - Secondary: Lower costs, limited amenities, budget carrier focus
+  - Visual differentiation on globe (size, icon style, color intensity)
+  - Airport type affects aircraft compatibility and route profitability
 
 - [ ] **Dynamic Economic System**
   - **Quarterly Recalculation**: Tourism/business scores change every quarter
@@ -199,6 +216,24 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
   - Add cargo facilities
   - Improve ground operations (turnaround time)
   - Hub specialization (cargo, international, regional)
+
+- [ ] **Airport Database Expansion**
+  - **Africa Expansion** (currently 8 airports → target 20+):
+    - Add major hubs: Accra (ACC), Dar es Salaam (DAR), Khartoum (KRT), Abidjan (ABJ)
+    - Regional airports: Kigali (KGL), Lusaka (LUN), Harare (HRE), Maputo (MPM)
+    - Secondary cities: Abuja (ABV), Luanda (LAD), Dakar (DSS), Entebbe (EBB)
+    - North Africa: Tunis (TUN), Tripoli (TIP)
+  - **South America Expansion** (currently 10 airports → target 15+):
+    - Add: Medellin (MDE), Cartagena (CTG), Cordoba (COR), Belo Horizonte (CNF)
+    - Regional hubs: Asuncion (ASU), Santa Cruz (VVI), Guayaquil (GYE)
+  - **Asia Secondary Markets** (expand existing coverage):
+    - Add: Hanoi (HAN), Colombo (CMB), Dhaka (DAC), Karachi (KHI)
+    - Regional: Kathmandu (KTM), Yangon (RGN), Phnom Penh (PNH)
+  - **Middle East Regional** (currently 6 → target 10):
+    - Add: Kuwait (KWI), Bahrain (BAH), Muscat (MCT), Amman (AMM)
+  - **Oceania/Pacific Expansion** (currently 5 → target 10):
+    - Add: Wellington (WLG), Christchurch (CHC), Fiji (NAN), Port Moresby (POM), Noumea (NOU)
+  - Target: 100+ global airports for comprehensive network planning
 
 #### Advertising & Marketing System
 - [ ] Advertising Campaigns

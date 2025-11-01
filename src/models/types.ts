@@ -23,6 +23,26 @@ export interface Route {
     flights_per_week: number;
     distance: number; // km
     suspended: boolean; // true = route on hold (no revenue/costs, keeps slots & aircraft)
+
+    // Connection tracking (for hub routes)
+    connections?: ConnectionStats;
+}
+
+// Connection statistics for hub routes
+export interface ConnectionStats {
+    // Number of connecting passengers per quarter
+    connecting_passengers: number;
+
+    // Most common connection patterns (top 5)
+    // e.g., "JFK->ORD->LAX" means passenger connects at ORD hub
+    connection_patterns: string[];
+
+    // Average connection quality (0-1)
+    // Based on: connection time adequacy, hub efficiency, schedule coordination
+    connection_quality: number;
+
+    // Revenue bonus from connections (percentage, e.g., 0.15 = 15% bonus)
+    connection_bonus: number;
 }
 
 // Loan
@@ -38,6 +58,31 @@ export interface Loan {
 // Active event (event instance with remaining duration)
 export interface ActiveEvent extends GameEvent {
     quartersRemaining: number;
+}
+
+// Hub efficiency metrics
+export interface HubMetrics {
+    airport_id: string;
+
+    // Efficiency rating (0-100)
+    efficiency_rating: number;
+
+    // Number of connections handled per quarter
+    connections_per_quarter: number;
+
+    // Average connection time (minutes)
+    avg_connection_time: number;
+
+    // Connection success rate (0-1)
+    success_rate: number;
+}
+
+// Slot negotiation (time-based acquisition)
+export interface SlotNegotiation {
+    airport_id: string;
+    quarters_remaining: number; // How many quarters until slots are acquired
+    slot_count: number; // Number of slots being negotiated
+    cost: number; // Upfront deposit cost
 }
 
 // Serializable game state
@@ -58,4 +103,7 @@ export interface SerializedGameState {
     advertisingBudget: number;
     fuelPrice: number;
     economicCondition: number;
+    hubMetrics: HubMetrics[]; // Efficiency tracking for hubs
+    slotNegotiations: SlotNegotiation[]; // Active slot negotiations
+    negotiationCapacity: number; // Max simultaneous negotiations (can be upgraded)
 }

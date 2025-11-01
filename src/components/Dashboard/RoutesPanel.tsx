@@ -148,6 +148,37 @@ export function RoutesPanel() {
                                     </div>
                                 </div>
 
+                                {/* Connection Info (if route has connections) */}
+                                {route.connections && route.connections.connecting_passengers > 0 && (
+                                    <div className="connection-info">
+                                        <div className="connection-header">
+                                            <span className="connection-icon">🔄</span>
+                                            <span className="connection-title">Hub Connections</span>
+                                            <span className="connection-bonus">+{(route.connections.connection_bonus * 100).toFixed(1)}% revenue</span>
+                                        </div>
+                                        <div className="connection-stats">
+                                            <div className="connection-stat-item">
+                                                <span className="connection-stat-label">Connecting Pax:</span>
+                                                <span className="connection-stat-value">{route.connections.connecting_passengers.toLocaleString()}/Q</span>
+                                            </div>
+                                            <div className="connection-stat-item">
+                                                <span className="connection-stat-label">Quality:</span>
+                                                <span className="connection-stat-value">{(route.connections.connection_quality * 100).toFixed(0)}%</span>
+                                            </div>
+                                        </div>
+                                        {route.connections.connection_patterns.length > 0 && (
+                                            <div className="connection-patterns">
+                                                <span className="patterns-label">Top Connections:</span>
+                                                <div className="patterns-list">
+                                                    {route.connections.connection_patterns.slice(0, 3).map((pattern, idx) => (
+                                                        <span key={idx} className="connection-pattern">{pattern}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
                                 {/* Route Actions */}
                                 <div className="route-card-actions">
                                     {route.suspended ? (

@@ -80,7 +80,7 @@ export function ActionsPanel() {
         startNewGame(startYear, startingCash, airlineName);
 
         // Mark the selected airport as hub and owned
-        const airport = engine.getState().airports.find(a => a.id === selectedHub.id);
+        const airport = state.airports.find(a => a.id === selectedHub.id);
         if (airport) {
             airport.owned = true;
             airport.is_hub = true;

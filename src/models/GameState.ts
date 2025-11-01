@@ -10,7 +10,9 @@ import {
     Route,
     Loan,
     ActiveEvent,
-    SerializedGameState
+    SerializedGameState,
+    HubMetrics,
+    SlotNegotiation
 } from './types';
 
 export class GameState {
@@ -32,6 +34,9 @@ export class GameState {
     advertisingBudget: number;
     fuelPrice: number;
     economicCondition: number;
+    hubMetrics: HubMetrics[];
+    slotNegotiations: SlotNegotiation[];
+    negotiationCapacity: number;
 
     // Financial health tracking
     consecutiveLosses: number;
@@ -56,6 +61,9 @@ export class GameState {
         this.advertisingBudget = 0;
         this.fuelPrice = 1.0;
         this.economicCondition = 1.0;
+        this.hubMetrics = [];
+        this.slotNegotiations = [];
+        this.negotiationCapacity = CONFIG.BASE_NEGOTIATION_CAPACITY;
 
         this.consecutiveLosses = 0;
         this.lastQuarterProfit = 0;
@@ -218,7 +226,10 @@ export class GameState {
             researchLevel: this.researchLevel,
             advertisingBudget: this.advertisingBudget,
             fuelPrice: this.fuelPrice,
-            economicCondition: this.economicCondition
+            economicCondition: this.economicCondition,
+            hubMetrics: this.hubMetrics,
+            slotNegotiations: this.slotNegotiations,
+            negotiationCapacity: this.negotiationCapacity
         };
     }
 
