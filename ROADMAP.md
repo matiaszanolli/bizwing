@@ -131,12 +131,22 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
   - **Fleet Utilization Report**: Which aircraft are underutilized
 
 #### Route Optimization
-- [ ] Route Management Interface
-  - Bulk edit routes (change frequency, pricing)
+- [x] **Route Manager Interface** ✅ COMPLETED
+  - Fullscreen route management modal
+  - Performance dashboard with summary statistics
+  - Profitability indicators (5 tiers with visual indicators)
+  - Bulk edit routes (frequency, suspend/resume multiple routes)
+  - Sortable columns (profit, revenue, expenses, distance, load factor, age)
+  - Filter by status (all, profitable, unprofitable, suspended)
+  - Real-time profitability calculations with age penalties
+  - Color-coded rows and indicators
+
+- [ ] Advanced Route Features
   - "Optimize All Routes" suggestion system
   - Seasonal scheduling (more flights in summer)
   - Route groups/categories for easy management
   - Performance alerts (unprofitable routes highlighted)
+  - Historical performance charts
 
 - [ ] Pricing Strategy
   - Adjust prices per route
@@ -158,7 +168,50 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
   - Improve ground operations (turnaround time)
   - Hub specialization (cargo, international, regional)
 
+#### Advertising & Marketing System
+- [ ] Advertising Campaigns
+  - **Regional Campaigns**: Target specific continents/countries
+  - **Route-Specific Marketing**: Promote individual routes
+  - **Brand Campaigns**: Build overall airline reputation
+  - **Seasonal Promotions**: Holiday travel, summer vacations
+  - **Campaign Duration**: 1-4 quarters with decay
+  - **Effectiveness Tracking**: See ROI on ad spending
+  - **Competition Impact**: Counter rival airlines' ads
+  - **Budget Tiers**: Small, Medium, Large campaigns with different effects
+
+- [ ] Sponsorships & Events
+  - **Sports Sponsorships**: FIFA, Olympics, local teams
+  - **Cultural Events**: Festivals, concerts, trade shows
+  - **Celebrity Endorsements**: Higher cost, higher impact
+  - **Tourism Board Partnerships**: Co-marketing with destinations
+
 #### Business Opportunities (Aerobiz-Style)
+- [ ] City Business Investments
+  - **Hotels**: Build/buy hotels in cities with routes (increases passenger traffic)
+  - **Airport Shuttles**: Shuttle services from hotels to airports
+  - **Car Rentals**: Rental car agencies at destination cities
+  - **Tourist Attractions**: Theme parks, museums, landmarks
+  - **Restaurants**: Dining establishments in hub cities
+  - **Duty-Free Shops**: Retail at airports you operate from
+  - **Business Districts**: Office space near airports
+  - **Convention Centers**: Drives business travel demand
+  - Each business generates passive income and boosts route profitability
+
+- [ ] Random Business Opportunities
+  - **Pop-up Events**: Quarterly random offers (accept/decline)
+  - **Risky Ventures**: High reward but potential losses
+  - **Limited-Time Deals**: Must decide quickly (same quarter)
+  - **Industry Partnerships**: Other airlines, manufacturers, governments
+  - **Real Estate Speculation**: Buy property before airport expansion
+  - **Startup Investments**: Tech companies, tourism startups
+  - **Success/Failure System**: Some ventures fail, others pay dividends
+  - **Opportunity Types**:
+    - New market entry (exclusive rights)
+    - Distressed asset purchases (bankrupt hotel chains)
+    - Government privatizations (buy state-owned hotels)
+    - IPO opportunities (invest in tourism companies)
+    - Partnership offers (code-share, joint ventures)
+
 - [ ] Special Deals
   - **Aircraft Deals**: Manufacturer offers on new planes (limited time)
   - **Airport Incentives**: Cities offering subsidies for new routes
@@ -168,10 +221,8 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
   - **Government Contracts**: Compete for mail/cargo contracts
 
 - [ ] Investment Opportunities
-  - **Hotels at Hubs**: Build hotels for connecting passengers
   - **Ground Services**: Invest in catering, maintenance facilities
   - **Training Centers**: Build pilot/crew training facilities
-  - **Real Estate**: Purchase airport-adjacent property
   - **Technology**: Invest in booking systems, IT infrastructure
 
 - [ ] Negotiations Mini-Game
@@ -179,6 +230,7 @@ This roadmap prioritizes features that enhance this **deliberate, strategic game
   - Multiple rounds of offers/counteroffers
   - Success based on negotiator skill, market conditions, luck
   - Can walk away or accept deal
+  - Risk assessment (conservative vs aggressive)
 
 #### Advanced Economics
 - [ ] Fare Classes & Configuration
