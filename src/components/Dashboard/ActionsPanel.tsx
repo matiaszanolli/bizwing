@@ -11,6 +11,8 @@ import { SaveLoadModal } from '../Modals/SaveLoadModal';
 import { EmergencyLoanModal } from '../Modals/EmergencyLoanModal';
 import { PreQuarterReviewModal } from '../Modals/PreQuarterReviewModal';
 import { PostQuarterResultsModal } from '../Modals/PostQuarterResultsModal';
+import { HelpModal } from '../Modals/HelpModal';
+import { FirstTimeTutorialModal } from '../Modals/FirstTimeTutorialModal';
 import { CONFIG } from '../../utils/config';
 import { formatMoney } from '../../utils/helpers';
 
@@ -26,6 +28,20 @@ export function ActionsPanel() {
     const [showPreQuarterReview, setShowPreQuarterReview] = useState(false);
     const [showPostQuarterResults, setShowPostQuarterResults] = useState(false);
     const [quarterResults, setQuarterResults] = useState({ revenue: 0, expenses: 0, profit: 0 });
+    const [showHelp, setShowHelp] = useState(false);
+    const [showFirstTimeTutorial, setShowFirstTimeTutorial] = useState(false);
+
+    // Check if this is the first time playing
+    React.useEffect(() => {
+        const tutorialCompleted = localStorage.getItem('bizwing_tutorial_completed');
+        if (!tutorialCompleted && state.quarter === 1 && state.year === 1992) {
+            // Show tutorial on first load
+            const timer = setTimeout(() => {
+                setShowFirstTimeTutorial(true);
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, []);
 
     const handleAdvanceTurnClick = () => {
         // Show pre-quarter review first
@@ -108,6 +124,9 @@ export function ActionsPanel() {
                     <button className="btn-secondary" onClick={() => setShowLoad(true)}>
                         Load Game
                     </button>
+                    <button className="btn-help" onClick={() => setShowHelp(true)} title="Help & Tutorial">
+                        ?
+                    </button>
                 </div>
 
                 <p className="help-text">
@@ -156,6 +175,14 @@ export function ActionsPanel() {
                 quarterRevenue={quarterResults.revenue}
                 quarterExpenses={quarterResults.expenses}
                 quarterProfit={quarterResults.profit}
+            />
+            <HelpModal
+                isOpen={showHelp}
+                onClose={() => setShowHelp(false)}
+            />
+            <FirstTimeTutorialModal
+                isOpen={showFirstTimeTutorial}
+                onClose={() => setShowFirstTimeTutorial(false)}
             />
         </>
     );

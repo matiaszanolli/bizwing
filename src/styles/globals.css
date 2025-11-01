@@ -1238,3 +1238,444 @@ input[type="range"]::-moz-range-thumb {
     text-align: center;
     padding: 8px 0;
 }
+
+/* Help Button */
+.btn-help {
+    background: none;
+    border: 2px solid var(--color-text-bright);
+    color: var(--color-text-bright);
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    text-shadow: 0 0 5px var(--color-text-bright);
+    box-shadow: 0 0 5px rgba(0, 170, 0, 0.3);
+    font-weight: bold;
+    width: 40px;
+}
+
+.btn-help:hover {
+    background: var(--color-text-bright);
+    color: var(--color-bg);
+    box-shadow: 0 0 15px var(--color-text-bright);
+}
+
+.save-load-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 40px;
+    gap: 6px;
+}
+
+/* Help Modal */
+.help-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.help-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 4px;
+}
+
+.help-tab {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+    color: var(--color-text);
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.help-tab:hover {
+    border-color: var(--color-text);
+    background: rgba(0, 170, 0, 0.05);
+}
+
+.help-tab.active {
+    background: rgba(0, 170, 0, 0.15);
+    border-color: var(--color-text-bright);
+    color: var(--color-text-bright);
+    text-shadow: 0 0 5px var(--color-text-bright);
+    border-bottom: 2px solid var(--color-text-bright);
+}
+
+.help-content {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 8px 4px;
+}
+
+/* Tutorial Content */
+.tutorial-content h3 {
+    color: var(--color-text-bright);
+    text-shadow: 0 0 5px var(--color-text-bright);
+    margin: 0 0 12px 0;
+    font-size: 18px;
+}
+
+.tutorial-content h4 {
+    color: var(--color-text-bright);
+    margin: 16px 0 8px 0;
+    font-size: 16px;
+    border-bottom: 1px solid var(--color-dim);
+    padding-bottom: 4px;
+}
+
+.tutorial-content p {
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 8px 0;
+}
+
+.tutorial-content ul,
+.tutorial-content ol {
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.tutorial-content li {
+    margin: 6px 0;
+}
+
+.tutorial-content strong {
+    color: var(--color-text-bright);
+}
+
+.tutorial-section {
+    margin: 16px 0;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+.tutorial-highlight {
+    background: rgba(0, 170, 0, 0.1);
+    border-left: 3px solid var(--color-text-bright);
+    padding: 8px 10px;
+    margin: 12px 0;
+    color: var(--color-text-bright);
+}
+
+/* Shortcuts Content */
+.shortcuts-content h3 {
+    color: var(--color-text-bright);
+    text-shadow: 0 0 5px var(--color-text-bright);
+    margin: 0 0 12px 0;
+    font-size: 18px;
+}
+
+.shortcuts-content h4 {
+    color: var(--color-text-bright);
+    margin: 16px 0 8px 0;
+    font-size: 16px;
+    border-bottom: 1px solid var(--color-dim);
+    padding-bottom: 4px;
+}
+
+.shortcuts-section {
+    margin: 16px 0;
+}
+
+.shortcut-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+.shortcut-item.disabled {
+    opacity: 0.4;
+}
+
+.shortcut-item kbd {
+    background: rgba(0, 170, 0, 0.2);
+    border: 1px solid var(--color-text-bright);
+    padding: 4px 10px;
+    font-family: 'VT323', monospace;
+    font-size: 16px;
+    color: var(--color-text-bright);
+    text-shadow: 0 0 5px var(--color-text-bright);
+    min-width: 60px;
+    text-align: center;
+}
+
+.shortcut-item span {
+    color: var(--color-text);
+    font-size: 14px;
+}
+
+.help-note {
+    margin-top: 12px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+    color: var(--color-text);
+    font-size: 13px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+/* Strategy Content */
+.strategy-content h3 {
+    color: var(--color-text-bright);
+    text-shadow: 0 0 5px var(--color-text-bright);
+    margin: 0 0 12px 0;
+    font-size: 18px;
+}
+
+.strategy-content h4 {
+    color: var(--color-text-bright);
+    margin: 16px 0 8px 0;
+    font-size: 16px;
+    border-bottom: 1px solid var(--color-dim);
+    padding-bottom: 4px;
+}
+
+.strategy-content ul {
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.strategy-content li {
+    margin: 6px 0;
+}
+
+.strategy-content strong {
+    color: var(--color-text-bright);
+}
+
+.strategy-section {
+    margin: 16px 0;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+/* First Time Tutorial Modal */
+.first-time-tutorial {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tutorial-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tutorial-progress span {
+    font-size: 13px;
+    color: var(--color-text);
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-dim);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-text-bright);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px var(--color-text-bright);
+}
+
+.tutorial-step-content {
+    min-height: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+.tutorial-step-content h3 {
+    color: var(--color-text-bright);
+    text-shadow: 0 0 5px var(--color-text-bright);
+    margin: 0 0 12px 0;
+    font-size: 18px;
+}
+
+.tutorial-step-content h4 {
+    color: var(--color-text-bright);
+    margin: 16px 0 8px 0;
+    font-size: 16px;
+    border-bottom: 1px solid var(--color-dim);
+    padding-bottom: 4px;
+}
+
+.tutorial-step-content p {
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 8px 0;
+}
+
+.tutorial-step-content ul,
+.tutorial-step-content ol {
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.tutorial-step-content li {
+    margin: 6px 0;
+}
+
+.tutorial-step-content strong {
+    color: var(--color-text-bright);
+}
+
+.tutorial-step-content kbd {
+    background: rgba(0, 170, 0, 0.2);
+    border: 1px solid var(--color-text-bright);
+    padding: 2px 6px;
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    color: var(--color-text-bright);
+}
+
+.tutorial-steps-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tutorial-steps-list li {
+    margin: 12px 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 3px solid var(--color-text-bright);
+}
+
+.tutorial-steps-list li p {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.tutorial-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+/* Airport Filter Controls */
+.filter-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-dim);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-group label {
+    font-size: 14px;
+    color: var(--color-text-bright);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.filter-btn {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-dim);
+    color: var(--color-text);
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    border-color: var(--color-text);
+    background: rgba(0, 170, 0, 0.05);
+}
+
+.filter-btn.active {
+    background: rgba(0, 170, 0, 0.2);
+    border-color: var(--color-text-bright);
+    color: var(--color-text-bright);
+    text-shadow: 0 0 5px var(--color-text-bright);
+    box-shadow: 0 0 10px rgba(0, 170, 0, 0.3);
+}
+
+.region-buttons .filter-btn {
+    flex: 1;
+    min-width: 80px;
+}
+
+/* Airport Card Status */
+.airport-card.owned {
+    border-color: var(--color-text-bright);
+    background: rgba(0, 170, 0, 0.05);
+}
+
+.airport-card.competitor-owned {
+    border-color: #aa0000;
+    background: rgba(170, 0, 0, 0.05);
+    opacity: 0.7;
+}
+
+.airport-status {
+    font-size: 12px;
+    color: var(--color-text-bright);
+    font-weight: bold;
+}
+
+.info-text {
+    margin-top: 12px;
+    padding: 8px;
+    background: rgba(0, 170, 0, 0.1);
+    border: 1px solid var(--color-text-bright);
+    color: var(--color-text);
+    font-size: 14px;
+    text-align: center;
+}

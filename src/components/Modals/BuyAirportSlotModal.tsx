@@ -12,23 +12,55 @@ interface Props {
     onClose: () => void;
 }
 
+type OwnershipFilter = 'available' | 'owned' | 'competitor' | 'all';
+type MarketSizeFilter = 'all' | 'small' | 'medium' | 'large' | 'mega';
+
 export function BuyAirportSlotModal({ isOpen, onClose }: Props) {
     const { engine, state, forceUpdate } = useGame();
     const [selectedRegion, setSelectedRegion] = useState<Region | 'All'>('All');
+    const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('available');
+    const [marketSizeFilter, setMarketSizeFilter] = useState<MarketSizeFilter>('all');
     const [selectedAirport, setSelectedAirport] = useState<Airport | null>(null);
 
-    // Get available airports (not owned, not competitor owned)
-    const availableAirports = useMemo(() => {
-        return state.airports.filter(airport =>
-            !airport.owned && !airport.competitor_owned
-        );
-    }, [state.airports]);
+    // Get airports based on ownership filter
+    const baseFilteredAirports = useMemo(() => {
+        switch (ownershipFilter) {
+            case 'available':
+                return state.airports.filter(airport => !airport.owned && !airport.competitor_owned);
+            case 'owned':
+                return state.airports.filter(airport => airport.owned);
+            case 'competitor':
+                return state.airports.filter(airport => airport.competitor_owned);
+            case 'all':
+                return state.airports;
+        }
+    }, [state.airports, ownershipFilter]);
 
-    // Filter by region
+    // Apply all filters
     const filteredAirports = useMemo(() => {
-        if (selectedRegion === 'All') return availableAirports;
-        return availableAirports.filter(airport => airport.region === selectedRegion);
-    }, [availableAirports, selectedRegion]);
+        let filtered = baseFilteredAirports;
+
+        // Region filter
+        if (selectedRegion !== 'All') {
+            filtered = filtered.filter(airport => airport.region === selectedRegion);
+        }
+
+        // Market size filter
+        if (marketSizeFilter !== 'all') {
+            filtered = filtered.filter(airport => {
+                const size = airport.market_size;
+                switch (marketSizeFilter) {
+                    case 'small': return size < 5000000;
+                    case 'medium': return size >= 5000000 && size < 15000000;
+                    case 'large': return size >= 15000000 && size < 30000000;
+                    case 'mega': return size >= 30000000;
+                    default: return true;
+                }
+            });
+        }
+
+        return filtered;
+    }, [baseFilteredAirports, selectedRegion, marketSizeFilter]);
 
     // Get unique regions
     const regions: (Region | 'All')[] = ['All', 'North America', 'Europe', 'Asia', 'Middle East', 'Africa', 'Oceania', 'South America'];
@@ -48,53 +80,168 @@ export function BuyAirportSlotModal({ isOpen, onClose }: Props) {
 
     const slotPrice = selectedAirport ? selectedAirport.market_size * CONFIG.AIRPORT_PRICE_MULTIPLIER : 0;
     const canAfford = selectedAirport ? state.canAfford(slotPrice) : false;
+    const isSelectedAvailable = selectedAirport ? (!selectedAirport.owned && !selectedAirport.competitor_owned) : false;
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Buy Airport Slot">
             <div className="airport-slot-purchase">
-                {/* Region Filter */}
-                <div className="region-filter">
-                    <label>Filter by Region:</label>
-                    <div className="region-buttons">
-                        {regions.map(region => (
+                {/* Filter Controls */}
+                <div className="filter-controls">
+                    {/* Ownership Filter */}
+                    <div className="filter-group">
+                        <label>Ownership:</label>
+                        <div className="filter-buttons">
                             <button
-                                key={region}
-                                className={`region-btn ${selectedRegion === region ? 'active' : ''}`}
+                                className={`filter-btn ${ownershipFilter === 'available' ? 'active' : ''}`}
                                 onClick={() => {
-                                    setSelectedRegion(region);
+                                    setOwnershipFilter('available');
                                     setSelectedAirport(null);
                                 }}
                             >
-                                {region}
+                                Available
                             </button>
-                        ))}
+                            <button
+                                className={`filter-btn ${ownershipFilter === 'owned' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setOwnershipFilter('owned');
+                                    setSelectedAirport(null);
+                                }}
+                            >
+                                Owned
+                            </button>
+                            <button
+                                className={`filter-btn ${ownershipFilter === 'competitor' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setOwnershipFilter('competitor');
+                                    setSelectedAirport(null);
+                                }}
+                            >
+                                Competitor
+                            </button>
+                            <button
+                                className={`filter-btn ${ownershipFilter === 'all' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setOwnershipFilter('all');
+                                    setSelectedAirport(null);
+                                }}
+                            >
+                                All
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Market Size Filter */}
+                    <div className="filter-group">
+                        <label>Market Size:</label>
+                        <div className="filter-buttons">
+                            <button
+                                className={`filter-btn ${marketSizeFilter === 'all' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setMarketSizeFilter('all');
+                                    setSelectedAirport(null);
+                                }}
+                            >
+                                All
+                            </button>
+                            <button
+                                className={`filter-btn ${marketSizeFilter === 'small' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setMarketSizeFilter('small');
+                                    setSelectedAirport(null);
+                                }}
+                                title="< 5M passengers/year"
+                            >
+                                Small
+                            </button>
+                            <button
+                                className={`filter-btn ${marketSizeFilter === 'medium' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setMarketSizeFilter('medium');
+                                    setSelectedAirport(null);
+                                }}
+                                title="5M - 15M passengers/year"
+                            >
+                                Medium
+                            </button>
+                            <button
+                                className={`filter-btn ${marketSizeFilter === 'large' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setMarketSizeFilter('large');
+                                    setSelectedAirport(null);
+                                }}
+                                title="15M - 30M passengers/year"
+                            >
+                                Large
+                            </button>
+                            <button
+                                className={`filter-btn ${marketSizeFilter === 'mega' ? 'active' : ''}`}
+                                onClick={() => {
+                                    setMarketSizeFilter('mega');
+                                    setSelectedAirport(null);
+                                }}
+                                title="> 30M passengers/year"
+                            >
+                                Mega
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Region Filter */}
+                    <div className="filter-group">
+                        <label>Region:</label>
+                        <div className="filter-buttons region-buttons">
+                            {regions.map(region => (
+                                <button
+                                    key={region}
+                                    className={`filter-btn region-btn ${selectedRegion === region ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setSelectedRegion(region);
+                                        setSelectedAirport(null);
+                                    }}
+                                >
+                                    {region}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
                 {/* Airport List */}
                 <div className="airport-list-section">
-                    <h3>Available Airports ({filteredAirports.length})</h3>
+                    <h3>
+                        {ownershipFilter === 'owned' && 'Your Airports'}
+                        {ownershipFilter === 'competitor' && 'Competitor Airports'}
+                        {ownershipFilter === 'available' && 'Available Airports'}
+                        {ownershipFilter === 'all' && 'All Airports'}
+                        {' '}({filteredAirports.length})
+                    </h3>
                     {filteredAirports.length === 0 ? (
                         <div className="empty-message">
-                            {availableAirports.length === 0
-                                ? 'No airports available for purchase!'
-                                : 'No airports in this region.'}
+                            No airports match the selected filters.
                         </div>
                     ) : (
                         <div className="airport-grid">
                             {filteredAirports.map(airport => {
                                 const price = airport.market_size * CONFIG.AIRPORT_PRICE_MULTIPLIER;
                                 const affordable = state.canAfford(price);
+                                const isAvailable = !airport.owned && !airport.competitor_owned;
 
                                 return (
                                     <div
                                         key={airport.id}
-                                        className={`airport-card ${selectedAirport?.id === airport.id ? 'selected' : ''} ${!affordable ? 'unaffordable' : ''}`}
+                                        className={`airport-card ${selectedAirport?.id === airport.id ? 'selected' : ''} ${!affordable ? 'unaffordable' : ''} ${airport.owned ? 'owned' : ''} ${airport.competitor_owned ? 'competitor-owned' : ''}`}
                                         onClick={() => setSelectedAirport(airport)}
                                     >
                                         <div className="airport-card-header">
                                             <span className="airport-code">{airport.id}</span>
-                                            <span className="airport-price">${formatMoney(price)}</span>
+                                            {isAvailable ? (
+                                                <span className="airport-price">${formatMoney(price)}</span>
+                                            ) : (
+                                                <span className="airport-status">
+                                                    {airport.owned && '✓ OWNED'}
+                                                    {airport.competitor_owned && '🔒 COMPETITOR'}
+                                                </span>
+                                            )}
                                         </div>
                                         <div className="airport-card-name">{airport.name}</div>
                                         <div className="airport-card-stats">
@@ -111,7 +258,7 @@ export function BuyAirportSlotModal({ isOpen, onClose }: Props) {
                                                 <span>{airport.slots_available}</span>
                                             </div>
                                         </div>
-                                        {!affordable && (
+                                        {isAvailable && !affordable && (
                                             <div className="insufficient-funds">Insufficient funds</div>
                                         )}
                                     </div>
@@ -154,19 +301,28 @@ export function BuyAirportSlotModal({ isOpen, onClose }: Props) {
                             </div>
                         </div>
 
-                        <div className="purchase-actions">
-                            <button
-                                className="btn-primary"
-                                onClick={handleBuy}
-                                disabled={!canAfford}
-                            >
-                                {canAfford ? 'Purchase Slot' : 'Insufficient Funds'}
-                            </button>
-                        </div>
+                        {isSelectedAvailable ? (
+                            <>
+                                <div className="purchase-actions">
+                                    <button
+                                        className="btn-primary"
+                                        onClick={handleBuy}
+                                        disabled={!canAfford}
+                                    >
+                                        {canAfford ? 'Purchase Slot' : 'Insufficient Funds'}
+                                    </button>
+                                </div>
 
-                        {!canAfford && (
-                            <div className="warning-text">
-                                You need ${formatMoney(slotPrice - state.cash)} more to purchase this slot.
+                                {!canAfford && (
+                                    <div className="warning-text">
+                                        You need ${formatMoney(slotPrice - state.cash)} more to purchase this slot.
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <div className="info-text">
+                                {selectedAirport?.owned && 'You already own this airport.'}
+                                {selectedAirport?.competitor_owned && 'This airport is owned by a competitor.'}
                             </div>
                         )}
                     </div>
