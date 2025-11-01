@@ -20,7 +20,32 @@ export const CONFIG = {
     // Costs
     AIRPORT_MAINTENANCE_PER_QUARTER: 500000,
     AIRCRAFT_MAINTENANCE_BASE: 200000,
-    AIRCRAFT_MAINTENANCE_AGE_FACTOR: 40, // Divisor for age penalty
+    AIRCRAFT_MAINTENANCE_AGE_FACTOR: 40, // Divisor for age penalty (legacy)
+
+    // Aircraft Age & Maintenance System
+    AIRCRAFT_AGE_EXCELLENT: 5,      // Years 0-5: Excellent condition
+    AIRCRAFT_AGE_GOOD: 10,          // Years 6-10: Good condition
+    AIRCRAFT_AGE_FAIR: 15,          // Years 11-15: Fair condition
+    AIRCRAFT_AGE_POOR: 20,          // Years 16-20: Poor condition
+    // Above 20: Critical condition
+
+    // Maintenance cost multipliers by condition
+    MAINTENANCE_MULTIPLIER_EXCELLENT: 1.0,   // Base cost
+    MAINTENANCE_MULTIPLIER_GOOD: 1.3,        // +30%
+    MAINTENANCE_MULTIPLIER_FAIR: 1.7,        // +70%
+    MAINTENANCE_MULTIPLIER_POOR: 2.3,        // +130%
+    MAINTENANCE_MULTIPLIER_CRITICAL: 3.5,    // +250%
+
+    // Fuel efficiency degradation by condition
+    FUEL_EFFICIENCY_EXCELLENT: 1.0,   // No penalty
+    FUEL_EFFICIENCY_GOOD: 1.05,       // +5% fuel consumption
+    FUEL_EFFICIENCY_FAIR: 1.15,       // +15% fuel consumption
+    FUEL_EFFICIENCY_POOR: 1.30,       // +30% fuel consumption
+    FUEL_EFFICIENCY_CRITICAL: 1.60,   // +60% fuel consumption
+
+    // Maintenance warnings
+    MAINTENANCE_WARNING_AGE: 15,      // Warn when aircraft reaches this age
+    MAINTENANCE_CRITICAL_AGE: 20,     // Critical warning at this age
 
     // Airport pricing
     AIRPORT_PRICE_MULTIPLIER: 10, // market_size * this

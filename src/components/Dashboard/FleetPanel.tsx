@@ -10,6 +10,22 @@ export function FleetPanel() {
     const { state, engine, forceUpdate } = useGame();
     const [aircraftToRemove, setAircraftToRemove] = useState<{ aircraft: Aircraft; type: 'sell' | 'return' } | null>(null);
 
+    const getConditionInfo = (age: number): { condition: string; color: string; icon: string } => {
+        const condition = engine.getAircraftCondition(age);
+        switch (condition) {
+            case 'EXCELLENT':
+                return { condition: 'Excellent', color: '#00ff00', icon: '●' };
+            case 'GOOD':
+                return { condition: 'Good', color: '#7fff00', icon: '●' };
+            case 'FAIR':
+                return { condition: 'Fair', color: '#ffaa00', icon: '●' };
+            case 'POOR':
+                return { condition: 'Poor', color: '#ff5500', icon: '⚠' };
+            case 'CRITICAL':
+                return { condition: 'Critical', color: '#ff0000', icon: '⚠' };
+        }
+    };
+
     const handleRemoveAircraft = () => {
         if (aircraftToRemove) {
             const { aircraft, type } = aircraftToRemove;
@@ -53,6 +69,10 @@ export function FleetPanel() {
                     state.fleet.map(aircraft => {
                         const resaleValue = calculateResaleValue(aircraft);
                         const isAvailable = !aircraft.assigned_route;
+                        const ageYears = Math.floor(aircraft.age / 4);
+                        const conditionInfo = getConditionInfo(ageYears);
+                        const maintenanceMultiplier = engine.getMaintenanceMultiplier(ageYears);
+                        const fuelEfficiency = engine.getFuelEfficiencyMultiplier(ageYears);
 
                         return (
                             <div key={aircraft.id} className="fleet-item">
@@ -60,8 +80,18 @@ export function FleetPanel() {
                                 <div>{aircraft.type.name}</div>
                                 <div className="fleet-details">
                                     {aircraft.owned ? 'Owned' : 'Leased'} •
-                                    Age: {aircraft.age}Q •
+                                    Age: {ageYears}y ({aircraft.age}Q) •
                                     {aircraft.assigned_route ? ' In use' : ' Available'}
+                                </div>
+                                <div className="fleet-condition">
+                                    <span style={{ color: conditionInfo.color }}>
+                                        {conditionInfo.icon} {conditionInfo.condition}
+                                    </span>
+                                    {ageYears > 0 && (
+                                        <span className="condition-details">
+                                            {' '}• Maint: {((maintenanceMultiplier - 1) * 100).toFixed(0)}% • Fuel: +{((fuelEfficiency - 1) * 100).toFixed(0)}%
+                                        </span>
+                                    )}
                                 </div>
                                 {isAvailable && (
                                     <div className="fleet-actions">

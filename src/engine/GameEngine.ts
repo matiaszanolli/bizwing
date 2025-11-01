@@ -35,6 +35,47 @@ export class GameEngine {
         this.state.initialize(startYear, startingCash, airlineName);
     }
 
+    // === AIRCRAFT CONDITION HELPERS ===
+
+    /**
+     * Get aircraft condition based on age
+     */
+    getAircraftCondition(age: number): 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR' | 'CRITICAL' {
+        if (age <= CONFIG.AIRCRAFT_AGE_EXCELLENT) return 'EXCELLENT';
+        if (age <= CONFIG.AIRCRAFT_AGE_GOOD) return 'GOOD';
+        if (age <= CONFIG.AIRCRAFT_AGE_FAIR) return 'FAIR';
+        if (age <= CONFIG.AIRCRAFT_AGE_POOR) return 'POOR';
+        return 'CRITICAL';
+    }
+
+    /**
+     * Get maintenance cost multiplier based on aircraft age
+     */
+    getMaintenanceMultiplier(age: number): number {
+        const condition = this.getAircraftCondition(age);
+        switch (condition) {
+            case 'EXCELLENT': return CONFIG.MAINTENANCE_MULTIPLIER_EXCELLENT;
+            case 'GOOD': return CONFIG.MAINTENANCE_MULTIPLIER_GOOD;
+            case 'FAIR': return CONFIG.MAINTENANCE_MULTIPLIER_FAIR;
+            case 'POOR': return CONFIG.MAINTENANCE_MULTIPLIER_POOR;
+            case 'CRITICAL': return CONFIG.MAINTENANCE_MULTIPLIER_CRITICAL;
+        }
+    }
+
+    /**
+     * Get fuel efficiency multiplier based on aircraft age
+     */
+    getFuelEfficiencyMultiplier(age: number): number {
+        const condition = this.getAircraftCondition(age);
+        switch (condition) {
+            case 'EXCELLENT': return CONFIG.FUEL_EFFICIENCY_EXCELLENT;
+            case 'GOOD': return CONFIG.FUEL_EFFICIENCY_GOOD;
+            case 'FAIR': return CONFIG.FUEL_EFFICIENCY_FAIR;
+            case 'POOR': return CONFIG.FUEL_EFFICIENCY_POOR;
+            case 'CRITICAL': return CONFIG.FUEL_EFFICIENCY_CRITICAL;
+        }
+    }
+
     // === AIRCRAFT MANAGEMENT ===
 
     buyAircraft(planeType: AircraftType): boolean {
@@ -353,13 +394,14 @@ export class GameEngine {
     calculateQuarterlyExpenses(): number {
         let expenses = 0;
 
-        // Operating costs for routes (affected by fuel prices)
+        // Operating costs for routes (affected by fuel prices and aircraft age)
         // Skip suspended routes - they don't incur operating costs
         this.state.routes.forEach(route => {
             if (!route.suspended) {
                 const flightsPerQuarter = route.flights_per_week * CONFIG.WEEKS_PER_QUARTER;
+                const fuelEfficiencyMultiplier = this.getFuelEfficiencyMultiplier(route.aircraft.age);
                 const baseCost = route.aircraft.type.operating_cost * flightsPerQuarter;
-                expenses += baseCost * this.state.fuelPrice;
+                expenses += baseCost * this.state.fuelPrice * fuelEfficiencyMultiplier;
             }
         });
 
@@ -374,10 +416,10 @@ export class GameEngine {
         const ownedAirports = this.state.getOwnedAirports();
         expenses += ownedAirports.length * CONFIG.AIRPORT_MAINTENANCE_PER_QUARTER;
 
-        // Fleet maintenance
+        // Fleet maintenance (age-based penalties)
         this.state.fleet.forEach(aircraft => {
-            const agePenalty = 1 + (aircraft.age / CONFIG.AIRCRAFT_MAINTENANCE_AGE_FACTOR);
-            expenses += CONFIG.AIRCRAFT_MAINTENANCE_BASE * agePenalty;
+            const maintenanceMultiplier = this.getMaintenanceMultiplier(aircraft.age);
+            expenses += CONFIG.AIRCRAFT_MAINTENANCE_BASE * maintenanceMultiplier;
         });
 
         // Loan payments
@@ -409,9 +451,11 @@ export class GameEngine {
     estimateRouteProfitability(route: Route): number {
         const revenue = this.calculateRouteRevenue(route);
         const flightsPerQuarter = route.flights_per_week * CONFIG.WEEKS_PER_QUARTER;
-        const operatingCost = route.aircraft.type.operating_cost * flightsPerQuarter * this.state.fuelPrice;
+        const fuelEfficiencyMultiplier = this.getFuelEfficiencyMultiplier(route.aircraft.age);
+        const operatingCost = route.aircraft.type.operating_cost * flightsPerQuarter * this.state.fuelPrice * fuelEfficiencyMultiplier;
         const leaseCost = route.aircraft.owned ? 0 : route.aircraft.type.lease_per_quarter;
-        return revenue - operatingCost - leaseCost;
+        const maintenanceCost = CONFIG.AIRCRAFT_MAINTENANCE_BASE * this.getMaintenanceMultiplier(route.aircraft.age) / this.state.routes.filter(r => r.aircraft.id === route.aircraft.id).length || 1;
+        return revenue - operatingCost - leaseCost - maintenanceCost;
     }
 
     // === EVENTS ===
@@ -591,6 +635,24 @@ export class GameEngine {
                     this.state.addNews(`INDUSTRY NEWS: ${aircraft.name} production ending next year - last chance to order!`);
                 });
             }
+
+            // Check for aging aircraft in fleet
+            this.state.fleet.forEach(aircraft => {
+                const ageYears = Math.floor(aircraft.age / 4);
+
+                // Critical maintenance warning
+                if (ageYears === CONFIG.MAINTENANCE_CRITICAL_AGE) {
+                    this.state.addNews(`⚠️ MAINTENANCE ALERT: ${aircraft.name} (${aircraft.type.name}) has reached ${ageYears} years - CRITICAL condition! Costs significantly increased.`);
+                }
+                // Regular maintenance warning
+                else if (ageYears === CONFIG.MAINTENANCE_WARNING_AGE) {
+                    this.state.addNews(`⚠️ MAINTENANCE: ${aircraft.name} (${aircraft.type.name}) is ${ageYears} years old. Consider replacement - maintenance costs rising.`);
+                }
+                // Milestone warnings every 5 years after critical age
+                else if (ageYears > CONFIG.MAINTENANCE_CRITICAL_AGE && ageYears % 5 === 0) {
+                    this.state.addNews(`⚠️ ${aircraft.name} is ${ageYears} years old - operating costs are severely elevated!`);
+                }
+            });
         }
 
         // Check game over

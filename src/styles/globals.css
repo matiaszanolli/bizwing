@@ -306,6 +306,18 @@ body::after {
     margin-top: 2px;
 }
 
+.fleet-condition {
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: bold;
+}
+
+.condition-details {
+    font-size: 12px;
+    color: var(--color-text);
+    font-weight: normal;
+}
+
 .fleet-actions {
     margin-top: 4px;
     padding-top: 4px;
