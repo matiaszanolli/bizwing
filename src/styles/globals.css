@@ -326,70 +326,254 @@ body::after {
     justify-content: flex-end;
 }
 
-/* Route Items */
-.route-item {
-    border-left: 2px solid var(--color-dim);
+/* ═══════════════════════════════════════════════════════════════════════
+   ROUTE CARDS - Enhanced Visual Design
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.route-card {
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid var(--color-dim);
+    border-left: 3px solid var(--color-dim);
+    background: rgba(0, 0, 0, 0.5);
+    transition: all 0.2s;
+    position: relative;
 }
 
-.route-item.profitable {
-    border-left-color: var(--color-text-bright);
+.route-card:hover {
+    border-color: var(--color-text-bright);
+    background: rgba(0, 170, 0, 0.05);
+    box-shadow: 0 0 12px rgba(0, 170, 0, 0.3);
+    transform: translateX(2px);
 }
 
-.route-item.unprofitable {
+.route-card.profitable {
+    border-left-color: #7fff00;
+}
+
+.route-card.unprofitable {
     border-left-color: var(--color-error);
 }
 
-.route-item.suspended {
+.route-card.suspended {
     border-left-color: var(--color-warning);
-    opacity: 0.7;
-    background: rgba(255, 170, 0, 0.05);
+    opacity: 0.75;
+    background: rgba(255, 170, 0, 0.03);
 }
 
-.suspended-badge {
-    color: var(--color-warning);
-    font-size: 13px;
+/* Route Card Header */
+.route-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-dim);
+}
+
+.route-cities-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.route-icon {
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+.route-cities {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
     font-weight: bold;
+}
+
+.airport-code {
+    color: var(--color-text-bright);
+    text-shadow: 0 0 4px var(--color-text-bright);
+    letter-spacing: 1px;
+}
+
+.route-arrow {
+    color: var(--color-dim);
+    font-size: 14px;
+}
+
+.status-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+    border: 1px solid;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.suspended {
+    background: rgba(255, 170, 0, 0.1);
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+}
+
+.route-profit-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.route-profit {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
 }
 
 .route-profit.neutral {
     color: var(--color-text);
 }
 
-.route-header {
+.route-profit.highly-profitable {
+    color: #00ff00;
+    text-shadow: 0 0 6px #00ff00;
+}
+
+.route-profit.profitable {
+    color: #7fff00;
+    text-shadow: 0 0 4px #7fff00;
+}
+
+.route-profit.marginal {
+    color: #ffaa00;
+    text-shadow: 0 0 4px #ffaa00;
+}
+
+.route-profit.unprofitable {
+    color: var(--color-error);
+    text-shadow: 0 0 4px var(--color-error);
+}
+
+/* Profitability Bar Visualization */
+.profit-bar-container {
+    margin: 8px 0;
+}
+
+.profit-bar-background {
+    height: 18px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--color-dim);
+    position: relative;
+    overflow: hidden;
+}
+
+.profit-bar {
+    height: 100%;
+    position: relative;
+    transition: width 0.5s ease-out;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1));
+}
+
+.profit-bar.highly-profitable {
+    background: linear-gradient(90deg, #00aa00, #00ff00);
+    box-shadow: inset 0 0 8px rgba(0, 255, 0, 0.5);
+}
+
+.profit-bar.profitable {
+    background: linear-gradient(90deg, #557700, #7fff00);
+    box-shadow: inset 0 0 8px rgba(127, 255, 0, 0.4);
+}
+
+.profit-bar.marginal {
+    background: linear-gradient(90deg, #aa7700, #ffaa00);
+    box-shadow: inset 0 0 8px rgba(255, 170, 0, 0.4);
+}
+
+.profit-bar.unprofitable {
+    background: linear-gradient(90deg, #aa0000, #ff3333);
+    box-shadow: inset 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+.profit-bar.neutral {
+    background: linear-gradient(90deg, #333333, #666666);
+}
+
+.profit-bar-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.profit-bar-labels {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--color-dim);
 }
 
-.route-cities {
-    font-size: 15px;
+.label-title {
+    font-weight: bold;
+    color: var(--color-text);
+    letter-spacing: 0.5px;
 }
 
-.route-profit {
-    font-size: 15px;
+.profit-label-left {
+    color: #7fff00;
+}
+
+.profit-label-right {
+    color: #ff5500;
+}
+
+/* Route Details Grid */
+.route-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 8px 0;
+    padding: 8px 0;
+    border-top: 1px solid var(--color-dim);
+    border-bottom: 1px solid var(--color-dim);
+}
+
+.route-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: var(--color-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 13px;
+    color: var(--color-text-bright);
     font-weight: bold;
 }
 
-.route-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4px;
-    font-size: 13px;
+.stat-subvalue {
+    font-size: 11px;
+    color: var(--color-text);
+    opacity: 0.7;
 }
 
-.route-detail-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 1px 0;
-}
-
-.route-actions {
-    margin-top: 4px;
-    padding-top: 4px;
-    border-top: 1px solid var(--color-dim);
+/* Route Card Actions */
+.route-card-actions {
     display: flex;
     justify-content: flex-end;
+    gap: 6px;
+    margin-top: 6px;
 }
 
 /* News Items */
@@ -458,6 +642,30 @@ body::after {
 .btn-danger:hover {
     background: rgba(255, 0, 0, 0.15);
     box-shadow: 0 0 12px rgba(255, 0, 0, 0.3);
+}
+
+.btn-success {
+    border-color: #00ff00;
+    color: #00ff00;
+    background: rgba(0, 255, 0, 0.05);
+    text-shadow: 0 0 4px #00ff00;
+}
+
+.btn-success:hover {
+    background: rgba(0, 255, 0, 0.15);
+    box-shadow: 0 0 12px rgba(0, 255, 0, 0.3);
+}
+
+.btn-warning {
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+    background: rgba(255, 170, 0, 0.05);
+    text-shadow: 0 0 4px var(--color-warning);
+}
+
+.btn-warning:hover {
+    background: rgba(255, 170, 0, 0.15);
+    box-shadow: 0 0 12px rgba(255, 170, 0, 0.3);
 }
 
 .btn-small {
