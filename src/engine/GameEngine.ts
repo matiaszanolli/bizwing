@@ -6,7 +6,8 @@ import { calculateDistance, formatMoney, clamp, generateId } from '../utils/help
 import { getRandomEvent } from '../data/events';
 import { AircraftType, getUpcomingAircraft, getEndingProductionAircraft } from '../data/aircraft';
 import { Airport } from '../data/airports';
-import { Route, ActiveEvent, HubMetrics } from '../models/types';
+import { Route, ActiveEvent, HubMetrics, Executive, ExecutiveActionType } from '../models/types';
+import { AircraftManager, ExecutiveManager, FinancialManager } from './managers';
 
 interface RouteCreationResult {
     success: boolean;
@@ -26,162 +27,59 @@ interface TurnResult {
 export class GameEngine {
     state: GameState;
 
+    // Subsystem managers
+    aircraft: AircraftManager;
+    executives: ExecutiveManager;
+    financial: FinancialManager;
+
     constructor(state?: GameState) {
         this.state = state || new GameState();
+
+        // Initialize managers
+        this.aircraft = new AircraftManager(this.state);
+        this.executives = new ExecutiveManager(this.state);
+        this.financial = new FinancialManager(this.state);
     }
 
     // Initialize new game
     initialize(startYear?: number, startingCash?: number, airlineName?: string): void {
         this.state.initialize(startYear, startingCash, airlineName);
-    }
 
-    // === AIRCRAFT CONDITION HELPERS ===
-
-    /**
-     * Get aircraft condition based on age
-     */
-    getAircraftCondition(age: number): 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR' | 'CRITICAL' {
-        if (age <= CONFIG.AIRCRAFT_AGE_EXCELLENT) return 'EXCELLENT';
-        if (age <= CONFIG.AIRCRAFT_AGE_GOOD) return 'GOOD';
-        if (age <= CONFIG.AIRCRAFT_AGE_FAIR) return 'FAIR';
-        if (age <= CONFIG.AIRCRAFT_AGE_POOR) return 'POOR';
-        return 'CRITICAL';
-    }
-
-    /**
-     * Get maintenance cost multiplier based on aircraft age
-     */
-    getMaintenanceMultiplier(age: number): number {
-        const condition = this.getAircraftCondition(age);
-        switch (condition) {
-            case 'EXCELLENT': return CONFIG.MAINTENANCE_MULTIPLIER_EXCELLENT;
-            case 'GOOD': return CONFIG.MAINTENANCE_MULTIPLIER_GOOD;
-            case 'FAIR': return CONFIG.MAINTENANCE_MULTIPLIER_FAIR;
-            case 'POOR': return CONFIG.MAINTENANCE_MULTIPLIER_POOR;
-            case 'CRITICAL': return CONFIG.MAINTENANCE_MULTIPLIER_CRITICAL;
-        }
-    }
-
-    /**
-     * Get fuel efficiency multiplier based on aircraft age
-     */
-    getFuelEfficiencyMultiplier(age: number): number {
-        const condition = this.getAircraftCondition(age);
-        switch (condition) {
-            case 'EXCELLENT': return CONFIG.FUEL_EFFICIENCY_EXCELLENT;
-            case 'GOOD': return CONFIG.FUEL_EFFICIENCY_GOOD;
-            case 'FAIR': return CONFIG.FUEL_EFFICIENCY_FAIR;
-            case 'POOR': return CONFIG.FUEL_EFFICIENCY_POOR;
-            case 'CRITICAL': return CONFIG.FUEL_EFFICIENCY_CRITICAL;
-        }
+        // Update manager state references
+        this.aircraft.updateState(this.state);
+        this.executives.updateState(this.state);
+        this.financial.updateState(this.state);
     }
 
     // === AIRCRAFT MANAGEMENT ===
+    // Delegated to AircraftManager
+
+    getAircraftCondition(age: number): 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR' | 'CRITICAL' {
+        return this.aircraft.getAircraftCondition(age);
+    }
+
+    getMaintenanceMultiplier(age: number): number {
+        return this.aircraft.getMaintenanceMultiplier(age);
+    }
+
+    getFuelEfficiencyMultiplier(age: number): number {
+        return this.aircraft.getFuelEfficiencyMultiplier(age);
+    }
 
     buyAircraft(planeType: AircraftType, owned: boolean = true, customName?: string): { success: boolean; error?: string } {
-        // If buying (owned), check if player can afford it
-        if (owned && !this.state.canAfford(planeType.price)) {
-            this.state.addNews('Insufficient funds to purchase aircraft!');
-            return { success: false, error: 'Insufficient funds' };
-        }
-
-        // Deduct cost for owned aircraft
-        if (owned) {
-            this.state.cash -= planeType.price;
-        }
-
-        const newId = generateId();
-        const aircraftName = customName || `Phoenix ${newId}`;
-
-        this.state.fleet.push({
-            id: newId,
-            type: planeType,
-            name: aircraftName,
-            assigned_route: null,
-            owned: owned,
-            age: 0
-        });
-
-        if (owned) {
-            this.state.addNews(`Purchased ${planeType.name} for $${formatMoney(planeType.price)}`);
-        } else {
-            this.state.addNews(`Leased ${planeType.name} for $${formatMoney(planeType.lease_per_quarter)}/quarter`);
-        }
-
-        return { success: true };
+        return this.aircraft.buyAircraft(planeType, owned, customName);
     }
 
     leaseAircraft(planeType: AircraftType): boolean {
-        const newId = generateId();
-        this.state.fleet.push({
-            id: newId,
-            type: planeType,
-            name: `Phoenix ${newId}`,
-            assigned_route: null,
-            owned: false,
-            age: 0
-        });
-        this.state.addNews(`Leased ${planeType.name} for $${formatMoney(planeType.lease_per_quarter)}/quarter`);
-        return true;
+        return this.aircraft.leaseAircraft(planeType);
     }
 
     sellAircraft(aircraftId: number): { success: boolean; error?: string; amount?: number } {
-        const aircraft = this.state.findAircraft(aircraftId);
-
-        if (!aircraft) {
-            return { success: false, error: 'Aircraft not found!' };
-        }
-
-        if (!aircraft.owned) {
-            return { success: false, error: 'Cannot sell leased aircraft! (You can only return it)' };
-        }
-
-        if (aircraft.assigned_route) {
-            return { success: false, error: 'Cannot sell aircraft assigned to a route! Remove it from the route first.' };
-        }
-
-        // Calculate resale value (depreciation based on age)
-        const baseValue = aircraft.type.price;
-        const depreciationRate = 0.10; // 10% per quarter
-        const depreciationFactor = Math.pow(1 - depreciationRate, aircraft.age);
-        const resaleValue = Math.floor(baseValue * depreciationFactor * 0.6); // Resale at 60% of depreciated value
-
-        // Remove aircraft from fleet
-        const aircraftIndex = this.state.fleet.findIndex(a => a.id === aircraftId);
-        if (aircraftIndex !== -1) {
-            this.state.fleet.splice(aircraftIndex, 1);
-        }
-
-        // Add cash from sale
-        this.state.cash += resaleValue;
-
-        this.state.addNews(`Sold ${aircraft.type.name} for $${formatMoney(resaleValue)}`);
-        return { success: true, amount: resaleValue };
+        return this.aircraft.sellAircraft(aircraftId);
     }
 
     returnLeasedAircraft(aircraftId: number): { success: boolean; error?: string } {
-        const aircraft = this.state.findAircraft(aircraftId);
-
-        if (!aircraft) {
-            return { success: false, error: 'Aircraft not found!' };
-        }
-
-        if (aircraft.owned) {
-            return { success: false, error: 'This aircraft is owned, not leased! Use "Sell" instead.' };
-        }
-
-        if (aircraft.assigned_route) {
-            return { success: false, error: 'Cannot return aircraft assigned to a route! Remove it from the route first.' };
-        }
-
-        // Remove aircraft from fleet
-        const aircraftIndex = this.state.fleet.findIndex(a => a.id === aircraftId);
-        if (aircraftIndex !== -1) {
-            this.state.fleet.splice(aircraftIndex, 1);
-        }
-
-        this.state.addNews(`Returned leased ${aircraft.type.name}`);
-        return { success: true };
+        return this.aircraft.returnLeasedAircraft(aircraftId);
     }
 
     // === AIRPORT MANAGEMENT ===
@@ -409,6 +307,66 @@ export class GameEngine {
         return true;
     }
 
+    // === EXECUTIVE MANAGEMENT ===
+    // Delegated to ExecutiveManager
+
+    hireExecutive(executive: Executive): { success: boolean; error?: string } {
+        return this.executives.hireExecutive(executive);
+    }
+
+    fireExecutive(executiveId: number): { success: boolean; error?: string } {
+        return this.executives.fireExecutive(executiveId);
+    }
+
+    assignExecutiveAction(
+        executiveId: number,
+        actionType: ExecutiveActionType,
+        target?: string,
+        parameters?: Record<string, any>
+    ): { success: boolean; error?: string } {
+        return this.executives.assignExecutiveAction(executiveId, actionType, target, parameters);
+    }
+
+    cancelExecutiveAction(actionId: string): { success: boolean; error?: string } {
+        return this.executives.cancelExecutiveAction(actionId);
+    }
+
+    getExecutiveSalaries(): number {
+        return this.executives.getExecutiveSalaries();
+    }
+
+    private processExecutiveActions(): void {
+        this.executives.processExecutiveActions();
+    }
+
+    // === FINANCIAL MANAGEMENT ===
+    // Delegated to FinancialManager
+
+    takeLoan(amount: number, quarters: number): boolean {
+        return this.financial.takeLoan(amount, quarters);
+    }
+
+    setAdvertisingBudget(amount: number): boolean {
+        return this.financial.setAdvertisingBudget(amount);
+    }
+
+    calculateScore(): number {
+        return this.financial.calculateScore();
+    }
+
+    calculateQuarterlyRevenue(): number {
+        return this.financial.calculateQuarterlyRevenue();
+    }
+
+    calculateQuarterlyExpenses(): number {
+        return this.financial.calculateQuarterlyExpenses(this.aircraft, this.executives);
+    }
+
+    private processLoans(): void {
+        this.financial.processLoans();
+    }
+
+    // OLD FINANCIAL MANAGEMENT (to be removed after refactoring)
     // === FINANCIAL MANAGEMENT ===
 
     takeLoan(amount: number, quarters: number): boolean {
@@ -564,6 +522,9 @@ export class GameEngine {
         // Research costs
         expenses += this.state.researchLevel * 100000;
 
+        // Executive salaries
+        expenses += this.getExecutiveSalaries();
+
         return Math.floor(expenses);
     }
 
@@ -709,9 +670,7 @@ export class GameEngine {
 
     advanceTurn(): TurnResult {
         // Age aircraft
-        this.state.fleet.forEach(aircraft => {
-            aircraft.age++;
-        });
+        this.aircraft.ageAllAircraft();
 
         // Calculate financials
         const revenue = this.calculateQuarterlyRevenue();
@@ -784,6 +743,9 @@ export class GameEngine {
 
         // Process slot negotiations (quarterly countdown)
         this.processSlotNegotiations();
+
+        // Process executive actions (quarterly)
+        this.processExecutiveActions();
 
         // Check for aircraft announcements (only on Q1)
         if (this.state.quarter === 1) {

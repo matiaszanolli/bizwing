@@ -85,6 +85,73 @@ export interface SlotNegotiation {
     cost: number; // Upfront deposit cost
 }
 
+// Executive specializations
+export type ExecutiveRole = 'MARKETING' | 'OPERATIONS' | 'FINANCE' | 'STRATEGY';
+
+// Executive experience levels
+export type ExecutiveLevel = 'JUNIOR' | 'SENIOR' | 'EXPERT';
+
+// Executive action types
+export type ExecutiveActionType =
+    | 'SLOT_NEGOTIATION'      // Negotiate airport slots (better success rate)
+    | 'AD_CAMPAIGN'           // Launch regional advertising
+    | 'ROUTE_ANALYSIS'        // Detailed route profitability report
+    | 'COMPETITOR_INTEL'      // Spy on competitor plans
+    | 'LABOR_RELATIONS'       // Negotiate with unions, prevent strikes
+    | 'GOVT_RELATIONS'        // Lobby for favorable regulations
+    | 'AIRCRAFT_DEAL'         // Negotiate better aircraft prices
+    | 'HUB_DEVELOPMENT';      // Improve hub efficiency
+
+// Executive action (instance of an action being performed)
+export interface ExecutiveAction {
+    id: string;
+    executive_id: number;
+    action_type: ExecutiveActionType;
+    quarters_remaining: number; // Some actions take multiple quarters
+    target?: string; // Airport ID, route ID, competitor name, etc.
+    parameters?: Record<string, any>; // Action-specific data
+}
+
+// Executive (employee in your company)
+export interface Executive {
+    id: number;
+    name: string;
+    role: ExecutiveRole;
+    level: ExecutiveLevel;
+
+    // Skills (0-100)
+    negotiation: number;  // Affects slot deals, aircraft prices
+    marketing: number;    // Affects advertising effectiveness
+    analysis: number;     // Affects report quality, intel gathering
+    operations: number;   // Affects hub efficiency, labor relations
+
+    // Salary (per quarter)
+    salary: number;
+
+    // Experience tracking
+    experience_points: number; // Gain XP from successful actions
+
+    // Current assignment
+    current_action: ExecutiveAction | null;
+
+    // Morale (0-100, affects success rates)
+    morale: number;
+}
+
+// Result of an executive action
+export interface ExecutiveActionResult {
+    success: boolean;
+    message: string;
+    effects?: {
+        cash_change?: number;
+        reputation_change?: number;
+        slot_discount?: number;
+        aircraft_discount?: number;
+        intel_report?: string;
+        route_recommendations?: string[];
+    };
+}
+
 // Serializable game state
 export interface SerializedGameState {
     year: number;
@@ -106,4 +173,6 @@ export interface SerializedGameState {
     hubMetrics: HubMetrics[]; // Efficiency tracking for hubs
     slotNegotiations: SlotNegotiation[]; // Active slot negotiations
     negotiationCapacity: number; // Max simultaneous negotiations (can be upgraded)
+    executives: Executive[]; // Hired executives
+    executiveActions: ExecutiveAction[]; // Active executive actions
 }

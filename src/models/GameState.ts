@@ -12,7 +12,9 @@ import {
     ActiveEvent,
     SerializedGameState,
     HubMetrics,
-    SlotNegotiation
+    SlotNegotiation,
+    Executive,
+    ExecutiveAction
 } from './types';
 
 export class GameState {
@@ -37,6 +39,10 @@ export class GameState {
     hubMetrics: HubMetrics[];
     slotNegotiations: SlotNegotiation[];
     negotiationCapacity: number;
+
+    // Executive management
+    executives: Executive[];
+    executiveActions: ExecutiveAction[];
 
     // Financial health tracking
     consecutiveLosses: number;
@@ -64,6 +70,9 @@ export class GameState {
         this.hubMetrics = [];
         this.slotNegotiations = [];
         this.negotiationCapacity = CONFIG.BASE_NEGOTIATION_CAPACITY;
+
+        this.executives = [];
+        this.executiveActions = [];
 
         this.consecutiveLosses = 0;
         this.lastQuarterProfit = 0;
@@ -229,7 +238,9 @@ export class GameState {
             economicCondition: this.economicCondition,
             hubMetrics: this.hubMetrics,
             slotNegotiations: this.slotNegotiations,
-            negotiationCapacity: this.negotiationCapacity
+            negotiationCapacity: this.negotiationCapacity,
+            executives: this.executives,
+            executiveActions: this.executiveActions
         };
     }
 
