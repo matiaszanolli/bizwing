@@ -366,82 +366,6 @@ export class GameEngine {
         this.financial.processLoans();
     }
 
-    // OLD FINANCIAL MANAGEMENT (to be removed after refactoring)
-    // === FINANCIAL MANAGEMENT ===
-
-    takeLoan(amount: number, quarters: number): boolean {
-        const interestRate = CONFIG.LOAN_INTEREST_RATE;
-        const quarterlyPayment = (amount * interestRate) / (1 - Math.pow(1 + interestRate, -quarters));
-        const principalPayment = amount / quarters;
-
-        const loan = {
-            original_amount: amount,
-            remaining: amount,
-            quarterly_payment: quarterlyPayment,
-            principal_payment: principalPayment,
-            quarters_remaining: quarters,
-            interest_rate: interestRate
-        };
-
-        this.state.loans.push(loan);
-        this.state.cash += amount;
-        this.state.addNews(`Loan approved: $${formatMoney(amount)} over ${quarters} quarters`);
-        return true;
-    }
-
-    takeEmergencyLoan(amount: number): boolean {
-        const interestRate = CONFIG.EMERGENCY_LOAN_INTEREST_RATE;
-        const quarters = 12; // Fixed 3-year term for emergency loans
-        const quarterlyPayment = (amount * interestRate) / (1 - Math.pow(1 + interestRate, -quarters));
-        const principalPayment = amount / quarters;
-
-        const loan = {
-            original_amount: amount,
-            remaining: amount,
-            quarterly_payment: quarterlyPayment,
-            principal_payment: principalPayment,
-            quarters_remaining: quarters,
-            interest_rate: interestRate
-        };
-
-        this.state.loans.push(loan);
-        this.state.cash += amount;
-        this.state.consecutiveLosses = 0; // Reset counter after emergency loan
-        this.state.addNews(`EMERGENCY LOAN: $${formatMoney(amount)} at ${(interestRate * 100).toFixed(0)}% interest over ${quarters} quarters`);
-        return true;
-    }
-
-    processLoans(): void {
-        this.state.loans = this.state.loans.filter(loan => {
-            loan.remaining -= loan.principal_payment;
-            loan.quarters_remaining--;
-
-            if (loan.quarters_remaining <= 0 || loan.remaining <= 0) {
-                this.state.addNews(`Loan paid off! Principal was $${formatMoney(loan.original_amount)}`);
-                return false;
-            }
-            return true;
-        });
-    }
-
-    setAdvertisingBudget(budget: number): void {
-        this.state.advertisingBudget = budget;
-        this.state.addNews(`Advertising budget set to $${formatMoney(budget)}/quarter`);
-    }
-
-    // === REVENUE CALCULATION ===
-
-    calculateQuarterlyRevenue(): number {
-        let revenue = 0;
-        this.state.routes.forEach(route => {
-            // Skip suspended routes
-            if (!route.suspended) {
-                revenue += this.calculateRouteRevenue(route);
-            }
-        });
-        return Math.floor(revenue);
-    }
-
     calculateRouteRevenue(route: Route): number {
         const from = this.state.findAirport(route.from);
         const to = this.state.findAirport(route.to);
@@ -476,56 +400,6 @@ export class GameEngine {
         }
 
         return quarterlyRevenue;
-    }
-
-    // === EXPENSE CALCULATION ===
-
-    calculateQuarterlyExpenses(): number {
-        let expenses = 0;
-
-        // Operating costs for routes (affected by fuel prices and aircraft age)
-        // Skip suspended routes - they don't incur operating costs
-        this.state.routes.forEach(route => {
-            if (!route.suspended) {
-                const flightsPerQuarter = route.flights_per_week * CONFIG.WEEKS_PER_QUARTER;
-                const fuelEfficiencyMultiplier = this.getFuelEfficiencyMultiplier(route.aircraft.age);
-                const baseCost = route.aircraft.type.operating_cost * flightsPerQuarter;
-                expenses += baseCost * this.state.fuelPrice * fuelEfficiencyMultiplier;
-            }
-        });
-
-        // Leasing costs
-        this.state.fleet.forEach(aircraft => {
-            if (!aircraft.owned) {
-                expenses += aircraft.type.lease_per_quarter;
-            }
-        });
-
-        // Fixed costs for owned airports
-        const ownedAirports = this.state.getOwnedAirports();
-        expenses += ownedAirports.length * CONFIG.AIRPORT_MAINTENANCE_PER_QUARTER;
-
-        // Fleet maintenance (age-based penalties)
-        this.state.fleet.forEach(aircraft => {
-            const maintenanceMultiplier = this.getMaintenanceMultiplier(aircraft.age);
-            expenses += CONFIG.AIRCRAFT_MAINTENANCE_BASE * maintenanceMultiplier;
-        });
-
-        // Loan payments
-        this.state.loans.forEach(loan => {
-            expenses += loan.quarterly_payment;
-        });
-
-        // Advertising budget
-        expenses += this.state.advertisingBudget;
-
-        // Research costs
-        expenses += this.state.researchLevel * 100000;
-
-        // Executive salaries
-        expenses += this.getExecutiveSalaries();
-
-        return Math.floor(expenses);
     }
 
     // === COMPETITION ===
@@ -1183,17 +1057,5 @@ export class GameEngine {
      */
     getHubMetrics(airportId: string): HubMetrics | undefined {
         return this.state.hubMetrics.find(m => m.airport_id === airportId);
-    }
-
-    // === SCORING ===
-
-    calculateScore(): number {
-        const cashScore = this.state.cash / CONFIG.SCORE_CASH_DIVISOR;
-        const airportScore = this.state.getOwnedAirports().length * CONFIG.SCORE_AIRPORT_MULTIPLIER;
-        const fleetScore = this.state.fleet.length * CONFIG.SCORE_FLEET_MULTIPLIER;
-        const reputationScore = this.state.reputation * CONFIG.SCORE_REPUTATION_MULTIPLIER;
-        const routeScore = this.state.routes.length * CONFIG.SCORE_ROUTE_MULTIPLIER;
-
-        return Math.floor(cashScore + airportScore + fleetScore + reputationScore + routeScore);
     }
 }

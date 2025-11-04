@@ -1,0 +1,97 @@
+/* ============================================
+   BizWing - Design System Overrides
+   ============================================ */
+
+/* ===== CSS Variables (Design System) ===== */
+:root {
+    /* Colors - Modern Dark Theme */
+    --bg-primary: #0f1419;
+    --bg-secondary: #1a1f2e;
+    --bg-tertiary: #252b3a;
+    --bg-hover: #2d3548;
+
+    /* Override Tailwind gray colors */
+    --tw-gray-50: #f9fafb;
+    --tw-gray-100: #f3f4f6;
+    --tw-gray-200: #e5e7eb;
+    --tw-gray-300: #d1d5db;
+    --tw-gray-400: #9ca3af;
+    --tw-gray-500: #6b7280;
+    --tw-gray-600: #4b5563;
+    --tw-gray-700: #374151;
+    --tw-gray-750: #2d3548;
+    --tw-gray-800: #1f2937;
+    --tw-gray-900: #111827;
+    --tw-gray-950: #030712;
+
+    /* Accent Colors */
+    --accent-blue: #3b82f6;
+    --accent-blue-hover: #2563eb;
+    --accent-green: #10b981;
+    --accent-yellow: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-purple: #8b5cf6;
+
+    /* Text Colors */
+    --text-primary: #e5e7eb;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Override Tailwind's gray scale with our theme */
+.bg-gray-800 { background-color: var(--bg-secondary) !important; }
+.bg-gray-750 { background-color: var(--bg-tertiary) !important; }
+.bg-gray-700 { background-color: var(--bg-hover) !important; }
+.bg-gray-600 { background-color: #4b5563 !important; }
+
+/* Improve text colors */
+.text-white { color: var(--text-primary) !important; }
+.text-gray-400 { color: var(--text-secondary) !important; }
+.text-gray-300 { color: var(--text-primary) !important; }
+.text-gray-500 { color: var(--text-muted) !important; }
+
+/* Better borders */
+.border-gray-700 { border-color: #374151 !important; }
+.border-gray-600 { border-color: #4b5563 !important; }
+
+/* Improve readability */
+body {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Better scrollbars */
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #4b5563;
+}
+
+/* Responsive font scaling */
+@media (max-width: 1400px) {
+    html { font-size: 15px; }
+}
+
+@media (max-width: 1200px) {
+    html { font-size: 14px; }
+}
+
+@media (max-width: 1024px) {
+    html { font-size: 13px; }
+}
